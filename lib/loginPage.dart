@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
           'Login Page',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor:Color(0xff283E50),
         centerTitle: true,
       ),
       body: Center(

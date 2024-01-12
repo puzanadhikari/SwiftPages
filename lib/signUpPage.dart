@@ -27,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
           'SignUp Page',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor:Color(0xff283E50),
         centerTitle: true,
       ),
       body: Center(
