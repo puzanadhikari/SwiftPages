@@ -169,8 +169,24 @@ class _HomePageState extends State<HomePage> {
                                   books[index].imageLink,
                                   height: 200,
                                   width: 200,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      // Image is fully loaded, display the actual image
+                                      return child;
+                                    } else {
+                                      // Image is still loading, display a placeholder or loading indicator
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null
+                                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
+
                             ],
                           ),
                         );
