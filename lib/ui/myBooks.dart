@@ -3,40 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MyBooks extends StatefulWidget {
+  const MyBooks({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<MyBooks> createState() => _MyBooksState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MyBooksState extends State<MyBooks> {
   final String apiKey =
-      "30fe2ae32emsh0b5a48e1d0ed53dp17a064jsn7a2f3e3aca01";
-  final String apiUrl =
-      "https://book-finder1.p.rapidapi.com/api/search?page=2";
+      "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0"; // Replace with your actual API key
 
   List<Book> books = [];
 
   Future<void> fetchBooks() async {
-    final response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {
-        "X-RapidAPI-Key": apiKey,
-      },
-    );
+    final String apiUrl =
+        "https://www.googleapis.com/books/v1/volumes?q=novels&maxResults=40";
+
+    final response =
+    await http.get(Uri.parse(apiUrl + "&key=$apiKey"));
 
     if (response.statusCode == 200) {
+      // Parse the JSON response
       final Map<String, dynamic> data = json.decode(response.body);
 
-      if (data.containsKey("results")) {
-        final List<dynamic> results = data["results"];
+      // Process the data as needed
+      if (data.containsKey("items")) {
+        final List<dynamic> items = data["items"];
         setState(() {
-          books = results.map((result) => Book.fromMap(result)).toList();
+          books = items.map((item) => Book.fromMap(item)).toList();
         });
-      } else {
-        // Handle the case when "results" key is not present in the response
-        print("Error: 'results' key not found in the response");
       }
     } else {
       // Handle errors
@@ -62,6 +58,7 @@ class _HomePageState extends State<HomePage> {
               left: 0,
               child: Image.asset(
                 'assets/Ellipse.png', // Replace with the correct image path
+                // Adjust the width as needed
                 fit: BoxFit.contain,
               ),
             ),
@@ -82,21 +79,19 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 20,
-              left: MediaQuery.of(context).size.width / 2.5,
-              child: Text(
-                "My Books",
-                style: const TextStyle(
+                top: 20,
+                left: MediaQuery.of(context).size.width/2.5,
+                child: Text("My Books",style: const TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
-                  height: 29 / 22,
-                ),
-              ),
+                  height: 29/22,
+                ),)
             ),
+
             Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: const EdgeInsets.only(top:100.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -123,9 +118,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   child: Column(
                                     children: [
-                                      SizedBox(
-                                        height: 30,
-                                      ),
+                                      SizedBox(height: 30,),
                                       RatingBar.builder(
                                         initialRating: 2.5,
                                         minRating: 1,
@@ -143,14 +136,12 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       SizedBox(height: 8),
                                       Container(
-                                        height:
-                                        200, // Set a fixed height for description
+                                        height: 200, // Set a fixed height for description
                                         child: SingleChildScrollView(
                                           child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 10.0),
+                                            padding: const EdgeInsets.only(top: 10.0),
                                             child: Text(
-                                              books[index].author,
+                                              books[index].description,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: Colors.black,
@@ -177,6 +168,8 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
+                  // Other content below the horizontal list
+                  // ...
                 ],
               ),
             ),
@@ -188,15 +181,25 @@ class _HomePageState extends State<HomePage> {
 }
 
 class Book {
-  final String author;
+  final String title;
   final String imageLink;
+  final String description;
+  final double rating;
 
-  Book({required this.author, required this.imageLink});
+  Book({
+    required this.title,
+    required this.imageLink,
+    required this.description,
+    required this.rating,
+  });
 
   factory Book.fromMap(Map<String, dynamic> map) {
+    final volumeInfo = map['volumeInfo'];
     return Book(
-      author: map['title'] ?? 'No Author',
-      imageLink: map['published_works'][0]['cover_art_url'] ?? 'No Image',
+      description: volumeInfo['description'] ?? 'No Description',
+      title: volumeInfo['title'] ?? 'No Title',
+      imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
+      rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
     );
   }
 }
