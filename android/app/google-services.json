@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "378764243966",
+    "project_id": "swiftpages-124b1",
+    "storage_bucket": "swiftpages-124b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378764243966:android:e2ea0bc6e5bac5524206af",
+        "android_client_info": {
+          "package_name": "com.example.swiftpages"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
