@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^2.24.2
   http:
   fluttertoast:
+  flutter_rating_bar:
   flutter:
     sdk: flutter
 

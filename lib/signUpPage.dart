@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:swiftpages/loginPage.dart';
 import 'firebase_auth.dart';
-
-import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -25,7 +21,6 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor: Color(0xFFFEEAD4),
         body: Stack(
           children: [
-            // Place the Image.asset here
             Positioned(
               top: 0,
               left: 0,
@@ -35,7 +30,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 fit: BoxFit.contain, // Ensure the image covers the entire width
               ),
             ),
-            // Logo.png image
             Positioned(
               top: -30,
               left: -20,
@@ -75,9 +69,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
             ),
-
-
-
             Center(
               child: SingleChildScrollView(
                 child: Padding(
@@ -89,7 +80,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       SizedBox(height: 150),
                       Column(
-
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(

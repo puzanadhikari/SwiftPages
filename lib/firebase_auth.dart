@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:swiftpages/loginPage.dart';
+import 'package:swiftpages/ui/homePage.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -56,8 +57,8 @@ class FirebaseAuthService {
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,
           fontSize: 16.0);
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
       return credential.user;
     } catch (e) {
       log("Some error occured");
