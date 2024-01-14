@@ -35,6 +35,7 @@ dependencies:
   http:
   fluttertoast:
   flutter_rating_bar:
+  floating_bottom_navigation_bar: ^1.5.2
   flutter:
     sdk: flutter
 

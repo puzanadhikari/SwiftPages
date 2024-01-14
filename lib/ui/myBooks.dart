@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -89,7 +91,6 @@ class _MyBooksState extends State<MyBooks> {
                   height: 29/22,
                 ),)
             ),
-
             Padding(
               padding: const EdgeInsets.only(top:100.0),
               child: Column(
@@ -173,6 +174,24 @@ class _MyBooksState extends State<MyBooks> {
                 ],
               ),
             ),
+          ],
+        ),
+        extendBody: true,
+        bottomNavigationBar: FloatingNavbar(
+          borderRadius: 40.0,
+          selectedBackgroundColor: Color(0xFFD9D9D9),
+          selectedItemColor: Color(0xffFF997A),
+          unselectedItemColor:  Color(0xffFF997A),
+          backgroundColor: Color(0xFF283E50),
+          onTap: (int val) {
+            //returns tab id which is user tapped
+          },
+          currentIndex:0,
+          items: [
+            FloatingNavbarItem(icon: Icons.home, title: 'Home'),
+            FloatingNavbarItem(icon: Icons.explore, title: 'Explore'),
+            FloatingNavbarItem(icon: Icons.chat_bubble_outline, title: 'Chats'),
+            FloatingNavbarItem(icon: Icons.settings, title: 'Settings'),
           ],
         ),
       ),
