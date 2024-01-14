@@ -217,7 +217,8 @@ class _LoginPageState extends State<LoginPage> {
                                 decoration: TextDecoration.underline,),
 
                             ),
-                          )
+                          ),
+
                         ],
                       )
                     ],
