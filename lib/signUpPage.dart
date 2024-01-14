@@ -12,6 +12,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
   bool obscurePassword = true;
 
   @override
@@ -129,7 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               color: Color(0xFFD9D9D9),
                             ),
                             child: TextField(
-
+                              controller: userNameController,
                               decoration: InputDecoration(
                                 hintText: 'Username',
                                 border: InputBorder.none,
@@ -185,7 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ElevatedButton(
                         onPressed: ()async {
                           await _auth.SignUpWithEmailAndPassword(
-                              context, emailController.text, passwordController.text);
+                              context, emailController.text, passwordController.text,userNameController.text);
                         },
                         style: ElevatedButton.styleFrom(
                           primary:Color(0xFF283E50),// Background color

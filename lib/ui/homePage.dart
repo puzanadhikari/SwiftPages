@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Book> books = [];
   String email = ' ';
+  String userName = ' ';
 
   Future<void> fetchBooks() async {
     final response = await http.get(
@@ -48,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchUserInfo() async {
 SharedPreferences preferences = await SharedPreferences.getInstance();
 email  = preferences.getString("email")!;
+userName  = preferences.getString("userName")!;
   }
 
   @override
@@ -84,7 +86,7 @@ email  = preferences.getString("email")!;
               top: 90,
               left: 10,
               child: Text(
-                "Welcome ${email}",
+                "Welcome ${userName} !!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Color(0xffFEEAD4),
