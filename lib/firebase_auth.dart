@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/loginPage.dart';
 import 'package:swiftpages/ui/homePage.dart';
 
@@ -46,10 +48,12 @@ class FirebaseAuthService {
 
   Future<User?> signInWithEmailAndPassword(
       BuildContext context, String email, String password) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       log(credential.toString());
+      preferences.setString("email", credential.user?.email ?? "");
       Fluttertoast.showToast(
           msg: 'Login successfully',
           backgroundColor: Colors.green,
