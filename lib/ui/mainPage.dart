@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:swiftpages/ui/homePage.dart';
 import 'package:swiftpages/ui/myBooks.dart';
 import 'package:swiftpages/ui/profilePage.dart';
+
+import '../firebase_auth.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -13,11 +16,18 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late PageController _pageController;
   int _currentIndex = 0;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User ? _user;
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _auth.authStateChanges().listen((event) {
+      setState(() {
+       _user = event;
+      });
+    });
+
   }
 
   @override
@@ -33,6 +43,7 @@ class _MainPageState extends State<MainPage> {
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

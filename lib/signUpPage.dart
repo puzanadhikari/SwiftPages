@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/loginPage.dart';
 import 'package:swiftpages/ui/chooseAvatars.dart';
+import 'package:swiftpages/ui/mainPage.dart';
 import 'firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -10,11 +13,38 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
-
+  final FirebaseAuth _authGoogle = FirebaseAuth.instance;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   bool obscurePassword = true;
+  Future<void> _handleGoogleSignIn() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    try {
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+      UserCredential userCredential =
+      await _authGoogle.signInWithProvider(_googleAuthProvider);
+
+      // After successful sign-in, retrieve the user's information
+      if (userCredential.user != null) {
+        String? email = userCredential.user!.email;
+        String? displayName = userCredential.user!.displayName;
+        preferences.setString("email", email ?? "");
+        preferences.setString("userName", displayName ?? "");
+        String? photoURL = userCredential.user!.photoURL;
+        preferences.setString("profilePicture",photoURL ?? "");
+
+        // Navigate to the main page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      }
+    } catch (e) {
+      print('Error during Google Sign-In: $e');
+      // Handle the error as needed
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,8 +247,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-                        },
+                          _handleGoogleSignIn();
+                           },
                         style: ElevatedButton.styleFrom(
                           primary: Color(0xFFFF997A),// Background color
                           shape: RoundedRectangleBorder(
