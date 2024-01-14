@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,6 +18,8 @@ class _HomePageState extends State<HomePage> {
       "https://book-finder1.p.rapidapi.com/api/search?page=2";
 
   List<Book> books = [];
+  String email = ' ';
+  String userName = ' ';
 
   Future<void> fetchBooks() async {
     final response = await http.get(
@@ -35,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           books = results.map((result) => Book.fromMap(result)).toList();
         });
       } else {
-        // Handle the case when "results" key is not present in the response
+
         print("Error: 'results' key not found in the response");
       }
     } else {
@@ -43,18 +46,24 @@ class _HomePageState extends State<HomePage> {
       print("Error: ${response.statusCode}");
     }
   }
+  Future<void> fetchUserInfo() async {
+SharedPreferences preferences = await SharedPreferences.getInstance();
+email  = preferences.getString("email")!;
+userName  = preferences.getString("userName")!;
+  }
 
   @override
   void initState() {
     super.initState();
     fetchBooks();
+    fetchUserInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFFFEEAD4),
+        backgroundColor: const Color(0xFFFEEAD4),
         body: Stack(
           children: [
             Positioned(
@@ -74,6 +83,19 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
+              top: 90,
+              left: 10,
+              child: Text(
+                "Welcome ${userName} !!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Color(0xffFEEAD4),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+            Positioned(
               top: 10,
               right: 10,
               child: Image.asset(
@@ -82,21 +104,102 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 20,
-              left: MediaQuery.of(context).size.width / 2.5,
-              child: Text(
-                "My Books",
-                style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xfffeead4),
-                  height: 29 / 22,
+              top: 130,
+              left: 40,
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width/1.2,
+
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD9D9D9),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.all( 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 5,),
+                        const Text(
+                        "Today's Goal",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        const SizedBox(height: 5,),
+                        const Text(
+                          "Today: 30 mins",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color(0xFF686868),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500
+                          ),
+                        ),
+                        const SizedBox(height: 5,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Completed: 10 mins",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(0xFF686868),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500
+
+                              ),
+                            ),
+                            Image.asset(
+                              "assets/clock.png",
+                              height: 20,
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
+            Positioned(
+              top: 20,
+              left: MediaQuery.of(context).size.width / 2.5,
+              child: Row(
+                children: [
+                  const Text(
+                    "Home",
+                    style: TextStyle(
+                      fontFamily: "Abhaya Libre ExtraBold",
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xfffeead4),
+                      height: 29 / 22,
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Image.asset(
+                      "assets/strick.png",
+                      height: 50,
+                    ),
+                  ),
+                  Text("9",style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xfffeead4),
+                  ),)
+                ],
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: const EdgeInsets.only(top: 260.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -106,84 +209,143 @@ class _HomePageState extends State<HomePage> {
                       itemCount: books.length,
                       itemBuilder: (context, index) {
                         return Container(
-                          width: 250,
-                          margin: EdgeInsets.symmetric(horizontal: 16.0),
+                          width: 280,
+                          margin: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Stack(
                             alignment: Alignment.topCenter,
                             children: [
                               Positioned(
-                                top: 180,
+                                top: 0,
+                                left: 30,
                                 child: Container(
-                                  height: 300,
+                                  height: 250,
                                   width: 250,
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: Color(0xFFD9D9D9),
+                                    color: const Color(0xFFD9D9D9),
                                     borderRadius: BorderRadius.circular(20.0),
                                   ),
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      RatingBar.builder(
-                                        initialRating: 2.5,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: 20,
-                                        itemBuilder: (context, _) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (rating) {
-                                          // You can update the rating if needed
-                                        },
-                                      ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Container(
                                         height:
-                                        200, // Set a fixed height for description
-                                        child: SingleChildScrollView(
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 10.0),
-                                            child: Text(
-                                              books[index].author,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.black,
+                                        150, // Set a fixed height for description
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                              const EdgeInsets.only(top: 10.0),
+                                              child: Text(
+                                                "Currently Reading",
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  color: Color(0xFF283E50),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 24
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                            SingleChildScrollView(
+                                              child: Padding(
+                                                padding:
+                                                const EdgeInsets.only(top: 5.0),
+                                                child: Text(
+                                                  books[index].author,
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF686868),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                          ],
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.network(
-                                  books[index].imageLink,
-                                  height: 200,
-                                  width: 200,
-                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      // Image is fully loaded, display the actual image
-                                      return child;
-                                    } else {
-                                      // Image is still loading, display a placeholder or loading indicator
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress.expectedTotalBytes != null
-                                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                              : null,
+                              Positioned(
+                                top: 100,
+                                right:20,
+                                child: Column(
+                                  children: [
+                                    Stack(
+                                      children:[
+                                        CircularProgressIndicator(
+                                          value: 0.9,
+
+                                          strokeWidth: 5.0, // Adjust the stroke width as needed
+                                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF283E50),), // Adjust the color as needed
                                         ),
-                                      );
-                                    }
-                                  },
+                                        Positioned(
+                                          top: 10,
+                                          left: 5,
+                                          child: Text(
+                                            "90%",
+                                            style: TextStyle(
+                                              color: Color(0xFF283E50),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+
+                                    ),
+                                    Text(
+                                      "Progress",
+                                      style: TextStyle(
+                                          color: Color(0xFF686868),
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                    SizedBox(height: 20,),
+
+                                    Image.asset(
+                                      "assets/notes.png",
+                                      height: 50,
+                                    ),
+                                    Text(
+                                      "Notes",
+                                      style: TextStyle(
+                                          color: Color(0xFF686868),
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top:100.0,right:80),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Image.network(
+                                    books[index].imageLink,
+                                    height: 200,
+                                    width: 200,
+                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        // Image is fully loaded, display the actual image
+                                        return child;
+                                      } else {
+                                        // Image is still loading, display a placeholder or loading indicator
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress.expectedTotalBytes != null
+                                                ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
 

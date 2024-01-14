@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/loginPage.dart';
 import 'package:swiftpages/ui/homePage.dart';
 
@@ -11,13 +13,14 @@ class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<User?> SignUpWithEmailAndPassword(
-      BuildContext context, String email, String password) async {
+      BuildContext context, String email, String password, String username) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      await userCredential.user?.updateDisplayName(username);
       Fluttertoast.showToast(
           msg: 'Signup successfully',
           backgroundColor: Colors.green,
@@ -46,10 +49,14 @@ class FirebaseAuthService {
 
   Future<User?> signInWithEmailAndPassword(
       BuildContext context, String email, String password) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       log(credential.toString());
+      preferences.setString("email", credential.user?.email ?? "");
+      preferences.setString("userName", credential.user?.displayName ?? "");
+
       Fluttertoast.showToast(
           msg: 'Login successfully',
           backgroundColor: Colors.green,
