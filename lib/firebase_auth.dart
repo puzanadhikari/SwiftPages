@@ -13,7 +13,7 @@ class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<User?> SignUpWithEmailAndPassword(
-      BuildContext context, String email, String password, String username) async {
+      BuildContext context, String email, String password, String username,String avatars) async {
     try {
       UserCredential userCredential =
       await _auth.createUserWithEmailAndPassword(
@@ -21,6 +21,7 @@ class FirebaseAuthService {
         password: password,
       );
       await userCredential.user?.updateDisplayName(username);
+      await userCredential.user?.updatePhotoURL(avatars);
       Fluttertoast.showToast(
           msg: 'Signup successfully',
           backgroundColor: Colors.green,

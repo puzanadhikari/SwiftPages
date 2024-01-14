@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swiftpages/loginPage.dart';
+import 'package:swiftpages/ui/chooseAvatars.dart';
 import 'firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -185,8 +186,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: ()async {
-                          await _auth.SignUpWithEmailAndPassword(
-                              context, emailController.text, passwordController.text,userNameController.text);
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=>ChooseAvatars(
+                          emailController,userNameController,passwordController
+                        )));
                         },
                         style: ElevatedButton.styleFrom(
                           primary:Color(0xFF283E50),// Background color
