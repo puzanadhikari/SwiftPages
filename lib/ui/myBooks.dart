@@ -32,9 +32,12 @@ class _MyBooksState extends State<MyBooks> {
       // Process the data as needed
       if (data.containsKey("items")) {
         final List<dynamic> items = data["items"];
-        setState(() {
-          books = items.map((item) => Book.fromMap(item)).toList();
-        });
+        if (_mounted) {
+          setState(() {
+            books = items.map((item) => Book.fromMap(item)).toList();
+          });
+        }
+
       }
     } else {
       // Handle errors
@@ -47,6 +50,13 @@ class _MyBooksState extends State<MyBooks> {
     super.initState();
     fetchBooks();
   }
+  bool _mounted = true;
+  @override
+  void dispose() {
+    _mounted = false; // Add this line
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,18 +91,21 @@ class _MyBooksState extends State<MyBooks> {
               ),
             ),
             Positioned(
-                top: 20,
-                left: MediaQuery.of(context).size.width/2.5,
-                child: Text("My Books",style: const TextStyle(
+              top: 20,
+              left: MediaQuery.of(context).size.width / 3,
+              child: Text(
+                "My Books",
+                style: const TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
-                  height: 29/22,
-                ),)
+                  height: 29 / 22,
+                ),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top: 100.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -137,7 +150,7 @@ class _MyBooksState extends State<MyBooks> {
                                       ),
                                       SizedBox(height: 8),
                                       Container(
-                                        height: 200, // Set a fixed height for description
+                                        height: 200,
                                         child: SingleChildScrollView(
                                           child: Padding(
                                             padding: const EdgeInsets.only(top: 10.0),
@@ -169,31 +182,12 @@ class _MyBooksState extends State<MyBooks> {
                       },
                     ),
                   ),
-                  // Other content below the horizontal list
-                  // ...
                 ],
               ),
             ),
           ],
         ),
         extendBody: true,
-        bottomNavigationBar: FloatingNavbar(
-          borderRadius: 40.0,
-          selectedBackgroundColor: Color(0xFFD9D9D9),
-          selectedItemColor: Color(0xffFF997A),
-          unselectedItemColor:  Color(0xffFF997A),
-          backgroundColor: Color(0xFF283E50),
-          onTap: (int val) {
-            //returns tab id which is user tapped
-          },
-          currentIndex:0,
-          items: [
-            FloatingNavbarItem(icon: Icons.home, title: 'Home'),
-            FloatingNavbarItem(icon: Icons.explore, title: 'Explore'),
-            FloatingNavbarItem(icon: Icons.chat_bubble_outline, title: 'Chats'),
-            FloatingNavbarItem(icon: Icons.settings, title: 'Settings'),
-          ],
-        ),
       ),
     );
   }
