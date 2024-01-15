@@ -310,18 +310,19 @@ class _MyBooksState extends State<MyBooks> {
   }
 
 }
-
 class Book {
   final String author;
   final String imageLink;
   final String documentId;
   int currentPage; // Add this field
+  List<String> notes; // Add this field
 
   Book({
     required this.author,
     required this.imageLink,
     required this.documentId,
     this.currentPage = 0, // Set the default value to 0
+    this.notes = const [], // Initialize notes as an empty list
   });
 
   factory Book.fromMap(String documentId, Map<String, dynamic>? map) {
@@ -337,8 +338,7 @@ class Book {
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,
       currentPage: map['currentPage'] ?? 0, // Set the currentPage value
+      notes: List<String>.from(map['notes'] ?? []), // Set the notes value
     );
   }
 }
-
-
