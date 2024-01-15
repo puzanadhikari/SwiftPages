@@ -37,8 +37,8 @@ class _MyBooksState extends State<MyBooks> {
         List<DocumentSnapshot> bookDocuments = querySnapshot.docs;
         setState(() {
           books = bookDocuments
-              .map((doc) => Book.fromMap(doc.data() as Map<String, dynamic>))
-              .toList();    print('Books: $books'); // Check the console for the list of books
+              .map((doc) => Book.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
+              .toList();  print('Books: $books'); // Check the console for the list of books
         });
         // Process each book document
         for (DocumentSnapshot doc in bookDocuments) {
@@ -152,7 +152,9 @@ class _MyBooksState extends State<MyBooks> {
                       itemCount: books.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: (){},
+                          onTap: (){
+                            _showConfirmationDialog(books[index]);
+                          },
                           child: Container(
                             width: 250,
                             margin: EdgeInsets.symmetric(horizontal: 16.0),
@@ -231,21 +233,99 @@ class _MyBooksState extends State<MyBooks> {
       ),
     );
   }
+  void removeBook(Book book) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to remove the book
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Remove the book document from Firestore using its document ID
+        await myBooksRef.doc(book.documentId).delete();
+
+        // Remove the book from the state
+        setState(() {
+          books.remove(book);
+        });
+
+        print('Book removed successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error removing book: $e');
+    }
+  }
+
+  void _showConfirmationDialog(Book book) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Edit User Name",
+            style: TextStyle(color: Colors.blue), // Set title text color
+          ),
+          content: Text("Are you sure want to remove the book from your list?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "No",
+                style: TextStyle(color: Colors.red), // Set cancel text color
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                removeBook(book);
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.green), // Set save text color
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
+        );
+      },
+    );
+  }
+
 }
 
 class Book {
   final String author;
   final String imageLink;
+  final String documentId; // Add this property
 
   Book({
     required this.author,
     required this.imageLink,
+    required this.documentId,
   });
 
-  factory Book.fromMap(Map<String, dynamic> map) {
+  factory Book.fromMap(String documentId, Map<String, dynamic>? map) {
+    if (map == null) {
+      // Handle the case when map is null
+      return Book(
+        author: 'No Author',
+        imageLink: 'No Image',
+        documentId: documentId,
+      );
+    }
     return Book(
       author: map['author'] ?? 'No Author',
       imageLink: map['image'] ?? 'No Image',
+      documentId: documentId,
     );
   }
 }
