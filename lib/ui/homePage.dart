@@ -29,11 +29,9 @@ class _HomePageState extends State<HomePage> {
       if (user != null) {
         String uid = user.uid;
 
-        // Get the current strikes count from Firestore
         DocumentSnapshot<Map<String, dynamic>> userDoc =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-        // Check if 'strikes' field exists, otherwise set it to 0
         strikesCount = userDoc.data()?.containsKey('strikes') ?? false
             ? userDoc.get('strikes')
             : 0;
