@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   final String apiUrl =
       "https://book-finder1.p.rapidapi.com/api/search?page=2";
 
-  void saveMyBook( String author,String image,) async {
+  void saveMyBook(String author, String image) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -29,19 +30,30 @@ class _HomePageState extends State<HomePage> {
         String uid = user.uid;
 
         // Reference to the 'myBooks' collection with the UID as the document ID
-        CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
-        // Sample book data (customize based on your requirements)
-        Map<String, dynamic> bookData = {
-          'image': image,
-          'author': author,
-          // Add other book details as needed
-        };
+        // Check if the book with the same author and image already exists
+        QuerySnapshot existingBooks = await myBooksRef
+            .where('author', isEqualTo: author)
+            .where('image', isEqualTo: image)
+            .get();
 
-        // Add the book data to the 'myBooks' collection
-        await myBooksRef.add(bookData);
+        if (existingBooks.docs.isEmpty) {
+          // Book does not exist, add it to the collection
+          Map<String, dynamic> bookData = {
+            'image': image,
+            'author': author,
+            // Add other book details as needed
+          };
 
-        print('Book saved successfully!');
+          // Add the book data to the 'myBooks' collection
+          await myBooksRef.add(bookData);
+
+          Fluttertoast.showToast(msg: "Book saved successfully!");
+        } else {
+          Fluttertoast.showToast(msg: "Book already exists!");
+        }
       } else {
         print('No user is currently signed in.');
       }
@@ -49,6 +61,7 @@ class _HomePageState extends State<HomePage> {
       print('Error saving book: $e');
     }
   }
+
   List<Book> books = [];
   String email = ' ';
   String userName = ' ';
@@ -410,7 +423,7 @@ userName  = preferences.getString("userName")!;
             "Edit User Name",
             style: TextStyle(color: Colors.blue), // Set title text color
           ),
-          content: Text("Are you sure want to change your password?"),
+          content: Text("Are you sure want to add this book in your list?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {

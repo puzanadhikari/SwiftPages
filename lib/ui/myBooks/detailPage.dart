@@ -25,6 +25,74 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   TextEditingController _textFieldController = TextEditingController();
   int selectedPageNumber = 1;
   int totalPages = 150;
+
+  void removeBook(Book book) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to remove the book
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Remove the book document from Firestore using its document ID
+        await myBooksRef.doc(book.documentId).delete();
+
+        // Remove the book from the state
+        setState(() {
+          // books.remove(book);
+        });
+
+        print('Book removed successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error removing book: $e');
+    }
+  }
+
+  void _showConfirmationDialog(Book book) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Edit User Name",
+            style: TextStyle(color: Colors.blue), // Set title text color
+          ),
+          content: Text("Are you sure want to remove the book from your list?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "No",
+                style: TextStyle(color: Colors.red), // Set cancel text color
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                removeBook(book);
+                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.green), // Set save text color
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
+        );
+      },
+    );
+  }
   double calculatePercentage() {
     if (widget.book==null) {
       return 0.0; // Avoid division by zero
@@ -110,13 +178,13 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
               ),
             ),
             Positioned(
-              top: 10,
-              right: 10,
+              top: 20,
+              right: 50,
               child: GestureDetector(
                 onTap: () {},
                 child: SvgPicture.asset(
                   'assets/logoutIcon.svg',
-                  height: 30,
+                  height: 20,
                 ),
               ),
             ),
@@ -180,7 +248,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                       ),
                     ),
                     Positioned(
-                      top: 100,
+                      top: 105,
                       right: 20,
                       child: Column(
                         children: [
@@ -188,7 +256,6 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                             children: [
                               CircularProgressIndicator(
                                 value: calculatePercentage()/100,
-
                                 strokeWidth: 5.0,
                                 // Adjust the stroke width as needed
                                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -203,7 +270,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                                   style: TextStyle(
                                       color: Color(0xFF283E50),
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12),
+                                      fontSize: 11),
                                 ),
                               ),
                             ],
@@ -269,33 +336,44 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey[200],
+                  // color: Colors.grey[200],
                 ),
-                child: DropdownButton<int>(
-                  value: selectedPageNumber,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 36,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
-                  ),
-                  items: List.generate(1000, (index) => index + 1)
-                      .map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(value.toString()),
-                    );
-                  }).toList(),
-                  onChanged: (int? newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        selectedPageNumber = newValue;
-                        updatePageNumber(widget.book!, selectedPageNumber);
-                      });
-                    }
-                  },
+                child: Row(
+                  children: [
+                    DropdownButton<int>(
+                      value: selectedPageNumber,
+                      icon: Icon(Icons.arrow_drop_down),
+                      iconSize: 36,
+                      elevation: 16,
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.blue,
+                      ),
+                      items: List.generate(1000, (index) => index + 1)
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (int? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedPageNumber = newValue;
+                            updatePageNumber(widget.book!, selectedPageNumber);
+                          });
+                        }
+                      },
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _showConfirmationDialog(widget.book!);
+
+                      },
+                      child: Icon(Icons.delete)
+                    ),
+                  ],
                 ),
               ),
             ),
