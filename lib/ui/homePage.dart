@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -17,6 +19,36 @@ class _HomePageState extends State<HomePage> {
   final String apiUrl =
       "https://book-finder1.p.rapidapi.com/api/search?page=2";
 
+  void saveMyBook( String author,String image,) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to associate books with the user
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Sample book data (customize based on your requirements)
+        Map<String, dynamic> bookData = {
+          'image': image,
+          'author': author,
+          // Add other book details as needed
+        };
+
+        // Add the book data to the 'myBooks' collection
+        await myBooksRef.add(bookData);
+
+        print('Book saved successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error saving book: $e');
+    }
+  }
   List<Book> books = [];
   String email = ' ';
   String userName = ' ';
@@ -208,148 +240,153 @@ userName  = preferences.getString("userName")!;
                       scrollDirection: Axis.horizontal,
                       itemCount: books.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          width: 280,
-                          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Positioned(
-                                top: 0,
-                                left: 30,
-                                child: Container(
-                                  height: 250,
-                                  width: 250,
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFD9D9D9),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 8),
-                                      Container(
-                                        height:
-                                        150, // Set a fixed height for description
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets.only(top: 10.0),
-                                              child: Text(
-                                                "Currently Reading",
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  color: Color(0xFF283E50),
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 24
-                                                ),
-                                              ),
-                                            ),
-                                            SingleChildScrollView(
-                                              child: Padding(
+                        return GestureDetector(
+                          onTap: (){
+                            _showConfirmationDialog(books[index].author,books[index].imageLink);
+                          },
+                          child: Container(
+                            width: 280,
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                Positioned(
+                                  top: 0,
+                                  left: 30,
+                                  child: Container(
+                                    height: 250,
+                                    width: 250,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          height:
+                                          150, // Set a fixed height for description
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
                                                 padding:
-                                                const EdgeInsets.only(top: 5.0),
+                                                const EdgeInsets.only(top: 10.0),
                                                 child: Text(
-                                                  books[index].author,
+                                                  "Currently Reading",
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
-                                                    color: Color(0xFF686868),
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500
+                                                    color: Color(0xFF283E50),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 24
                                                   ),
                                                 ),
                                               ),
-                                            ),
+                                              SingleChildScrollView(
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(top: 5.0),
+                                                  child: Text(
+                                                    books[index].author,
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF686868),
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w500
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
 
-                                          ],
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 100,
+                                  right:20,
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                        children:[
+                                          CircularProgressIndicator(
+                                            value: 0.9,
+
+                                            strokeWidth: 5.0, // Adjust the stroke width as needed
+                                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF283E50),), // Adjust the color as needed
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            left: 5,
+                                            child: Text(
+                                              "90%",
+                                              style: TextStyle(
+                                                color: Color(0xFF283E50),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+
+                                      ),
+                                      Text(
+                                        "Progress",
+                                        style: TextStyle(
+                                            color: Color(0xFF686868),
+                                            fontSize: 14
+                                        ),
+                                      ),
+                                      SizedBox(height: 20,),
+
+                                      Image.asset(
+                                        "assets/notes.png",
+                                        height: 50,
+                                      ),
+                                      Text(
+                                        "Notes",
+                                        style: TextStyle(
+                                            color: Color(0xFF686868),
+                                            fontSize: 14
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 100,
-                                right:20,
-                                child: Column(
-                                  children: [
-                                    Stack(
-                                      children:[
-                                        CircularProgressIndicator(
-                                          value: 0.9,
-
-                                          strokeWidth: 5.0, // Adjust the stroke width as needed
-                                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF283E50),), // Adjust the color as needed
-                                        ),
-                                        Positioned(
-                                          top: 10,
-                                          left: 5,
-                                          child: Text(
-                                            "90%",
-                                            style: TextStyle(
-                                              color: Color(0xFF283E50),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14
+                                Padding(
+                                  padding: const EdgeInsets.only(top:100.0,right:80),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.network(
+                                      books[index].imageLink,
+                                      height: 200,
+                                      width: 200,
+                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          // Image is fully loaded, display the actual image
+                                          return child;
+                                        } else {
+                                          // Image is still loading, display a placeholder or loading indicator
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress.expectedTotalBytes != null
+                                                  ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                                  : null,
                                             ),
-                                          ),
-                                        ),
-                                      ],
-
+                                          );
+                                        }
+                                      },
                                     ),
-                                    Text(
-                                      "Progress",
-                                      style: TextStyle(
-                                          color: Color(0xFF686868),
-                                          fontSize: 14
-                                      ),
-                                    ),
-                                    SizedBox(height: 20,),
-
-                                    Image.asset(
-                                      "assets/notes.png",
-                                      height: 50,
-                                    ),
-                                    Text(
-                                      "Notes",
-                                      style: TextStyle(
-                                          color: Color(0xFF686868),
-                                          fontSize: 14
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top:100.0,right:80),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.network(
-                                    books[index].imageLink,
-                                    height: 200,
-                                    width: 200,
-                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        // Image is fully loaded, display the actual image
-                                        return child;
-                                      } else {
-                                        // Image is still loading, display a placeholder or loading indicator
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                                : null,
-                                          ),
-                                        );
-                                      }
-                                    },
                                   ),
                                 ),
-                              ),
 
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -362,6 +399,42 @@ userName  = preferences.getString("userName")!;
         ),
 
       ),
+    );
+  }
+  void _showConfirmationDialog(String author,String image) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Edit User Name",
+            style: TextStyle(color: Colors.blue), // Set title text color
+          ),
+          content: Text("Are you sure want to change your password?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "No",
+                style: TextStyle(color: Colors.red), // Set cancel text color
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                    saveMyBook( author,image);
+                  Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.green), // Set save text color
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
+        );
+      },
     );
   }
 }

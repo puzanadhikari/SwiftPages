@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,9 @@ class FirebaseAuthService {
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,
           fontSize: 16.0);
+      addUserData(email,username,password,avatars);
       sendVerificationEmail(context);
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
 
@@ -68,6 +71,49 @@ class FirebaseAuthService {
       return null;
     }
   }
+  void addUserData(String email,String username,String password,String avatar) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID as the document ID
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> userData = {
+          "email":email,
+              "username":username,
+              "password":password,
+              "avatar":avatar,
+          // Add other user details as needed
+        };
+
+        // Reference to the 'users' collection with the UID as the document ID
+        DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
+
+        // Store the user data in Firestore
+        await userRef.set(userData);
+
+        print('User data stored successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error storing user data: $e');
+    }
+  }
+  // Future addUserDetail(String email,String username,String password,String avatar)async{
+  // var firebaseUser = await FirebaseAuth.instance.currentUser;
+  //
+  //    FirebaseFirestore.instance.collection('users').add({
+  //     "email":email,
+  //     "username":username,
+  //     "password":password,
+  //     "avatar":avatar,
+  //      "uid":firebaseUser?.uid,
+  //   });
+  // }
 
   Future<User?> signInWithEmailAndPassword(
       BuildContext context, String email, String password) async {
