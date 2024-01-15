@@ -134,25 +134,59 @@ class _TimerState extends State<Timer> {
       if (user != null) {
         String uid = user.uid;
 
-        // Get the current strikes count from Firestore
+        // Get the current user document from Firestore
         DocumentSnapshot<Map<String, dynamic>> userDoc =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-        // Check if 'strikes' field exists, otherwise set it to 0
-        int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
-            ? userDoc.get('strikes')
-            : 0;
+        // Check if 'lastStrikeTimestamp' field exists
+        if (userDoc.data()?.containsKey('lastStrikeTimestamp') ?? false) {
+          // Get the 'lastStrikeTimestamp' field
+          DateTime lastStrikeTimestamp =
+          (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
 
-        // Update the strikes count in Firestore
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(uid)
-            .update({'strikes': currentStrikes + 1});
+          // Check if 24 hours have passed since the last strike
+          if (DateTime.now().difference(lastStrikeTimestamp).inHours >= 24) {
+            // Update 'lastStrikeTimestamp' to the current time
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .update({'lastStrikeTimestamp': FieldValue.serverTimestamp()});
+
+            // Increment the strikes count
+            int currentStrikes =
+            userDoc.data()?.containsKey('strikes') ?? false
+                ? userDoc.get('strikes')
+                : 0;
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .update({'strikes': currentStrikes + 1});
+          } else {
+            print('Cannot add a new strike within 24 hours.');
+          }
+        } else {
+          // If 'lastStrikeTimestamp' field does not exist, initialize it
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .update({'lastStrikeTimestamp': FieldValue.serverTimestamp()});
+
+          // Increment the strikes count
+          int currentStrikes =
+          userDoc.data()?.containsKey('strikes') ?? false
+              ? userDoc.get('strikes')
+              : 0;
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .update({'strikes': currentStrikes + 1});
+        }
       }
     } catch (e) {
       print('Error updating strike in Firestore: $e');
     }
   }
+
 
   void _handleTimerButtonPressed() {
     setState(() {
