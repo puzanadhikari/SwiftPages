@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import 'myBooks/detailPage.dart';
+
 class MyBooks extends StatefulWidget {
   const MyBooks({Key? key}) : super(key: key);
 
@@ -16,6 +18,8 @@ class MyBooks extends StatefulWidget {
 }
 
 class _MyBooksState extends State<MyBooks> {
+
+  List<Book> books = [];
   final String apiKey =
       "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0"; // Replace with your actual API key
   void fetchBooks() async {
@@ -54,7 +58,10 @@ class _MyBooksState extends State<MyBooks> {
       print('Error fetching books: $e');
     }
   }
-  List<Book> books = [];
+
+  static const int maxPagesPerBook = 100;
+
+
   // Future<void> fetchBooks() async {
   //   final String apiUrl =
   //       "https://www.googleapis.com/books/v1/volumes?q=novels&maxResults=40";
@@ -86,6 +93,7 @@ class _MyBooksState extends State<MyBooks> {
   void initState() {
     super.initState();
     fetchBooks();
+    // log('Percentage of Books Read: ${calculatePercentage()}%');
   }
   bool _mounted = true;
   @override
@@ -153,7 +161,8 @@ class _MyBooksState extends State<MyBooks> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: (){
-                            _showConfirmationDialog(books[index]);
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: books[index],)));
+
                           },
                           child: Container(
                             width: 250,
@@ -305,17 +314,18 @@ class _MyBooksState extends State<MyBooks> {
 class Book {
   final String author;
   final String imageLink;
-  final String documentId; // Add this property
+  final String documentId;
+  int currentPage; // Add this field
 
   Book({
     required this.author,
     required this.imageLink,
     required this.documentId,
+    this.currentPage = 0, // Set the default value to 0
   });
 
   factory Book.fromMap(String documentId, Map<String, dynamic>? map) {
     if (map == null) {
-      // Handle the case when map is null
       return Book(
         author: 'No Author',
         imageLink: 'No Image',
@@ -326,7 +336,9 @@ class Book {
       author: map['author'] ?? 'No Author',
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,
+      currentPage: map['currentPage'] ?? 0, // Set the currentPage value
     );
   }
 }
+
 
