@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/loginPage.dart';
 import 'package:swiftpages/ui/homePage.dart';
 import 'package:swiftpages/ui/mainPage.dart';
+import 'package:swiftpages/ui/spashScreen.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -125,7 +126,12 @@ class FirebaseAuthService {
       preferences.setString("email", credential.user?.email ?? "");
       preferences.setString("userName", credential.user?.displayName ?? "");
       preferences.setString("profilePicture", credential.user?.photoURL ?? "");
-
+      if (credential.user != null) {
+        String uid = credential.user!.uid;
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'lastLoginTimestamp': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      }
       // Check if the user's email is verified
       if (credential.user != null && credential.user!.emailVerified) {
         Fluttertoast.showToast(

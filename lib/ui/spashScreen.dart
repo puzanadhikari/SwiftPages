@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swiftpages/signUpPage.dart';
 
@@ -13,9 +16,56 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
 
+  Future<void> checkLoginTime() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String uid = user.uid;
+
+      try {
+        DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+        if (snapshot.exists) {
+          // Cast snapshot.data() to a Map<String, dynamic>
+          Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+          // Check if the document contains the 'lastLoginTimestamp' field
+          if (data.containsKey('lastLoginTimestamp')) {
+            // Extract the timestamp from the document
+            Timestamp timestamp = data['lastLoginTimestamp'];
+
+            // Convert the timestamp to a DateTime object
+            DateTime lastLoginTime = timestamp.toDate();
+            DateTime currentTime = DateTime.now();
+
+            // Calculate the time difference
+            Duration difference = currentTime.difference(lastLoginTime);
+
+            // Log 'yes' if within 5 minutes, otherwise log 'no'
+            if (difference.inMinutes <= 5) {
+              log('yes');
+            } else {
+              log('no');
+            }
+          } else {
+            print('The document does not contain the lastLoginTimestamp field.');
+          }
+        } else {
+          print('User document not found.');
+        }
+      } catch (e) {
+        print('Error fetching user document: $e');
+      }
+    }
+  }
+
+
+
   @override
   void initState() {
     super.initState();
+    // checkLoginTime();
     // Call the _navigateToNextScreen function after 1 second
     Timer(
       Duration(seconds: 1),
