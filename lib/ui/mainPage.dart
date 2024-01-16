@@ -76,7 +76,6 @@ class _MainPageState extends State<MainPage> {
             items: [
               FloatingNavbarItem(icon: Icons.home, title: ''),
               FloatingNavbarItem(icon: Icons.book, title: ''),
-              FloatingNavbarItem(icon: Icons.explore, title: ''),
               FloatingNavbarItem(icon: Icons.person, title: ''),
             ],
           ),
