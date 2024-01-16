@@ -175,7 +175,7 @@ userName  = preferences.getString("userName")!;
               right: 10,
               child: GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer()));
+                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer()));
                 },
                 child: Image.asset(
                   "assets/search.png",

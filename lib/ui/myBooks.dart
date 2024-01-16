@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:swiftpages/ui/timerPage/ui.dart';
 
 import 'myBooks/detailPage.dart';
 
@@ -19,7 +20,7 @@ class MyBooks extends StatefulWidget {
 
 class _MyBooksState extends State<MyBooks> {
 
-  List<Book> books = [];
+  List<DetailBook> books = [];
   final String apiKey =
       "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0"; // Replace with your actual API key
   void fetchBooks() async {
@@ -41,7 +42,7 @@ class _MyBooksState extends State<MyBooks> {
         List<DocumentSnapshot> bookDocuments = querySnapshot.docs;
         setState(() {
           books = bookDocuments
-              .map((doc) => Book.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
+              .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();  print('Books: $books'); // Check the console for the list of books
         });
         // Process each book document
@@ -173,7 +174,7 @@ class _MyBooksState extends State<MyBooks> {
                                 Positioned(
                                   top: 180,
                                   child: Container(
-                                    height: 300,
+                                    // height: 300,
                                     width: 250,
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
@@ -200,7 +201,7 @@ class _MyBooksState extends State<MyBooks> {
                                         ),
                                         SizedBox(height: 8),
                                         Container(
-                                          height: 200,
+                                          height: 70,
                                           child: SingleChildScrollView(
                                             child: Padding(
                                               padding: const EdgeInsets.only(top: 10.0),
@@ -210,6 +211,21 @@ class _MyBooksState extends State<MyBooks> {
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                 ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer(book: books[index],)));
+                                          },
+                                          child: Text("Read"),
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                            minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(15.0),
                                               ),
                                             ),
                                           ),
@@ -242,7 +258,7 @@ class _MyBooksState extends State<MyBooks> {
       ),
     );
   }
-  void removeBook(Book book) async {
+  void removeBook(DetailBook book) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -272,7 +288,7 @@ class _MyBooksState extends State<MyBooks> {
     }
   }
 
-  void _showConfirmationDialog(Book book) {
+  void _showConfirmationDialog(DetailBook book) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -310,14 +326,14 @@ class _MyBooksState extends State<MyBooks> {
   }
 
 }
-class Book {
+class DetailBook {
   final String author;
   final String imageLink;
   final String documentId;
   int currentPage; // Add this field
   List<String> notes; // Add this field
 
-  Book({
+  DetailBook({
     required this.author,
     required this.imageLink,
     required this.documentId,
@@ -325,15 +341,15 @@ class Book {
     this.notes = const [], // Initialize notes as an empty list
   });
 
-  factory Book.fromMap(String documentId, Map<String, dynamic>? map) {
+  factory DetailBook.fromMap(String documentId, Map<String, dynamic>? map) {
     if (map == null) {
-      return Book(
+      return DetailBook(
         author: 'No Author',
         imageLink: 'No Image',
         documentId: documentId,
       );
     }
-    return Book(
+    return DetailBook(
       author: map['author'] ?? 'No Author',
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,

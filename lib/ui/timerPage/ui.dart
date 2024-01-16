@@ -3,8 +3,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../myBooks.dart';
+class Music {
+  final String title;
+  final String artist;
+
+  Music({required this.title, required this.artist});
+}
+
 class Timer extends StatefulWidget {
-  const Timer({Key? key}) : super(key: key);
+  DetailBook book;
+
+   Timer({Key? key,required this.book}) : super(key: key);
 
   @override
   State<Timer> createState() => _TimerState();
@@ -14,11 +24,30 @@ class _TimerState extends State<Timer> {
   final int _duration = 10;
   final CountDownController _controller = CountDownController();
   late bool _isRunning;
+  int totalPages = 150;
+  double calculatePercentage() {
+    if (widget.book==null) {
+      return 0.0;
+    }
+
+    return ( widget.book.currentPage/totalPages ) * 100;
+  }
+
+
+  List<Music> musicList = [
+    Music(title: 'Song 1', artist: 'Artist 1'),
+    Music(title: 'Song 2', artist: 'Artist 2'),
+    Music(title: 'Song 3', artist: 'Artist 3'),
+    // Add more music items as needed
+  ];
 
   @override
   void initState() {
     super.initState();
     _isRunning = false;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _showPersistentMusicBottomSheet(context);
+    });
   }
 
   @override
@@ -56,7 +85,7 @@ class _TimerState extends State<Timer> {
               top: 20,
               left: MediaQuery.of(context).size.width / 3,
               child: Text(
-                "My Books",
+                "Reading",
                 style: const TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 22,
@@ -66,65 +95,301 @@ class _TimerState extends State<Timer> {
                 ),
               ),
             ),
-            Center(
-              child: Column(
-                children: [
-                  CircularCountDownTimer(
-                    duration: _duration,
-                    controller: _controller,
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.height / 2,
-                    ringColor: Colors.grey[300]!,
-                    fillColor: Colors.purpleAccent[100]!,
-                    backgroundColor: Colors.purple[500],
-                    strokeWidth: 20.0,
-                    strokeCap: StrokeCap.round,
-                    textStyle: const TextStyle(
-                      fontSize: 33.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    isReverse: false,
-                    isReverseAnimation: false,
-                    isTimerTextShown: true,
-                    autoStart: false,
-                    onStart: () {
-                      debugPrint('Countdown Started');
-                    },
-                    onComplete: () {
-                      debugPrint('Countdown Ended');
-                      setState(() {
-                        _isRunning = false;
-                      });
-                      updateStrikeInFirestore();
-                      // Reset the timer when completed
-                      _controller.restart(duration: _duration);
-                    },
-                    onChange: (String timeStamp) {
-                      debugPrint('Countdown Changed $timeStamp');
-                    },
-                    timeFormatterFunction: (defaultFormatterFunction, duration) {
-                      if (duration.inSeconds == 0) {
-                        return "Start";
-                      } else {
-                        return Function.apply(defaultFormatterFunction, [duration]);
-                      }
-                    },
-                  ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 100.0),
+                child: Container(
+                  width: 200,
+                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: 30,
+                        child: Container(
+                          height: 250,
+                          width: 250,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD9D9D9),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8),
+                              Container(
+                                height: 150, // Set a fixed height for description
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: Text(
+                                        "Currently Reading",
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: Color(0xFF283E50),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    ),
+                                    SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: Text(
+                                          widget.book.author,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: Color(0xFF686868),
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 105,
+                        right:10,
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                CircularProgressIndicator(
+                                  value: calculatePercentage()/100,
+                                  strokeWidth: 5.0,
+                                  backgroundColor: Colors.black12,
+                                  // Adjust the stroke width as needed
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xFF283E50),
 
-                  ElevatedButton(
-                    onPressed: _handleTimerButtonPressed,
-                    child: Text(_isRunning ? 'Pause' : 'Start'),
+                                  ), // Adjust the color as needed
+                                ),
+                                Positioned(
+                                  top: 10,
+                                  left: 5,
+                                  child: Text(
+                                    "${calculatePercentage().toStringAsFixed(1)}%",
+                                    style: TextStyle(
+                                        color: Color(0xFF283E50),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Progress",
+                              style: TextStyle(
+                                  color: Color(0xFF686868), fontSize: 14),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+
+
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 100.0, right: 80),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                            widget.book!.imageLink,
+                            height: 200,
+                            width: 200,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                // Image is fully loaded, display the actual image
+                                return child;
+                              } else {
+                                // Image is still loading, display a placeholder or loading indicator
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                        (loadingProgress.expectedTotalBytes ??
+                                            1)
+                                        : null,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top:10.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: CircularCountDownTimer(
+                        duration: _duration,
+                        controller: _controller,
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: MediaQuery.of(context).size.height / 3,
+                        ringColor: Colors.grey[300]!,
+                        fillColor: Color(0xFF283E50)!,
+                        backgroundColor: Color(0xFFFEEAD4),
+                        strokeWidth: 15.0,
+                        strokeCap: StrokeCap.round,
+                        textStyle: const TextStyle(
+                          fontSize: 33.0,
+                          color: Color(0xFF283E50),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        isReverse: false,
+                        isReverseAnimation: false,
+                        isTimerTextShown: true,
+                        autoStart: false,
+                        onStart: () {
+                          debugPrint('Countdown Started');
+                        },
+                        onComplete: () {
+                          debugPrint('Countdown Ended');
+                          setState(() {
+                            _isRunning = false;
+                          });
+                          updateStrikeInFirestore();
+                          // Reset the timer when completed
+                          _controller.restart(duration: _duration);
+                        },
+                        onChange: (String timeStamp) {
+                          debugPrint('Countdown Changed $timeStamp');
+                        },
+                        timeFormatterFunction: (defaultFormatterFunction, duration) {
+                          if (duration.inSeconds == 0) {
+                            return "Start";
+                          } else {
+                            return Function.apply(defaultFormatterFunction, [duration]);
+                          }
+                        },
+                      ),
+                    ),
+
+                    ElevatedButton(
+                      onPressed: _handleTimerButtonPressed,
+                      child: Text(_isRunning ? 'Pause' : 'Start'),
+                      style: ElevatedButton.styleFrom(
+                        primary:  Color(0xFF283E50),// Background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
+                        ),
+                      ),
+
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
           ],
         ),
+
         extendBody: true,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+                _showPersistentMusicBottomSheet(context);
+          },
+          child: Icon(Icons.music_note),
+          backgroundColor: Color(0xFF283E50), // Set your desired FAB background color
+        ),
+
       ),
+
     );
   }
+  void _showPersistentMusicBottomSheet(BuildContext context) {
+    double sheetTopPosition = 0.3; // Initial position (30% from the top)
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onVerticalDragUpdate: (details) {
+            // Update the sheet position based on the drag gestures
+            double delta = details.primaryDelta! / MediaQuery.of(context).size.height;
+            sheetTopPosition = (sheetTopPosition - delta).clamp(0.1, 0.8);
+          },
+          child: DraggableScrollableSheet(
+
+            initialChildSize: sheetTopPosition,
+            minChildSize: 0.1,
+            maxChildSize: 0.8,
+            expand: false,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Image.asset('assets/logo.png', height: 50),
+                      title: Text('Now Playing'),
+                      trailing: IconButton(
+                        icon: Icon(Icons.play_arrow),
+                        onPressed: () {
+                          // Handle play button action
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: musicList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(musicList[index].title),
+                            subtitle: Text(musicList[index].artist),
+                            onTap: () {
+                              // Handle music item click
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+
+
+
   Future<void> updateStrikeInFirestore() async {
     try {
       // Get the current user
