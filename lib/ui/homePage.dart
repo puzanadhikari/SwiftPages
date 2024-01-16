@@ -102,11 +102,14 @@ class _HomePageState extends State<HomePage> {
 
       if (data.containsKey("results")) {
         final List<dynamic> results = data["results"];
+
+        // Fetch only the first 5 books
+        List<dynamic> firstFiveBooks = results.take(5).toList();
+
         setState(() {
-          books = results.map((result) => Book.fromMap(result)).toList();
+          books = firstFiveBooks.map((result) => Book.fromMap(result)).toList();
         });
       } else {
-
         print("Error: 'results' key not found in the response");
       }
     } else {
@@ -114,6 +117,7 @@ class _HomePageState extends State<HomePage> {
       print("Error: ${response.statusCode}");
     }
   }
+
   Future<void> fetchUserInfo() async {
 SharedPreferences preferences = await SharedPreferences.getInstance();
 email  = preferences.getString("email")!;
@@ -257,18 +261,15 @@ userName  = preferences.getString("userName")!;
                       height: 29 / 22,
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Image.asset(
-                      "assets/strick.png",
-                      height: 50,
-                    ),
+                  Image.asset(
+                    "assets/strick.png",
+                    height: 50,
                   ),
-                  Text("${strikesCount}",style: TextStyle(
+                  Text("${strikesCount}", style: TextStyle(
                     fontSize: 14,
                     color: Color(0xfffeead4),
-                  ),)
+                  )),
+                  // ... other widgets
                 ],
               ),
             ),
@@ -282,153 +283,83 @@ userName  = preferences.getString("userName")!;
                       scrollDirection: Axis.horizontal,
                       itemCount: books.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: (){
-                            _showConfirmationDialog(books[index].author,books[index].imageLink);
-                          },
-                          child: Container(
-                            width: 280,
-                            margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Stack(
-                              alignment: Alignment.topCenter,
-                              children: [
-                                Positioned(
-                                  top: 0,
-                                  left: 30,
-                                  child: Container(
-                                    height: 250,
-                                    width: 250,
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 8),
-                                        Container(
-                                          height:
-                                          150, // Set a fixed height for description
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.only(top: 10.0),
-                                                child: Text(
-                                                  "Currently Reading",
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF283E50),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 24
-                                                  ),
-                                                ),
-                                              ),
-                                              SingleChildScrollView(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsets.only(top: 5.0),
-                                                  child: Text(
-                                                    books[index].author,
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      color: Color(0xFF686868),
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w500
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                        return Container(
+                          width: 250,
+                          margin: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Positioned(
+                                top: 120,
+                                child: Container(
+                                  height: 150,
+                                  width: 250,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFD9D9D9),
+                                    borderRadius: BorderRadius.circular(20.0),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 100,
-                                  right:20,
                                   child: Column(
                                     children: [
-                                      Stack(
-                                        children:[
-                                          CircularProgressIndicator(
-                                            value: 0.9,
+                                      SizedBox(
+                                        height: 30,
+                                      ),
 
-                                            strokeWidth: 5.0, // Adjust the stroke width as needed
-                                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF283E50),), // Adjust the color as needed
-                                          ),
-                                          Positioned(
-                                            top: 10,
-                                            left: 5,
-                                            child: Text(
-                                              "90%",
-                                              style: TextStyle(
-                                                color: Color(0xFF283E50),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14
-                                              ),
+                                      SizedBox(height: 8),
+                                      Container(
+                                        // height:
+                                        // 100,
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding:
+                                            const EdgeInsets.only(top: 10.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  books[index].author,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10,),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    _showConfirmationDialog(books[index].author, books[index].imageLink);
+                                                  },
+                                                  child: Text("Read"),
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                    minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+                                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(15.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+
+
+                                              ],
                                             ),
                                           ),
-                                        ],
-
-                                      ),
-                                      Text(
-                                        "Progress",
-                                        style: TextStyle(
-                                            color: Color(0xFF686868),
-                                            fontSize: 14
-                                        ),
-                                      ),
-                                      SizedBox(height: 20,),
-
-                                      Image.asset(
-                                        "assets/notes.png",
-                                        height: 50,
-                                      ),
-                                      Text(
-                                        "Notes",
-                                        style: TextStyle(
-                                            color: Color(0xFF686868),
-                                            fontSize: 14
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top:100.0,right:80),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.network(
-                                      books[index].imageLink,
-                                      height: 200,
-                                      width: 200,
-                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          // Image is fully loaded, display the actual image
-                                          return child;
-                                        } else {
-                                          // Image is still loading, display a placeholder or loading indicator
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                              value: loadingProgress.expectedTotalBytes != null
-                                                  ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                                  : null,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.network(
+                                  books[index].imageLink,
+                                  height: 150,
+                                  width: 150,
                                 ),
+                              ),
 
-                              ],
-                            ),
+                            ],
                           ),
                         );
                       },
@@ -437,6 +368,7 @@ userName  = preferences.getString("userName")!;
                 ],
               ),
             ),
+
           ],
         ),
 
