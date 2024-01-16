@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swiftpages/ui/timerPage/ui.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,7 +19,30 @@ class _HomePageState extends State<HomePage> {
       "30fe2ae32emsh0b5a48e1d0ed53dp17a064jsn7a2f3e3aca01";
   final String apiUrl =
       "https://book-finder1.p.rapidapi.com/api/search?page=2";
+  int strikesCount = 0;
 
+  Future<void> fetchStrikes() async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        DocumentSnapshot<Map<String, dynamic>> userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+        strikesCount = userDoc.data()?.containsKey('strikes') ?? false
+            ? userDoc.get('strikes')
+            : 0;
+
+        // Update the UI with the new strikes count
+        setState(() {});
+      }
+    } catch (e) {
+      print('Error fetching strikes: $e');
+    }
+  }
   void saveMyBook(String author, String image) async {
     try {
       // Get the current authenticated user
@@ -102,6 +125,7 @@ userName  = preferences.getString("userName")!;
     super.initState();
     fetchBooks();
     fetchUserInfo();
+    fetchStrikes();
   }
 
   @override
@@ -143,9 +167,14 @@ userName  = preferences.getString("userName")!;
             Positioned(
               top: 10,
               right: 10,
-              child: Image.asset(
-                "assets/search.png",
-                height: 50,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer()));
+                },
+                child: Image.asset(
+                  "assets/search.png",
+                  height: 50,
+                ),
               ),
             ),
             Positioned(
@@ -236,7 +265,7 @@ userName  = preferences.getString("userName")!;
                       height: 50,
                     ),
                   ),
-                  Text("9",style: TextStyle(
+                  Text("${strikesCount}",style: TextStyle(
                     fontSize: 14,
                     color: Color(0xfffeead4),
                   ),)
