@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 
+import 'books/allBooks.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -269,14 +271,14 @@ userName  = preferences.getString("userName")!;
                     fontSize: 14,
                     color: Color(0xfffeead4),
                   )),
-                  // ... other widgets
+
                 ],
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 260.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: ListView.builder(
@@ -304,15 +306,11 @@ userName  = preferences.getString("userName")!;
                                       SizedBox(
                                         height: 30,
                                       ),
-
                                       SizedBox(height: 8),
                                       Container(
-                                        // height:
-                                        // 100,
                                         child: SingleChildScrollView(
                                           child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 10.0),
+                                            padding: const EdgeInsets.only(top: 10.0),
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
@@ -323,7 +321,7 @@ userName  = preferences.getString("userName")!;
                                                     color: Colors.black,
                                                   ),
                                                 ),
-                                                SizedBox(height: 10,),
+                                                SizedBox(height: 10),
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     _showConfirmationDialog(books[index].author, books[index].imageLink);
@@ -338,9 +336,7 @@ userName  = preferences.getString("userName")!;
                                                       ),
                                                     ),
                                                   ),
-                                                )
-
-
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -358,15 +354,34 @@ userName  = preferences.getString("userName")!;
                                   width: 150,
                                 ),
                               ),
-
                             ],
                           ),
                         );
                       },
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 150.0),
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                        },
+                        child: Text(
+                          "More books>>", // Add your additional text here
+                          style: TextStyle(
+                            color: Colors.black,
+                            decoration: TextDecoration.underline
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
-              ),
+              )
+
             ),
 
           ],
