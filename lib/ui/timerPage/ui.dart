@@ -16,11 +16,10 @@ class Music {
   Music({required this.title, required this.path});
 }
 
-
 class Timer extends StatefulWidget {
   DetailBook book;
 
-   Timer({Key? key,required this.book}) : super(key: key);
+  Timer({Key? key, required this.book}) : super(key: key);
 
   @override
   State<Timer> createState() => _TimerState();
@@ -30,17 +29,20 @@ class _TimerState extends State<Timer> {
   final int _duration = 10;
   final CountDownController _controller = CountDownController();
   late bool _isRunning;
+  late bool _isPlaying;
   int totalPages = 150;
   final AudioPlayer audioPlayer = AudioPlayer();
 
   double calculatePercentage() {
-    if (widget.book==null) {
+    if (widget.book == null) {
       return 0.0;
     }
 
-    return ( widget.book.currentPage/totalPages ) * 100;
+    return (widget.book.currentPage / totalPages) * 100;
   }
+
   Reference get firebaseStorage => FirebaseStorage.instance.ref();
+
   Future<void> loadMusic() async {
     List<Music> urls = []; // Update the type to List<Music>
 
@@ -49,8 +51,12 @@ class _TimerState extends State<Timer> {
 
       for (Reference ref in result.items) {
         final musicUrl = await ref.getDownloadURL();
-        String fileName = ref.name.split('.').first; // Extracting the file name without extension
-        urls.add(Music(title: fileName, path: musicUrl)); // Include the path in Music object
+        String fileName = ref.name
+            .split('.')
+            .first; // Extracting the file name without extension
+        urls.add(Music(
+            title: fileName,
+            path: musicUrl)); // Include the path in Music object
       }
     } catch (e) {
       log('Error fetching music URLs: $e');
@@ -61,20 +67,29 @@ class _TimerState extends State<Timer> {
       log(musicUrls[0].path.toString());
     });
   }
-  Future<void> playMusic(String path) async {
 
+  Future<void> playMusic(String path) async {
     if (path.isNotEmpty) {
       try {
-        log("play func"+path.toString());
+        log("play func" + path.toString());
         await audioPlayer.setUrl(path);
 
         await audioPlayer.play();
+        setState(() {
+          _isPlaying = true;
+        });
       } catch (e) {
         log('Error playing music: $e');
       }
     } else {
       log('Error: Empty file path.');
     }
+  }
+  Future<void> pauseMusic() async {
+    await audioPlayer.pause();
+    setState(() {
+      _isPlaying=false;
+    });
   }
 
   void handlePlaybackResult(int result) {
@@ -87,9 +102,7 @@ class _TimerState extends State<Timer> {
     }
   }
 
-
   List<Music> musicUrls = [
-
     // Add more music items as needed
   ];
 
@@ -98,16 +111,17 @@ class _TimerState extends State<Timer> {
     super.initState();
     loadMusic();
     _isRunning = false;
+    _isPlaying = false;
     // WidgetsBinding.instance!.addPostFrameCallback((_) {
     //   _showPersistentMusicBottomSheet(context);
     // });
   }
+
   @override
   void dispose() {
     audioPlayer.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +194,8 @@ class _TimerState extends State<Timer> {
                             children: [
                               const SizedBox(height: 8),
                               Container(
-                                height: 150, // Set a fixed height for description
+                                height: 150,
+                                // Set a fixed height for description
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -197,7 +212,8 @@ class _TimerState extends State<Timer> {
                                     ),
                                     SingleChildScrollView(
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 5.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
                                         child: Text(
                                           widget.book.author,
                                           textAlign: TextAlign.center,
@@ -217,19 +233,18 @@ class _TimerState extends State<Timer> {
                       ),
                       Positioned(
                         top: 105,
-                        right:10,
+                        right: 10,
                         child: Column(
                           children: [
                             Stack(
                               children: [
                                 CircularProgressIndicator(
-                                  value: calculatePercentage()/100,
+                                  value: calculatePercentage() / 100,
                                   strokeWidth: 5.0,
                                   backgroundColor: Colors.black12,
                                   // Adjust the stroke width as needed
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     Color(0xFF283E50),
-
                                   ), // Adjust the color as needed
                                 ),
                                 Positioned(
@@ -256,8 +271,6 @@ class _TimerState extends State<Timer> {
                             SizedBox(
                               height: 20,
                             ),
-
-
                           ],
                         ),
                       ),
@@ -279,10 +292,12 @@ class _TimerState extends State<Timer> {
                                 return Center(
                                   child: CircularProgressIndicator(
                                     value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                        ? loadingProgress.cumulativeBytesLoaded /
-                                        (loadingProgress.expectedTotalBytes ??
-                                            1)
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                    .expectedTotalBytes ??
+                                                1)
                                         : null,
                                   ),
                                 );
@@ -299,7 +314,7 @@ class _TimerState extends State<Timer> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top:10.0),
+                padding: const EdgeInsets.only(top: 10.0),
                 child: Column(
                   children: [
                     Padding(
@@ -338,64 +353,139 @@ class _TimerState extends State<Timer> {
                         onChange: (String timeStamp) {
                           debugPrint('Countdown Changed $timeStamp');
                         },
-                        timeFormatterFunction: (defaultFormatterFunction, duration) {
+                        timeFormatterFunction:
+                            (defaultFormatterFunction, duration) {
                           if (duration.inSeconds == 0) {
                             return "Start";
                           } else {
-                            return Function.apply(defaultFormatterFunction, [duration]);
+                            return Function.apply(
+                                defaultFormatterFunction, [duration]);
                           }
                         },
                       ),
                     ),
-
                     ElevatedButton(
                       onPressed: _handleTimerButtonPressed,
                       child: Text(_isRunning ? 'Pause' : 'Start'),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFF283E50),// Background color
+                        primary: Color(0xFF283E50), // Background color
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
+                          borderRadius: BorderRadius.circular(
+                              8), // Adjust the border radius as needed
                         ),
                       ),
-
                     ),
                   ],
                 ),
               ),
             ),
+            DraggableScrollableSheet(
+                initialChildSize: 0.3,
+                minChildSize: 0.3,
+                maxChildSize: 1,
+                snapSizes: [0.5, 1],
+                snap: true,
+                builder: (BuildContext context, scrollSheetController) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          // leading: Image.asset('assets/logo.png', height: 50),
+                          title: Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: Color(0xFF283E50),
+                                  endIndent: 18,
+                                  thickness: 2,
+                                ),
+                              ),
+                              Text(
+                                'MUSIC',
+                                style: TextStyle(
+                                    color: Color(0xFF283E50),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Icon(
+                                Icons.music_note,
+                                color: Color(0xFF283E50),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  color: Color(0xFF283E50),
+                                  indent: 14,
+                                  thickness: 2,
+                                ),
+                              ),
+                            ],
+                          ),
 
+                          // trailing: IconButton(
+                          //       icon: Icon(Icons.play_arrow),
+                          //       onPressed: () {
+                          //         // Handle play button action
+                          //       },
+                          //     ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            controller: scrollSheetController,
+                            itemCount: musicUrls.length,
+                            itemBuilder: (context, index) {
+                              return musicUrls.isEmpty?CircularProgressIndicator():ListTile(
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(musicUrls[index].title),
+                                    GestureDetector(
+                                        onTap: () {
+                                          _isPlaying==true?pauseMusic():playMusic(musicUrls[index].path);
+                                        },
+                                        child: _isPlaying==true?Icon(Icons.pause):Icon(Icons.play_arrow))
+                                  ],
+                                ),
+                                onTap: () {},
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
           ],
         ),
-
         extendBody: true,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-                _showPersistentMusicBottomSheet(context);
-          },
-          child: Icon(Icons.music_note),
-          backgroundColor: Color(0xFF283E50), // Set your desired FAB background color
-        ),
-
+      
       ),
-
     );
   }
+
   void _showPersistentMusicBottomSheet(BuildContext context) {
     double sheetTopPosition = 0.3; // Initial position (30% from the top)
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-
       builder: (BuildContext context) {
         return GestureDetector(
           onVerticalDragUpdate: (details) {
             // Update the sheet position based on the drag gestures
-            double delta = details.primaryDelta! / MediaQuery.of(context).size.height;
+            double delta =
+                details.primaryDelta! / MediaQuery.of(context).size.height;
             sheetTopPosition = (sheetTopPosition - delta).clamp(0.1, 0.8);
           },
           child: DraggableScrollableSheet(
-
             initialChildSize: sheetTopPosition,
             minChildSize: 0.1,
             maxChildSize: 0.8,
@@ -433,16 +523,13 @@ class _TimerState extends State<Timer> {
                               children: [
                                 Text(musicUrls[index].title),
                                 GestureDetector(
-                                    onTap: (){
+                                    onTap: () {
                                       playMusic(musicUrls[index].path);
-
                                     },
                                     child: Icon(Icons.play_arrow))
                               ],
                             ),
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                           );
                         },
                       ),
@@ -457,9 +544,6 @@ class _TimerState extends State<Timer> {
     );
   }
 
-
-
-
   Future<void> updateStrikeInFirestore() async {
     try {
       // Get the current user
@@ -471,13 +555,13 @@ class _TimerState extends State<Timer> {
 
         // Get the current user document from Firestore
         DocumentSnapshot<Map<String, dynamic>> userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+            await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
         // Check if 'lastStrikeTimestamp' field exists
         if (userDoc.data()?.containsKey('lastStrikeTimestamp') ?? false) {
           // Get the 'lastStrikeTimestamp' field
           DateTime lastStrikeTimestamp =
-          (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
+              (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
 
           // Check if 24 hours have passed since the last strike
           if (DateTime.now().difference(lastStrikeTimestamp).inHours >= 24) {
@@ -488,8 +572,7 @@ class _TimerState extends State<Timer> {
                 .update({'lastStrikeTimestamp': FieldValue.serverTimestamp()});
 
             // Increment the strikes count
-            int currentStrikes =
-            userDoc.data()?.containsKey('strikes') ?? false
+            int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
                 ? userDoc.get('strikes')
                 : 0;
             await FirebaseFirestore.instance
@@ -507,8 +590,7 @@ class _TimerState extends State<Timer> {
               .update({'lastStrikeTimestamp': FieldValue.serverTimestamp()});
 
           // Increment the strikes count
-          int currentStrikes =
-          userDoc.data()?.containsKey('strikes') ?? false
+          int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
               ? userDoc.get('strikes')
               : 0;
           await FirebaseFirestore.instance
@@ -521,7 +603,6 @@ class _TimerState extends State<Timer> {
       print('Error updating strike in Firestore: $e');
     }
   }
-
 
   void _handleTimerButtonPressed() {
     setState(() {
