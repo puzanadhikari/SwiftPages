@@ -1,15 +1,21 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:just_audio/just_audio.dart';
+
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import '../myBooks.dart';
+
 class Music {
   final String title;
-  final String artist;
+  final String path; // Add this field for storing the path
 
-  Music({required this.title, required this.artist});
+  Music({required this.title, required this.path});
 }
+
 
 class Timer extends StatefulWidget {
   DetailBook book;
@@ -25,6 +31,8 @@ class _TimerState extends State<Timer> {
   final CountDownController _controller = CountDownController();
   late bool _isRunning;
   int totalPages = 150;
+  final AudioPlayer audioPlayer = AudioPlayer();
+
   double calculatePercentage() {
     if (widget.book==null) {
       return 0.0;
@@ -32,23 +40,74 @@ class _TimerState extends State<Timer> {
 
     return ( widget.book.currentPage/totalPages ) * 100;
   }
+  Reference get firebaseStorage => FirebaseStorage.instance.ref();
+  Future<void> loadMusic() async {
+    List<Music> urls = []; // Update the type to List<Music>
+
+    try {
+      ListResult result = await firebaseStorage.child("music/").listAll();
+
+      for (Reference ref in result.items) {
+        final musicUrl = await ref.getDownloadURL();
+        String fileName = ref.name.split('.').first; // Extracting the file name without extension
+        urls.add(Music(title: fileName, path: musicUrl)); // Include the path in Music object
+      }
+    } catch (e) {
+      log('Error fetching music URLs: $e');
+    }
+
+    setState(() {
+      musicUrls = urls;
+      log(musicUrls[0].path.toString());
+    });
+  }
+  Future<void> playMusic(String path) async {
+
+    if (path.isNotEmpty) {
+      try {
+        log("play func"+path.toString());
+        await audioPlayer.setUrl(path);
+
+        await audioPlayer.play();
+      } catch (e) {
+        log('Error playing music: $e');
+      }
+    } else {
+      log('Error: Empty file path.');
+    }
+  }
+
+  void handlePlaybackResult(int result) {
+    if (result == 1) {
+      // Success
+      log('Music started playing');
+    } else {
+      // Error
+      log('Error playing music');
+    }
+  }
 
 
-  List<Music> musicList = [
-    Music(title: 'Song 1', artist: 'Artist 1'),
-    Music(title: 'Song 2', artist: 'Artist 2'),
-    Music(title: 'Song 3', artist: 'Artist 3'),
+  List<Music> musicUrls = [
+
     // Add more music items as needed
   ];
 
   @override
   void initState() {
     super.initState();
+    loadMusic();
     _isRunning = false;
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _showPersistentMusicBottomSheet(context);
-    });
+    // WidgetsBinding.instance!.addPostFrameCallback((_) {
+    //   _showPersistentMusicBottomSheet(context);
+    // });
   }
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -365,13 +424,24 @@ class _TimerState extends State<Timer> {
                     Expanded(
                       child: ListView.builder(
                         controller: scrollController,
-                        itemCount: musicList.length,
+                        itemCount: musicUrls.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text(musicList[index].title),
-                            subtitle: Text(musicList[index].artist),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(musicUrls[index].title),
+                                GestureDetector(
+                                    onTap: (){
+                                      playMusic(musicUrls[index].path);
+
+                                    },
+                                    child: Icon(Icons.play_arrow))
+                              ],
+                            ),
                             onTap: () {
-                              // Handle music item click
+
                             },
                           );
                         },

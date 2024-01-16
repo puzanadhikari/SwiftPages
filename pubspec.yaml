@@ -38,8 +38,10 @@ dependencies:
   http:
   fluttertoast:
   flutter_rating_bar:
+  just_audio:
   floating_bottom_navigation_bar: ^1.5.2
   cloud_firestore:
+  audioplayers:
   timer_builder:
   circular_countdown_timer:
   flutter:
