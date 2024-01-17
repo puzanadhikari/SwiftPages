@@ -19,6 +19,40 @@ class MyBooks extends StatefulWidget {
 }
 
 class _MyBooksState extends State<MyBooks> {
+  void shareBookDetails(DetailBook book,String note) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        // Reference to the 'communityBooks' collection
+        CollectionReference communityBooksRef =
+        FirebaseFirestore.instance.collection('communityBooks');
+
+        // Add the book details to the community collection
+        await communityBooksRef.add({
+          'author': book.author,
+          'imageLink': book.imageLink,
+          'currentPage': book.currentPage,
+          'notes': note,
+          'username': user.displayName ?? 'Anonymous',
+          'avatarUrl': user.photoURL ?? '',
+          // Add other fields as needed
+        });
+
+        // Display a notification or feedback to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Book shared successfully!'),
+          ),
+        );
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error sharing book: $e');
+    }
+  }
 
   List<DetailBook> books = [];
   final String apiKey =
@@ -215,20 +249,41 @@ class _MyBooksState extends State<MyBooks> {
                                             ),
                                           ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer(book: books[index],)));
-                                          },
-                                          child: Text("Read"),
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                                            minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
-                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(15.0),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer(book: books[index],)));
+                                              },
+                                              child: Text("Read"),
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(15.0),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                _showAddNotesDialog(books[index]);
+                                                 },
+                                              child: Text("Share"),
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(15.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -287,43 +342,51 @@ class _MyBooksState extends State<MyBooks> {
       print('Error removing book: $e');
     }
   }
-
-  void _showConfirmationDialog(DetailBook book) {
+  void _showAddNotesDialog(DetailBook book) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
+
         return AlertDialog(
-          title: Text(
-            "Edit User Name",
-            style: TextStyle(color: Colors.blue), // Set title text color
+          title: Text('Add Notes'),
+          content: TextField(
+            controller: notesController,
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration(
+              hintText: 'Write your notes here...',
+            ),
           ),
-          content: Text("Are you sure want to remove the book from your list?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text(
-                "No",
-                style: TextStyle(color: Colors.red), // Set cancel text color
-              ),
+              child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                removeBook(book);
-                Navigator.pop(context); // Close the dialog
+                String newNote = notesController.text.trim();
+                if (newNote.isNotEmpty) {
+                  shareBookDetails(book,notesController.text);
+                  Navigator.pop(context); // Close the dialog
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Note added successfully!'),
+                    ),
+                  );
+                }
               },
-              child: Text(
-                "Yes",
-                style: TextStyle(color: Colors.green), // Set save text color
-              ),
+              child: Text('Save'),
             ),
           ],
-          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
         );
       },
     );
   }
+
+
 
 }
 class DetailBook {

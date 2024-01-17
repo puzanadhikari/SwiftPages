@@ -7,6 +7,7 @@ import 'package:swiftpages/ui/myBooks.dart';
 import 'package:swiftpages/ui/profilePage.dart';
 
 import '../firebase_auth.dart';
+import 'community/ui.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -59,7 +60,9 @@ class _MainPageState extends State<MainPage> {
         children: [
           HomePage(),
           MyBooks(),
-          ProfilePage()
+          Community(),
+          ProfilePage(),
+
         ],
       ),
       extendBody: false,
@@ -76,6 +79,7 @@ class _MainPageState extends State<MainPage> {
             items: [
               FloatingNavbarItem(icon: Icons.home, title: ''),
               FloatingNavbarItem(icon: Icons.book, title: ''),
+              FloatingNavbarItem(icon: Icons.safety_divider, title: ''),
               FloatingNavbarItem(icon: Icons.person, title: ''),
             ],
           ),
