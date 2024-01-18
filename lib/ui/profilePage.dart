@@ -193,9 +193,11 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
-  void _validateInvitationCode() {
+  void _validateInvitationCode() async{
+    User? user = _auth.currentUser;
     String enteredCode = _invitationCodeController.text.trim();
-
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await _firestore.collection('users').doc(user?.uid).get();
     // Perform a query to find the user with the entered invitation code
     _firestore
         .collection('users')
@@ -204,31 +206,93 @@ class _ProfilePageState extends State<ProfilePage> {
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         // User with the entered code found
-        DocumentSnapshot userDocument = querySnapshot.docs.first;
-        String userId = userDocument.id;
+        DocumentSnapshot redeemingUserDocument = querySnapshot.docs.first;
+        String? redeemingUserId = _auth.currentUser?.uid;
 
-        // Increase strikes for the user who entered the code
-        _increaseStrikes(userId);
+        // Check if the redeeming user has already redeemed the invitation
+        bool hasRedeemed = snapshot.data()?['redeemed'] ?? false;
+        log(hasRedeemed.toString());
+        if (hasRedeemed) {
+          // User has already redeemed the invitation
+          print('Already redeemed the invitation code!');
+          // You may show a toast or other messages to indicate that it's already redeemed
+          Fluttertoast.showToast(
+            msg: 'Invitation code already redeemed!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        } else {
+          // Increase strikes for the redeeming user
+          _increaseStrikes(redeemingUserId!);
 
-        // Increase strikes for the user who generated the code
-        String generatorUserId = _auth.currentUser?.uid ?? '';
-        _increaseStrikes(generatorUserId);
+          // Increase strikes for the generating user
+          String generatorUserId = redeemingUserDocument.id ?? '';
+          _increaseStrikes(generatorUserId);
 
-        print('Code is valid for user with ID: $userId');
-        Navigator.of(context).pop(); // Close the dialog
+          // Delete the invitation code from the generating user's document
+          _deleteInvitationCode(generatorUserId);
 
-        // Implement your logic here based on the user associated with the code
+          // Mark the invitation as redeemed for the redeeming user
+          _markInvitationAsRedeemed(redeemingUserId);
+
+          print('Code is valid for user with ID: $redeemingUserId');
+          Navigator.of(context).pop(); // Close the dialog
+
+          // Implement your logic here based on the user associated with the code
+        }
       } else {
         // Code is invalid, show an error message
         print('Invalid code!');
         // You may show an error message or take other actions
+        Fluttertoast.showToast(
+          msg: 'Invalid invitation code!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
       }
     }).catchError((error) {
       print('Error validating code: $error');
       // Handle the error (e.g., show an error message)
+      Fluttertoast.showToast(
+        msg: 'Error validating invitation code!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     });
   }
 
+
+  Future<void> _markInvitationAsRedeemed(String userId) async {
+    User? user = _auth.currentUser;
+
+    try {
+      // Mark the 'redeemed' field as true for the user with the given ID
+      await _firestore.collection('users').doc(user?.uid).update({'redeemed': true});
+      print('Invitation marked as redeemed for user with ID: $userId');
+    } catch (error) {
+      print('Error marking invitation as redeemed for user with ID: $userId - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+
+
+  Future<void> _deleteInvitationCode(String userId) async {
+    try {
+        await _firestore.collection('users').doc(userId).update({'invitationCode': FieldValue.delete()});
+      print('Invitation code deleted for user with ID: $userId');
+    } catch (error) {
+      print('Error deleting invitation code for user with ID: $userId - $error');
+        }
+  }
   Future<void> _increaseStrikes(String userId) async {
     try {
       // Increment the 'strikes' field by 10 for the given user ID
