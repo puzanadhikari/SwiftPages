@@ -125,9 +125,12 @@ class _BookCardState extends State<BookCard> {
     List<Map<String, dynamic>> comments =
         List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
     log(comments.length.toString());
+    User? user = FirebaseAuth.instance.currentUser;
     String currentUsername = widget.bookData['username'] ?? '';
+    String username = user?.displayName ?? '';
     List<dynamic> likedBy = widget.bookData['likedBy'] ?? [];
-    _isLiked = likedBy.contains(currentUsername);
+
+    _isLiked = likedBy.contains(username);
 
     return GestureDetector(
       onTap: () {
@@ -208,7 +211,7 @@ class _BookCardState extends State<BookCard> {
                       GestureDetector(
                         onTap: (){
                           updateLikes(
-                              _isLiked ? likes - 1 : likes + 1, widget.index);
+                              _isLiked ? likes - 1 : likes + 1, widget.index,username);
                         },
                         child: SvgPicture.asset(
                           'assets/like.svg',
@@ -330,12 +333,12 @@ class _BookCardState extends State<BookCard> {
     );
   }
 
-  void updateLikes(int newLikes, int index) async {
+  void updateLikes(int newLikes, int index,String username) async {
     String currentUsername = widget.bookData['username'] ?? '';
     List<dynamic> likedBy = List<String>.from(widget.bookData['likedBy'] ?? []);
 
-    if (!likedBy.contains(currentUsername)) {
-      likedBy.add(currentUsername);
+    if (!likedBy.contains(username)) {
+      likedBy.add(username);
 
       // Update Firestore document with newLikes and updated likedBy
       await FirebaseFirestore.instance
@@ -345,7 +348,7 @@ class _BookCardState extends State<BookCard> {
 
       log('Liked on index: $index');
     } else {
-      likedBy.remove(currentUsername);
+      likedBy.remove(username);
 
       // Update Firestore document with newLikes and updated likedBy
       await FirebaseFirestore.instance
