@@ -37,6 +37,7 @@ class _MyBooksState extends State<MyBooks> {
           'notes': note,
           'username': user.displayName ?? 'Anonymous',
           'avatarUrl': user.photoURL ?? '',
+          'userId':uid
           // Add other fields as needed
         });
 

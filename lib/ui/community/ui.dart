@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
+
+import '../notificationPage.dart';
 TextEditingController commentController = TextEditingController();
 String comment='';
 class Community extends StatefulWidget {
@@ -42,9 +44,14 @@ class _CommunityState extends State<Community> {
             Positioned(
               top: 10,
               right: 10,
-              child: Image.asset(
-                "assets/search.png",
-                height: 50,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ActivityList()));
+                },
+                child: Image.asset(
+                  "assets/search.png",
+                  height: 50,
+                ),
               ),
             ),
             Positioned(
@@ -242,6 +249,7 @@ class _BookCardState extends State<BookCard> {
                         onTap: (){
                           updateLikes(
                               _isLiked ? likes - 1 : likes + 1, widget.index,username);
+                          saveActivity(context,widget.bookData['imageLink'],widget.bookData['username'],widget.bookData['avatarUrl'],_isLiked?'Unliked':'Liked',widget.bookData['userId']);
                         },
                         child: SvgPicture.asset(
                           'assets/like.svg',
@@ -284,84 +292,45 @@ class _BookCardState extends State<BookCard> {
 
                 ],
               ),
-              // ListTile(
-              //   leading: CircleAvatar(
-              //     backgroundImage: NetworkImage(widget.bookData['avatarUrl'] ?? ''),
-              //   ),
-              //   title: Text(widget.bookData['username'] ?? 'Anonymous'),
-              // ),
-              // Container(
-              //   height: 150,
-              //   width: double.infinity,
-              //   child: Image.network(
-              //     widget.bookData['imageLink'] ?? '',
-              //     fit: BoxFit.contain,
-              //   ),
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.all(8),
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         widget.bookData['title'] ?? '',
-              //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              //       ),
-              //       SizedBox(height: 8),
-              //       Text(
-              //         '${widget.bookData['notes'] ?? ''}',
-              //         style: TextStyle(fontSize: 14),
-              //       ),
-              //       SizedBox(height: 8),
-              //       Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Row(
-              //             children: [
-              //               IconButton(
-              //                 icon: Icon(
-              //                   Icons.thumb_up,
-              //                   color: _isLiked ? Colors.blue : null,
-              //                 ),
-              //                 onPressed: () {
-              //                   updateLikes(_isLiked ? likes-1 : likes + 1, widget.index);
-              //                 },
-              //               ),
-              //               Text('$likes'),
-              //             ],
-              //           ),
-              //
-              //         ],
-              //       ),
-              //       Row(
-              //         children: [
-              //           Expanded(
-              //             child: TextField(
-              //               controller: commentController,
-              //               decoration: InputDecoration(hintText: 'Write your comment'),
-              //             ),
-              //           ),
-              //           if (commentController.text.isEmpty)
-              //             TextButton(
-              //               onPressed: () {
-              //                 addComment(commentController.text);
-              //               },
-              //               child: Text('Add Comment'),
-              //             ),
-              //
-              //         ],
-              //       ),
-              //
-              //
-              //     ],
-              //   ),
-              // ),
+
             ],
           ),
         ),
       ),
     );
   }
+  void saveActivity(BuildContext context, String imgLink, String activityBy, String activityUserAvatar,String type,String userId) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String currentUserId = user.uid;
+
+      // Create a map representing the saved post
+      Map<String, dynamic> savedPost = {
+        'imageLink': imgLink ?? '',
+        'activityBy': activityBy ?? '',
+        'activityUserAvatar': activityUserAvatar ?? '',
+        'type':type,
+
+      };
+
+      // Save the post information to the current user's data
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('activity')
+          .add(savedPost);
+
+      // Show a confirmation message or perform any other action
+      // You can use Flutter's SnackBar to display a message.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post saved successfully!'),
+        ),
+      );
+    }
+  }
+
 
   void updateLikes(int newLikes, int index,String username) async {
     String currentUsername = widget.bookData['username'] ?? '';
