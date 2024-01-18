@@ -21,6 +21,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String userName = ' ';
   String photoURL = ' ';
   String _invitationCode = '';
+  TextEditingController _invitationCodeController = TextEditingController();
+
   TextEditingController _textFieldController = TextEditingController();
   TextEditingController _passwordFieldController = TextEditingController();
   TextEditingController _emailFieldController = TextEditingController();
@@ -102,15 +104,15 @@ class _ProfilePageState extends State<ProfilePage> {
       // Generate a random 4-letter code
       String code = _generateRandomCode();
 
-      // Update the user profile with the new code
-      await _firestore.collection('users').doc(user.uid).set({'invitationCode': code});
+      // Update only the 'invitationCode' field in the user's Firestore document
+      await _firestore.collection('users').doc(user.uid).update({'invitationCode': code});
 
       setState(() {
         _invitationCode = code;
-
       });
     }
   }
+
   Future<void> _fetchInvitationCode() async {
     User? user = _auth.currentUser;
     if (user != null) {
@@ -157,6 +159,87 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
+  void _showInvitationCodeEnterPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Your Invitation Code'),
+          content: Column(
+            children: [
+              TextField(
+                controller: _invitationCodeController,
+                decoration: InputDecoration(labelText: 'Invitation Code'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _validateInvitationCode();
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _validateInvitationCode() {
+    String enteredCode = _invitationCodeController.text.trim();
+
+    // Perform a query to find the user with the entered invitation code
+    _firestore
+        .collection('users')
+        .where('invitationCode', isEqualTo: enteredCode)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        // User with the entered code found
+        DocumentSnapshot userDocument = querySnapshot.docs.first;
+        String userId = userDocument.id;
+
+        // Increase strikes for the user who entered the code
+        _increaseStrikes(userId);
+
+        // Increase strikes for the user who generated the code
+        String generatorUserId = _auth.currentUser?.uid ?? '';
+        _increaseStrikes(generatorUserId);
+
+        print('Code is valid for user with ID: $userId');
+        Navigator.of(context).pop(); // Close the dialog
+
+        // Implement your logic here based on the user associated with the code
+      } else {
+        // Code is invalid, show an error message
+        print('Invalid code!');
+        // You may show an error message or take other actions
+      }
+    }).catchError((error) {
+      print('Error validating code: $error');
+      // Handle the error (e.g., show an error message)
+    });
+  }
+
+  Future<void> _increaseStrikes(String userId) async {
+    try {
+      // Increment the 'strikes' field by 10 for the given user ID
+      await _firestore.collection('users').doc(userId).update({'strikes': FieldValue.increment(10)});
+      print('Strikes increased for user with ID: $userId');
+    } catch (error) {
+      print('Error increasing strikes for user with ID: $userId - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+
 
 
   @override
@@ -342,6 +425,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Image.asset("assets/envelope.png"),
                                 SizedBox(width: 15,),
                                 Text("Invite a Friend",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          GestureDetector(
+                            onTap: (){
+                              _showInvitationCodeEnterPopup();
+                              // _fetchInvitationCode();
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/envelope.png"),
+                                SizedBox(width: 15,),
+                                Text("Redeem",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
                               ],
                             ),
                           ),
