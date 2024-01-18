@@ -194,6 +194,7 @@ class _BookCardState extends State<BookCard> {
                                     onPressed: (){
                                       addComment(comment);
                                     },
+                                    commentCount: comments.length,
                                   )));
                         },
                         child: Icon(
@@ -411,8 +412,9 @@ class CommentPage extends StatefulWidget {
   List<Map<String, dynamic>> comments;
   String docId;
   final VoidCallback onPressed;
+  int commentCount;
 
-  CommentPage({Key? key, required this.comments, required this.docId,required this.onPressed})
+  CommentPage({Key? key, required this.comments, required this.docId,required this.onPressed,required this.commentCount})
       : super(key: key);
 
   @override
@@ -477,7 +479,37 @@ class _CommentPageState extends State<CommentPage> {
                 margin: EdgeInsets.all(10),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:Column(
+                  child:widget.commentCount==0?Center(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Center(child: Text("No Comments yet"))
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  // controller: commentController,
+                                  onChanged: (value){
+                                    setState(() {
+                                      comment = value;
+                                    });
+                                  },
+                                  decoration: InputDecoration(hintText: 'Write your comment'),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: widget.onPressed,
+                                child: Text('Comment',style: TextStyle(color: Colors.white),),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ):Column(
                         children: [
                           Expanded(
                             child: ListView(children: [
