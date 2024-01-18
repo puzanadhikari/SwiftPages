@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,9 +20,12 @@ class _ProfilePageState extends State<ProfilePage> {
   String email = ' ';
   String userName = ' ';
   String photoURL = ' ';
+  String _invitationCode = '';
   TextEditingController _textFieldController = TextEditingController();
   TextEditingController _passwordFieldController = TextEditingController();
   TextEditingController _emailFieldController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -91,6 +96,68 @@ class _ProfilePageState extends State<ProfilePage> {
       // Handle the error (e.g., show an error message)
     }
   }
+  Future<void> _generateInvitationCode() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      // Generate a random 4-letter code
+      String code = _generateRandomCode();
+
+      // Update the user profile with the new code
+      await _firestore.collection('users').doc(user.uid).set({'invitationCode': code});
+
+      setState(() {
+        _invitationCode = code;
+
+      });
+    }
+  }
+  Future<void> _fetchInvitationCode() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      // Fetch the invitation code and timestamp from Firestore
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await _firestore.collection('users').doc(user.uid).get();
+
+      if (snapshot.exists) {
+        setState(() {
+          _invitationCode = snapshot.data()?['invitationCode'] ?? '';
+
+        });
+        _showInvitationCodePopup();
+
+      }
+    }
+  }
+  String _generateRandomCode() {
+    // Generate a random 4-letter code (you may customize this logic)
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    String code = '';
+    for (int i = 0; i < 4; i++) {
+      code += chars[DateTime.now().microsecondsSinceEpoch % chars.length];
+    }
+    return code;
+  }
+
+  void _showInvitationCodePopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Your Invitation Code'),
+          content: Text(_invitationCode),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   void initState() {
@@ -264,15 +331,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset("assets/envelope.png"),
-                              SizedBox(width: 15,),
-                              Text("Invite a Friend",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
-                            ],
+                          GestureDetector(
+                            onTap: (){
+                              _generateInvitationCode();
+                              _fetchInvitationCode();
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/envelope.png"),
+                                SizedBox(width: 15,),
+                                Text("Invite a Friend",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
+                              ],
+                            ),
                           ),
-
                         ],
                       ),
                     ),
