@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swiftpages/ui/community/savedPosts.dart';
 import 'package:swiftpages/ui/community/ui.dart';
 import 'package:swiftpages/ui/restoreStreak/ui.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
@@ -365,214 +366,231 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 30, ),
               ),
             ),
-            Center(
-              child: Container(
-                height:MediaQuery.of(context).size.height/1.5 ,
-                width: MediaQuery.of(context).size.width / 1.2,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD9D9D9),
-                  borderRadius: BorderRadius.circular(46.0),
-                ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+            Padding(
+              padding: const EdgeInsets.only(top:100.0),
+              child: Center(
+                child: Container(
+                  height:MediaQuery.of(context).size.height/1.2 ,
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9D9D9),
+                    borderRadius: BorderRadius.circular(46.0),
+                  ),
+                  child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      '${userName.toUpperCase()}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "${email}",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Color(0xFF686868),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                  ],
+                                ),
+                                CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage: NetworkImage(photoURL ?? ''),
+                                  backgroundColor: Color(0xfffeead4),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black.withOpacity(0.25),
+                            ),
+                            Text(
+                              "Account",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/person.png"),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: (){
+                                      _showEditDisplayNameDialog();
+                                    },
+                                    child: Text("Change Username",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                              ],
+                            ),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/key.png"),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                  onTap: (){
+                                    _showEditPasswordDialog();
+                                  },
+                                    child: Text("Change Password",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                              ],
+                            ),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/close.png",height: 20,),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: (){
+                                      _showEditEmailDialog();
+                                    },
+                                    child: Text("Change Email Address",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                              ],
+                            ),
+                             Divider(
+                                    thickness: 1,
+                              color: Colors.black.withOpacity(0.25),
+                            ),
+                            Text(
+                              "Book Settings",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            SizedBox(height: 20,),
+                            GestureDetector(
+                              onTap: (){
+                                _generateInvitationCode();
+                                _fetchInvitationCode();
+                              },
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    '${userName.toUpperCase()}',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "${email}",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Color(0xFF686868),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
+                                  Image.asset("assets/envelope.png",height: 15,),
+                                  SizedBox(width: 15,),
+                                  Text("Invite a Friend",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
                               ),
-                              CircleAvatar(
-                                radius: 40,
-                                backgroundImage: NetworkImage(photoURL ?? ''),
-                                backgroundColor: Color(0xfffeead4),
+                            ),
+                            SizedBox(height: 20,),
+                            GestureDetector(
+                              onTap: (){
+                                _showInvitationCodeEnterPopup();
+                                // _fetchInvitationCode();
+                              },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Image.asset("assets/envelope.png",height: 15,),
+                                  SizedBox(width: 15,),
+                                  Text("Redeem",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
+                                ],
                               ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black.withOpacity(0.25),
-                          ),
-                          Text(
-                            "Account",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset("assets/person.png"),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                  onTap: (){
-                                    _showEditDisplayNameDialog();
-                                  },
-                                  child: Text("Change Username",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset("assets/key.png"),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                onTap: (){
-                                  _showEditPasswordDialog();
-                                },
-                                  child: Text("Change Password",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset("assets/close.png",height: 20,),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                  onTap: (){
-                                    _showEditEmailDialog();
-                                  },
-                                  child: Text("Change Email Address",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
-                            ],
-                          ),
-                           Divider(
-                                  thickness: 1,
-                            color: Colors.black.withOpacity(0.25),
-                          ),
-                          Text(
-                            "Book Settings",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          SizedBox(height: 20,),
-                          GestureDetector(
-                            onTap: (){
-                              _generateInvitationCode();
-                              _fetchInvitationCode();
-                            },
-                            child: Row(
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black.withOpacity(0.25),
+                            ),
+                            Text(
+                              "Social",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            SizedBox(height: 20,),
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
+
                               children: [
-                                Image.asset("assets/envelope.png",height: 15,),
+                                Image.asset("assets/envelope.png",height: 20,),
                                 SizedBox(width: 15,),
-                                Text("Invite a Friend",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
+                                GestureDetector(
+                                    onTap: (){
+                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>Community()));
+                                    },
+                                    child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
-                          ),
-                          SizedBox(height: 20,),
-                          GestureDetector(
-                            onTap: (){
-                              _showInvitationCodeEnterPopup();
-                              // _fetchInvitationCode();
-                            },
-                            child: Row(
+                            SizedBox(height: 20,),
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
+
                               children: [
-                                Image.asset("assets/envelope.png",height: 15,),
+                                Image.asset("assets/envelope.png",height: 20,),
                                 SizedBox(width: 15,),
-                                Text("Redeem",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
+                                GestureDetector(
+                                    onTap: (){
+                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>MyPosts()));
+                                    },
+                                    child: Text("My Posts",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black.withOpacity(0.25),
-                          ),
-                          Text(
-                            "Social",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
 
-                            children: [
-                              Image.asset("assets/envelope.png",height: 20,),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                  onTap: (){
-                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Community()));
-                                  },
-                                  child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/envelope.png",height: 20,),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: (){
+                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>SavedPosts()));
+                                    },
+                                    child: Text("Saved Posts",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black.withOpacity(0.25),
+                            ),
+                            Text(
+                              "Streak Setting",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
 
-                            children: [
-                              Image.asset("assets/envelope.png",height: 20,),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                  onTap: (){
-                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyPosts()));
-                                  },
-                                  child: Text("My Posts",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black.withOpacity(0.25),
-                          ),
-                          Text(
-                            "Streak Setting",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
+                                    },
+                                    child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                              ],
+                            ),
 
-                            children: [
-                              Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
-                              SizedBox(width: 15,),
-                              GestureDetector(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
-                                  },
-                                  child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
-                            ],
-                          ),
-
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
