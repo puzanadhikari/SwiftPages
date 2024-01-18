@@ -93,7 +93,7 @@ class _MainPageState extends State<MainPage> {
         children: [
           HomePage(),
           MyBooks(),
-          Community(),
+
           ProfilePage(),
 
         ],
@@ -112,7 +112,7 @@ class _MainPageState extends State<MainPage> {
             items: [
               FloatingNavbarItem(icon: Icons.home, title: ''),
               FloatingNavbarItem(icon: Icons.book, title: ''),
-              FloatingNavbarItem(icon: Icons.safety_divider, title: ''),
+
               FloatingNavbarItem(icon: Icons.person, title: ''),
             ],
           ),

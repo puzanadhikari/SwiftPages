@@ -380,7 +380,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                             style: TextStyle(color: Colors.black, fontSize: 18),
                             underline: Container(
                               height: 2,
-                              color: Colors.blue,
+                              color: Colors.white,
                             ),
                             items: List.generate(1000, (index) => index + 1)
                                 .map<DropdownMenuItem<int>>((int value) {

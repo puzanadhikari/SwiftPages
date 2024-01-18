@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swiftpages/ui/community/ui.dart';
+import 'package:swiftpages/ui/restoreStreak/ui.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -363,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Center(
               child: Container(
-                height:MediaQuery.of(context).size.height / 2,
+                height:MediaQuery.of(context).size.height/1.5 ,
                 width: MediaQuery.of(context).size.width / 1.2,
                 decoration: BoxDecoration(
                   color: const Color(0xFFD9D9D9),
@@ -439,7 +441,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   onTap: (){
                                     _showEditDisplayNameDialog();
                                   },
-                                  child: Text("Change Username",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),)),
+                                  child: Text("Change Username",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                             ],
                           ),
                           SizedBox(height: 20,),
@@ -452,20 +454,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onTap: (){
                                   _showEditPasswordDialog();
                                 },
-                                  child: Text("Change Password",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),)),
+                                  child: Text("Change Password",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                             ],
                           ),
                           SizedBox(height: 20,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset("assets/close.png"),
+                              Image.asset("assets/close.png",height: 20,),
                               SizedBox(width: 15,),
                               GestureDetector(
                                   onTap: (){
                                     _showEditEmailDialog();
                                   },
-                                  child: Text("Change Email Address",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),)),
+                                  child: Text("Change Email Address",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                             ],
                           ),
                            Divider(
@@ -475,7 +477,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Text(
                             "Book Settings",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           SizedBox(height: 20,),
                           GestureDetector(
@@ -486,9 +488,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset("assets/envelope.png"),
+                                Image.asset("assets/envelope.png",height: 15,),
                                 SizedBox(width: 15,),
-                                Text("Invite a Friend",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
+                                Text("Invite a Friend",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
                               ],
                             ),
                           ),
@@ -501,12 +503,59 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset("assets/envelope.png"),
+                                Image.asset("assets/envelope.png",height: 15,),
                                 SizedBox(width: 15,),
-                                Text("Redeem",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
+                                Text("Redeem",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
                               ],
                             ),
                           ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black.withOpacity(0.25),
+                          ),
+                          Text(
+                            "Social",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          SizedBox(height: 20,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                            children: [
+                              Image.asset("assets/envelope.png",height: 20,),
+                              SizedBox(width: 15,),
+                              GestureDetector(
+                                  onTap: (){
+                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Community()));
+                                  },
+                                  child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black.withOpacity(0.25),
+                          ),
+                          Text(
+                            "Streak Setting",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          SizedBox(height: 20,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                            children: [
+                              Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
+                              SizedBox(width: 15,),
+                              GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
+                                  },
+                                  child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                            ],
+                          ),
+
                         ],
                       ),
                     ),

@@ -33,6 +33,10 @@ dependencies:
   firebase_database: ^10.3.8
   shared_preferences:
   firebase_storage:
+  cloud_functions:
+
+  url_launcher:
+
   cached_network_image:
   firebase_core: ^2.24.2
   http:
