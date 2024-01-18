@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/svg.dart';
 TextEditingController commentController = TextEditingController();
 String comment='';
 class Community extends StatefulWidget {
@@ -18,6 +19,7 @@ class _CommunityState extends State<Community> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xfffeead4),
         body: Stack(
           children: [
             Positioned(
@@ -178,11 +180,11 @@ class _BookCardState extends State<BookCard> {
                 children: [
                   Row(
                     children: [
-                      Text("Review"),
+                      Text("Review",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
                       SizedBox(
                         width: 10,
                       ),
-                      Text('${comments.length}'),
+                      Text('${comments.length} ',style: TextStyle(color: Color(0xFF283E50),),),
                       GestureDetector(
                         onTap: (){
                           Navigator.push(
@@ -197,45 +199,51 @@ class _BookCardState extends State<BookCard> {
                                     commentCount: comments.length,
                                   )));
                         },
-                        child: Icon(
-                          Icons.comment,
-                          color: Colors.black,
+                        child: SvgPicture.asset(
+                          'assets/comment.svg',
+                          height: 30,
                         ),
                       ),
-
-                      IconButton(
-                        icon: Icon(
-                          Icons.thumb_up,
-                          color: _isLiked ? Colors.red: Color(0xFFFEEAD4),
-                        ),
-                        onPressed: () {
+                      SizedBox(width: 10,),
+                      GestureDetector(
+                        onTap: (){
                           updateLikes(
                               _isLiked ? likes - 1 : likes + 1, widget.index);
                         },
+                        child: SvgPicture.asset(
+                          'assets/like.svg',
+                          height: 25,
+                          color: _isLiked ? Colors.red: Color(0xFFFEEAD4),
+                        ),
                       ),
-                      Text('${likes}'),
+
+                      Text(' ${likes}',style: TextStyle(color: Color(0xFF283E50),),),
                     ],
                   ),
-                  Container(
-                    height:120,
-                    width: 200,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top:20.0),
                     child: Container(
-                      height: 150,
-                      width: 150,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Text(
-                          '${widget.bookData['notes'] ?? ''}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Color(0xFF686868),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
+                      height:120,
+                      width: 200,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            '${widget.bookData['notes'] ?? ''}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Color(0xFF686868),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ),
                     ),
