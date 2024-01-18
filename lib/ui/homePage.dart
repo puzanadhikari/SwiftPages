@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Stream<DocumentSnapshot<Map<String, dynamic>>> _userStream;
   final String apiKey =
       "30fe2ae32emsh0b5a48e1d0ed53dp17a064jsn7a2f3e3aca01";
   final String apiUrl =
@@ -129,9 +130,17 @@ userName  = preferences.getString("userName")!;
   @override
   void initState() {
     super.initState();
-    fetchBooks();
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String uid = user.uid;
+      _userStream =
+          FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+      fetchStrikes();
+    }
+      fetchBooks();
     fetchUserInfo();
-    fetchStrikes();
+
   }
 
   @override

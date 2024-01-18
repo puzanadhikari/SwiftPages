@@ -33,6 +33,7 @@ String searchQuery='novels';
         final List<dynamic> items = data["items"];
         setState(() {
           books = items.map((item) => Book.fromMap(item)).toList();
+
         });
       }
     } else {
@@ -151,7 +152,7 @@ String searchQuery='novels';
       ),
     );
   }
-  void saveMyBook(String author, String image) async {
+  void saveMyBook(String author, String image,int totalPage) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -168,6 +169,7 @@ String searchQuery='novels';
         QuerySnapshot existingBooks = await myBooksRef
             .where('author', isEqualTo: author)
             .where('image', isEqualTo: image)
+            .where('totalPageCount', isEqualTo: totalPage)
             .get();
 
         if (existingBooks.docs.isEmpty) {
@@ -175,6 +177,7 @@ String searchQuery='novels';
           Map<String, dynamic> bookData = {
             'image': image,
             'author': author,
+            'totalPageCount': totalPage,
             // Add other book details as needed
           };
 
@@ -197,7 +200,7 @@ String searchQuery='novels';
     return GestureDetector(
         onTap: (){
           log(book.title.toUpperCase());
-          _showConfirmationDialog( book.title, book.imageLink);
+          _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
         },
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -240,7 +243,7 @@ String searchQuery='novels';
       ),
     );
   }
-  void _showConfirmationDialog(String author,String image) {
+  void _showConfirmationDialog(String author,String image,int totalPage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -262,7 +265,7 @@ String searchQuery='novels';
             ),
             TextButton(
               onPressed: () {
-                saveMyBook( author,image);
+                saveMyBook( author,image,totalPage);
                 Navigator.pop(context); // Close the dialog
               },
               child: Text(
@@ -283,12 +286,15 @@ class Book {
   final String imageLink;
   final String description;
   final double rating;
+  final int pageCount;
 
   Book({
     required this.title,
     required this.imageLink,
     required this.description,
     required this.rating,
+    required this.pageCount,
+
   });
 
   factory Book.fromMap(Map<String, dynamic> map) {
@@ -298,6 +304,7 @@ class Book {
       title: volumeInfo['title'] ?? 'No Title',
       imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
       rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
+      pageCount: volumeInfo['pageCount'] ?? 0,
     );
   }
 }

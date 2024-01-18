@@ -23,8 +23,8 @@ class MyBooksDetailPage extends StatefulWidget {
 
 class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   TextEditingController _textFieldController = TextEditingController();
-  int selectedPageNumber = 1;
-  int totalPages = 150;
+  int? selectedPageNumber;
+  // int totalPages = widget.book.totalPage;
 
   void removeBook(DetailBook book) async {
     try {
@@ -102,7 +102,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
     // int totalPages = totalPages; // Adjust maxPagesPerBook as needed
     // int totalReadPages = books.fold(0, (sum, book) => sum + book.currentPage);
 
-    return ( widget.book!.currentPage/totalPages ) * 100;
+    return ( widget.book!.currentPage/(widget.book!.totalPage==0?150:widget.book!.totalPage) ) * 100;
   }
   void updatePageNumber(DetailBook book, int newPageNumber) async {
     try {
@@ -165,6 +165,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   @override
   void initState() {
     super.initState();
+    selectedPageNumber = widget.book!.currentPage;
   }
 
   @override
@@ -372,7 +373,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                       Row(
                         children: [
                           DropdownButton<int>(
-                            value: selectedPageNumber,
+                            value: selectedPageNumber==0?1:selectedPageNumber,
                             icon: Icon(Icons.arrow_drop_down),
                             iconSize: 36,
                             elevation: 16,
@@ -392,7 +393,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                               if (newValue != null) {
                                 setState(() {
                                   selectedPageNumber = newValue;
-                                  updatePageNumber(widget.book!, selectedPageNumber);
+                                  updatePageNumber(widget.book!, selectedPageNumber!);
                                 });
                               }
                             },
