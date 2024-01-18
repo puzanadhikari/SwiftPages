@@ -6,14 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 TextEditingController commentController = TextEditingController();
 String comment='';
-class Community extends StatefulWidget {
-  const Community({Key? key}) : super(key: key);
+class MyPosts extends StatefulWidget {
+  const MyPosts({Key? key}) : super(key: key);
 
   @override
-  _CommunityState createState() => _CommunityState();
+  _MyPostsState createState() => _MyPostsState();
 }
 
-class _CommunityState extends State<Community> {
+class _MyPostsState extends State<MyPosts> {
   String? currentUserName = FirebaseAuth.instance.currentUser?.displayName;
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _CommunityState extends State<Community> {
               top: 20,
               left: MediaQuery.of(context).size.width / 3,
               child: Text(
-                "Community",
+                "My Posts",
                 style: const TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 22,
@@ -64,7 +64,7 @@ class _CommunityState extends State<Community> {
               padding: const EdgeInsets.only(top:100.0),
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('communityBooks')
+                    .collection('communityBooks').where('username', isEqualTo: currentUserName)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
@@ -79,7 +79,7 @@ class _CommunityState extends State<Community> {
                     itemCount: bookDocuments.length,
                     itemBuilder: (context, index) {
                       var bookData =
-                          bookDocuments[index].data() as Map<String, dynamic>;
+                      bookDocuments[index].data() as Map<String, dynamic>;
                       var documentId = bookDocuments[index].id;
 
                       return BookCard(
@@ -106,9 +106,9 @@ class BookCard extends StatefulWidget {
 
   BookCard(
       {Key? key,
-      required this.bookData,
-      required this.documentId,
-      required this.index})
+        required this.bookData,
+        required this.documentId,
+        required this.index})
       : super(key: key);
 
   @override
@@ -123,7 +123,7 @@ class _BookCardState extends State<BookCard> {
   Widget build(BuildContext context) {
     int likes = widget.bookData['likes'] ?? 0;
     List<Map<String, dynamic>> comments =
-        List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+    List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
     log(comments.length.toString());
     User? user = FirebaseAuth.instance.currentUser;
     String currentUsername = widget.bookData['username'] ?? '';
@@ -378,7 +378,7 @@ class _BookCardState extends State<BookCard> {
     };
 
     List<Map<String, dynamic>> updatedComments =
-        List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+    List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
     updatedComments.add(commentData);
 
     // Update Firestore document with the new comments
@@ -494,7 +494,7 @@ class _CommentPageState extends State<CommentPage> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: Center(child: Text("No Comments yet"))
+                            child: Center(child: Text("No Comments yet"))
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -521,48 +521,48 @@ class _CommentPageState extends State<CommentPage> {
                       ],
                     ),
                   ):Column(
-                        children: [
-                          Expanded(
-                            child: ListView(children: [
-                              for (var comment in widget.comments)
-                                CommentWidget(
-                                    username: comment['username'],
-                                    avatarUrl: comment['avatarUrl'],
-                                    comment: comment['comment'])
-                            ]),
-                          ),
-
-                          // Add Comment Section
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    // controller: commentController,
-                                    onChanged: (value){
-                                      setState(() {
-                                        comment = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(hintText: 'Write your comment'),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: widget.onPressed,
-                                  child: Text('Comment',style: TextStyle(color: Colors.white),),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                    children: [
+                      Expanded(
+                        child: ListView(children: [
+                          for (var comment in widget.comments)
+                            CommentWidget(
+                                username: comment['username'],
+                                avatarUrl: comment['avatarUrl'],
+                                comment: comment['comment'])
+                        ]),
                       ),
+
+                      // Add Comment Section
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                // controller: commentController,
+                                onChanged: (value){
+                                  setState(() {
+                                    comment = value;
+                                  });
+                                },
+                                decoration: InputDecoration(hintText: 'Write your comment'),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: widget.onPressed,
+                              child: Text('Comment',style: TextStyle(color: Colors.white),),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
               ),
             ),
 
-          
+
           ],
         ),
       ),

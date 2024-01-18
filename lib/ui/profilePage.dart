@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swiftpages/ui/community/ui.dart';
 import 'package:swiftpages/ui/restoreStreak/ui.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
+
+import 'community/myPosts.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -530,6 +532,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Community()));
                                   },
                                   child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                            ],
+                          ),
+                          SizedBox(height: 20,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                            children: [
+                              Image.asset("assets/envelope.png",height: 20,),
+                              SizedBox(width: 15,),
+                              GestureDetector(
+                                  onTap: (){
+                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyPosts()));
+                                  },
+                                  child: Text("My Posts",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                             ],
                           ),
                           Divider(
