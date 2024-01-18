@@ -13,7 +13,7 @@ import 'package:swiftpages/ui/spashScreen.dart';
 import '../myBooks.dart';
 
 class MyBooksDetailPage extends StatefulWidget {
-  Book? book;
+  DetailBook? book;
 
   MyBooksDetailPage({Key? key, this.book}) : super(key: key);
 
@@ -26,7 +26,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   int selectedPageNumber = 1;
   int totalPages = 150;
 
-  void removeBook(Book book) async {
+  void removeBook(DetailBook book) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -56,7 +56,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
     }
   }
 
-  void _showConfirmationDialog(Book book) {
+  void _showConfirmationDialog(DetailBook book) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -104,7 +104,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
 
     return ( widget.book!.currentPage/totalPages ) * 100;
   }
-  void updatePageNumber(Book book, int newPageNumber) async {
+  void updatePageNumber(DetailBook book, int newPageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -134,7 +134,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
       print('Error updating page number: $e');
     }
   }
-  void addNote(Book book, String newNote) async {
+  void addNote(DetailBook book, String newNote) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {

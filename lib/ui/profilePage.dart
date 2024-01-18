@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,9 +20,14 @@ class _ProfilePageState extends State<ProfilePage> {
   String email = ' ';
   String userName = ' ';
   String photoURL = ' ';
+  String _invitationCode = '';
+  TextEditingController _invitationCodeController = TextEditingController();
+
   TextEditingController _textFieldController = TextEditingController();
   TextEditingController _passwordFieldController = TextEditingController();
   TextEditingController _emailFieldController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -91,6 +98,213 @@ class _ProfilePageState extends State<ProfilePage> {
       // Handle the error (e.g., show an error message)
     }
   }
+  Future<void> _generateInvitationCode() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      // Generate a random 4-letter code
+      String code = _generateRandomCode();
+
+      // Update only the 'invitationCode' field in the user's Firestore document
+      await _firestore.collection('users').doc(user.uid).update({'invitationCode': code});
+
+      setState(() {
+        _invitationCode = code;
+      });
+    }
+  }
+
+  Future<void> _fetchInvitationCode() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      // Fetch the invitation code and timestamp from Firestore
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await _firestore.collection('users').doc(user.uid).get();
+
+      if (snapshot.exists) {
+        setState(() {
+          _invitationCode = snapshot.data()?['invitationCode'] ?? '';
+
+        });
+        _showInvitationCodePopup();
+
+      }
+    }
+  }
+  String _generateRandomCode() {
+    // Generate a random 4-letter code (you may customize this logic)
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    String code = '';
+    for (int i = 0; i < 4; i++) {
+      code += chars[DateTime.now().microsecondsSinceEpoch % chars.length];
+    }
+    return code;
+  }
+
+  void _showInvitationCodePopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Your Invitation Code'),
+          content: Text(_invitationCode),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showInvitationCodeEnterPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Your Invitation Code'),
+          content: Column(
+            children: [
+              TextField(
+                controller: _invitationCodeController,
+                decoration: InputDecoration(labelText: 'Invitation Code'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _validateInvitationCode();
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _validateInvitationCode() async{
+    User? user = _auth.currentUser;
+    String enteredCode = _invitationCodeController.text.trim();
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await _firestore.collection('users').doc(user?.uid).get();
+    // Perform a query to find the user with the entered invitation code
+    _firestore
+        .collection('users')
+        .where('invitationCode', isEqualTo: enteredCode)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        // User with the entered code found
+        DocumentSnapshot redeemingUserDocument = querySnapshot.docs.first;
+        String? redeemingUserId = _auth.currentUser?.uid;
+
+        // Check if the redeeming user has already redeemed the invitation
+        bool hasRedeemed = snapshot.data()?['redeemed'] ?? false;
+        log(hasRedeemed.toString());
+        if (hasRedeemed) {
+          // User has already redeemed the invitation
+          print('Already redeemed the invitation code!');
+          // You may show a toast or other messages to indicate that it's already redeemed
+          Fluttertoast.showToast(
+            msg: 'Invitation code already redeemed!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        } else {
+          // Increase strikes for the redeeming user
+          _increaseStrikes(redeemingUserId!);
+
+          // Increase strikes for the generating user
+          String generatorUserId = redeemingUserDocument.id ?? '';
+          _increaseStrikes(generatorUserId);
+
+          // Delete the invitation code from the generating user's document
+          _deleteInvitationCode(generatorUserId);
+
+          // Mark the invitation as redeemed for the redeeming user
+          _markInvitationAsRedeemed(redeemingUserId);
+
+          print('Code is valid for user with ID: $redeemingUserId');
+          Navigator.of(context).pop(); // Close the dialog
+
+          // Implement your logic here based on the user associated with the code
+        }
+      } else {
+        // Code is invalid, show an error message
+        print('Invalid code!');
+        // You may show an error message or take other actions
+        Fluttertoast.showToast(
+          msg: 'Invalid invitation code!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    }).catchError((error) {
+      print('Error validating code: $error');
+      // Handle the error (e.g., show an error message)
+      Fluttertoast.showToast(
+        msg: 'Error validating invitation code!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    });
+  }
+
+
+  Future<void> _markInvitationAsRedeemed(String userId) async {
+    User? user = _auth.currentUser;
+
+    try {
+      // Mark the 'redeemed' field as true for the user with the given ID
+      await _firestore.collection('users').doc(user?.uid).update({'redeemed': true});
+      print('Invitation marked as redeemed for user with ID: $userId');
+    } catch (error) {
+      print('Error marking invitation as redeemed for user with ID: $userId - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+
+
+  Future<void> _deleteInvitationCode(String userId) async {
+    try {
+        await _firestore.collection('users').doc(userId).update({'invitationCode': FieldValue.delete()});
+      print('Invitation code deleted for user with ID: $userId');
+    } catch (error) {
+      print('Error deleting invitation code for user with ID: $userId - $error');
+        }
+  }
+  Future<void> _increaseStrikes(String userId) async {
+    try {
+      // Increment the 'strikes' field by 10 for the given user ID
+      await _firestore.collection('users').doc(userId).update({'strikes': FieldValue.increment(10)});
+      print('Strikes increased for user with ID: $userId');
+    } catch (error) {
+      print('Error increasing strikes for user with ID: $userId - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+
+
 
   @override
   void initState() {
@@ -264,15 +478,35 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset("assets/envelope.png"),
-                              SizedBox(width: 15,),
-                              Text("Invite a Friend",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
-                            ],
+                          GestureDetector(
+                            onTap: (){
+                              _generateInvitationCode();
+                              _fetchInvitationCode();
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/envelope.png"),
+                                SizedBox(width: 15,),
+                                Text("Invite a Friend",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
+                              ],
+                            ),
                           ),
-
+                          SizedBox(height: 20,),
+                          GestureDetector(
+                            onTap: (){
+                              _showInvitationCodeEnterPopup();
+                              // _fetchInvitationCode();
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/envelope.png"),
+                                SizedBox(width: 15,),
+                                Text("Redeem",style: TextStyle(fontSize: 20,color:  Color(0xFF686868),),),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
