@@ -4,19 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart';
-
-import '../notificationPage.dart';
 TextEditingController commentController = TextEditingController();
 String comment='';
-class Community extends StatefulWidget {
-  const Community({Key? key}) : super(key: key);
+class MyPosts extends StatefulWidget {
+  const MyPosts({Key? key}) : super(key: key);
 
   @override
-  _CommunityState createState() => _CommunityState();
+  _MyPostsState createState() => _MyPostsState();
 }
 
-class _CommunityState extends State<Community> {
+class _MyPostsState extends State<MyPosts> {
   String? currentUserName = FirebaseAuth.instance.currentUser?.displayName;
   @override
   Widget build(BuildContext context) {
@@ -44,21 +41,16 @@ class _CommunityState extends State<Community> {
             Positioned(
               top: 10,
               right: 10,
-              child: GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ActivityList()));
-                },
-                child: Image.asset(
-                  "assets/search.png",
-                  height: 50,
-                ),
+              child: Image.asset(
+                "assets/search.png",
+                height: 50,
               ),
             ),
             Positioned(
               top: 20,
               left: MediaQuery.of(context).size.width / 3,
               child: Text(
-                "Community",
+                "My Posts",
                 style: const TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 22,
@@ -72,7 +64,7 @@ class _CommunityState extends State<Community> {
               padding: const EdgeInsets.only(top:100.0),
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('communityBooks')
+                    .collection('communityBooks').where('username', isEqualTo: currentUserName)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
@@ -87,7 +79,7 @@ class _CommunityState extends State<Community> {
                     itemCount: bookDocuments.length,
                     itemBuilder: (context, index) {
                       var bookData =
-                          bookDocuments[index].data() as Map<String, dynamic>;
+                      bookDocuments[index].data() as Map<String, dynamic>;
                       var documentId = bookDocuments[index].id;
 
                       return BookCard(
@@ -106,36 +98,7 @@ class _CommunityState extends State<Community> {
     );
   }
 }
-  void savePost(BuildContext context,String imgLink,String postedBy, String postedUserAvatar,String note,) async {
-    User? user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      String currentUserId = user.uid;
-
-      // Create a map representing the saved post
-      Map<String, dynamic> savedPost = {
-        'imageLink': imgLink ?? '',
-        'postedBy': postedBy?? '',
-        'avatarUrl': postedUserAvatar ?? '',
-        'note': note ?? '',
-      };
-
-      // Save the post information to the current user's data
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUserId)
-          .collection('savedPosts')
-          .add(savedPost);
-
-      // Show a confirmation message or perform any other action
-      // You can use Flutter's SnackBar to display a message.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Post saved successfully!'),
-        ),
-      );
-    }
-  }
 class BookCard extends StatefulWidget {
   final Map<String, dynamic> bookData;
   final String documentId;
@@ -143,9 +106,9 @@ class BookCard extends StatefulWidget {
 
   BookCard(
       {Key? key,
-      required this.bookData,
-      required this.documentId,
-      required this.index})
+        required this.bookData,
+        required this.documentId,
+        required this.index})
       : super(key: key);
 
   @override
@@ -160,7 +123,7 @@ class _BookCardState extends State<BookCard> {
   Widget build(BuildContext context) {
     int likes = widget.bookData['likes'] ?? 0;
     List<Map<String, dynamic>> comments =
-        List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+    List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
     log(comments.length.toString());
     User? user = FirebaseAuth.instance.currentUser;
     String currentUsername = widget.bookData['username'] ?? '';
@@ -171,7 +134,7 @@ class _BookCardState extends State<BookCard> {
 
     return GestureDetector(
       onTap: () {
-        savePost(context,widget.bookData['imageLink'],widget.bookData['username'],widget.bookData['avatarUrl'] ,widget.bookData['notes']);
+
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -249,7 +212,6 @@ class _BookCardState extends State<BookCard> {
                         onTap: (){
                           updateLikes(
                               _isLiked ? likes - 1 : likes + 1, widget.index,username);
-                          saveActivity(context,widget.bookData['imageLink'],widget.bookData['username'],widget.bookData['avatarUrl'],_isLiked?'Unliked':'Liked',widget.bookData['userId']);
                         },
                         child: SvgPicture.asset(
                           'assets/like.svg',
@@ -292,45 +254,84 @@ class _BookCardState extends State<BookCard> {
 
                 ],
               ),
-
+              // ListTile(
+              //   leading: CircleAvatar(
+              //     backgroundImage: NetworkImage(widget.bookData['avatarUrl'] ?? ''),
+              //   ),
+              //   title: Text(widget.bookData['username'] ?? 'Anonymous'),
+              // ),
+              // Container(
+              //   height: 150,
+              //   width: double.infinity,
+              //   child: Image.network(
+              //     widget.bookData['imageLink'] ?? '',
+              //     fit: BoxFit.contain,
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(8),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         widget.bookData['title'] ?? '',
+              //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              //       ),
+              //       SizedBox(height: 8),
+              //       Text(
+              //         '${widget.bookData['notes'] ?? ''}',
+              //         style: TextStyle(fontSize: 14),
+              //       ),
+              //       SizedBox(height: 8),
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Row(
+              //             children: [
+              //               IconButton(
+              //                 icon: Icon(
+              //                   Icons.thumb_up,
+              //                   color: _isLiked ? Colors.blue : null,
+              //                 ),
+              //                 onPressed: () {
+              //                   updateLikes(_isLiked ? likes-1 : likes + 1, widget.index);
+              //                 },
+              //               ),
+              //               Text('$likes'),
+              //             ],
+              //           ),
+              //
+              //         ],
+              //       ),
+              //       Row(
+              //         children: [
+              //           Expanded(
+              //             child: TextField(
+              //               controller: commentController,
+              //               decoration: InputDecoration(hintText: 'Write your comment'),
+              //             ),
+              //           ),
+              //           if (commentController.text.isEmpty)
+              //             TextButton(
+              //               onPressed: () {
+              //                 addComment(commentController.text);
+              //               },
+              //               child: Text('Add Comment'),
+              //             ),
+              //
+              //         ],
+              //       ),
+              //
+              //
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),
       ),
     );
   }
-  void saveActivity(BuildContext context, String imgLink, String activityBy, String activityUserAvatar,String type,String userId) async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      String currentUserId = user.uid;
-
-      // Create a map representing the saved post
-      Map<String, dynamic> savedPost = {
-        'imageLink': imgLink ?? '',
-        'activityBy': activityBy ?? '',
-        'activityUserAvatar': activityUserAvatar ?? '',
-        'type':type,
-
-      };
-
-      // Save the post information to the current user's data
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('activity')
-          .add(savedPost);
-
-      // Show a confirmation message or perform any other action
-      // You can use Flutter's SnackBar to display a message.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Post saved successfully!'),
-        ),
-      );
-    }
-  }
-
 
   void updateLikes(int newLikes, int index,String username) async {
     String currentUsername = widget.bookData['username'] ?? '';
@@ -377,7 +378,7 @@ class _BookCardState extends State<BookCard> {
     };
 
     List<Map<String, dynamic>> updatedComments =
-        List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+    List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
     updatedComments.add(commentData);
 
     // Update Firestore document with the new comments
@@ -493,7 +494,7 @@ class _CommentPageState extends State<CommentPage> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: Center(child: Text("No Comments yet"))
+                            child: Center(child: Text("No Comments yet"))
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -520,48 +521,48 @@ class _CommentPageState extends State<CommentPage> {
                       ],
                     ),
                   ):Column(
-                        children: [
-                          Expanded(
-                            child: ListView(children: [
-                              for (var comment in widget.comments)
-                                CommentWidget(
-                                    username: comment['username'],
-                                    avatarUrl: comment['avatarUrl'],
-                                    comment: comment['comment'])
-                            ]),
-                          ),
-
-                          // Add Comment Section
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    // controller: commentController,
-                                    onChanged: (value){
-                                      setState(() {
-                                        comment = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(hintText: 'Write your comment'),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: widget.onPressed,
-                                  child: Text('Comment',style: TextStyle(color: Colors.white),),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                    children: [
+                      Expanded(
+                        child: ListView(children: [
+                          for (var comment in widget.comments)
+                            CommentWidget(
+                                username: comment['username'],
+                                avatarUrl: comment['avatarUrl'],
+                                comment: comment['comment'])
+                        ]),
                       ),
+
+                      // Add Comment Section
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                // controller: commentController,
+                                onChanged: (value){
+                                  setState(() {
+                                    comment = value;
+                                  });
+                                },
+                                decoration: InputDecoration(hintText: 'Write your comment'),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: widget.onPressed,
+                              child: Text('Comment',style: TextStyle(color: Colors.white),),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
               ),
             ),
 
-          
+
           ],
         ),
       ),

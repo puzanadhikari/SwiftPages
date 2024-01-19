@@ -37,6 +37,7 @@ class _MyBooksState extends State<MyBooks> {
           'notes': note,
           'username': user.displayName ?? 'Anonymous',
           'avatarUrl': user.photoURL ?? '',
+          'userId':uid
           // Add other fields as needed
         });
 
@@ -394,6 +395,7 @@ class DetailBook {
   final String imageLink;
   final String documentId;
   int currentPage; // Add this field
+  int totalPage; // Add this field
   List<String> notes; // Add this field
 
   DetailBook({
@@ -401,6 +403,7 @@ class DetailBook {
     required this.imageLink,
     required this.documentId,
     this.currentPage = 0, // Set the default value to 0
+    this.totalPage = 0, // Set the default value to 0
     this.notes = const [], // Initialize notes as an empty list
   });
 
@@ -410,6 +413,7 @@ class DetailBook {
         author: 'No Author',
         imageLink: 'No Image',
         documentId: documentId,
+        totalPage: 100
       );
     }
     return DetailBook(
@@ -417,6 +421,7 @@ class DetailBook {
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,
       currentPage: map['currentPage'] ?? 0, // Set the currentPage value
+      totalPage: map['totalPageCount'] ?? 0, // Set the currentPage value
       notes: List<String>.from(map['notes'] ?? []), // Set the notes value
     );
   }
