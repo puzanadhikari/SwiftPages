@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swiftpages/signUpPage.dart';
+import 'package:swiftpages/ui/homePage.dart';
+import 'package:swiftpages/ui/mainPage.dart';
 
 import 'choosePage.dart';
 
@@ -60,18 +62,33 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  Future<void> checkAuthentication() async {
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
 
+    if (user != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()) // Replace with your homepage
+      );
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ChoosePage()));
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // checkLoginTime();
-    // Call the _navigateToNextScreen function after 1 second
-    Timer(
-      Duration(seconds: 1),
-          () =>Navigator.push(context, MaterialPageRoute(builder: (context)=>ChoosePage())),
-    );
+    Future.delayed(Duration.zero, () {
+      checkLoginTime();
+      checkAuthentication();
+    });
   }
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
