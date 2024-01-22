@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -247,20 +248,26 @@ class _BookCardState extends State<BookCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundColor: Color(0xFFFEEAD4),
-                      backgroundImage: NetworkImage(
-                        widget.bookData['avatarUrl'] ?? '',
+                GestureDetector(
+                  onTap: ()async{
+                    fetchUserDetailsById(widget.bookData['userId']);
+
+                  },
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Color(0xFFFEEAD4),
+                        backgroundImage: NetworkImage(
+                          widget.bookData['avatarUrl'] ?? '',
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(widget.bookData['username'] ?? 'Anonymous'),
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(widget.bookData['username'] ?? 'Anonymous'),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -399,6 +406,98 @@ class _BookCardState extends State<BookCard> {
           ],
         ),
       ),
+    );
+  }
+  Future<Map<String, dynamic>> fetchUserDetailsById(String userId) async {
+    log(userId.toString());
+    try {
+
+          DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+
+            Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+            _showUserDetail(context, userData['email'], userData['strikes']);
+            return userData;
+
+
+
+
+    } catch (error) {
+      // Handle errors appropriately
+      log("Error fetching user details: $error");
+      throw Exception("Failed to fetch user details.");
+    }
+  }
+
+  void _showUserDetail(BuildContext context,String email,int strikes) {
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Swift Pages user detail",
+            style: TextStyle(color: Colors.black), // Set title text color
+          ),
+          actions: <Widget>[
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
+              ),
+              color: Color(0xFFFF997A),
+              elevation: 8,
+              margin: EdgeInsets.all(10),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Color(0xFFFEEAD4),
+                          backgroundImage: NetworkImage(
+                            widget.bookData['avatarUrl'] ?? '',
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.bookData['username'] ?? 'Anonymous'),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Image.asset(
+                          "assets/strick.png",
+                          height: 40,
+                          color: Colors.black,
+                        ),
+                        Text(strikes.toString(), style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(email),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9),
+
+        );
+      },
     );
   }
   void _showConfirmationDialogToSave(BuildContext context) {
