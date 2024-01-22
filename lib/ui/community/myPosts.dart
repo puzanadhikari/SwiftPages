@@ -19,49 +19,12 @@ class _MyPostsState extends State<MyPosts> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xfffeead4),
+        backgroundColor: Color(0xffD9D9D9),
         body: Stack(
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Image.asset(
-                'assets/Ellipse.png', // Replace with the correct image path
-                fit: BoxFit.contain,
-              ),
-            ),
-            Positioned(
-              top: -20,
-              left: -10,
-              child: Image.asset(
-                "assets/logo.png",
-                height: 120,
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Image.asset(
-                "assets/search.png",
-                height: 50,
-              ),
-            ),
-            Positioned(
-              top: 20,
-              left: MediaQuery.of(context).size.width / 3,
-              child: Text(
-                "My Posts",
-                style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xfffeead4),
-                  height: 29 / 22,
-                ),
-              ),
-            ),
+
             Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top:10.0),
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('communityBooks').where('username', isEqualTo: currentUserName)
@@ -408,13 +371,51 @@ class CommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(avatarUrl),
-        backgroundColor:  Color(0xFFFEEAD4),
+        return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
       ),
-      title: Text(username.toUpperCase(),style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
-      subtitle: Text(comment,style: TextStyle(fontSize: 14),),
+      color: Color(0xffD9D9D9),
+      elevation: 8,
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor:  Color(0xFFFEEAD4),
+                      backgroundImage: NetworkImage(
+                        avatarUrl,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text( username.toUpperCase(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                        Text(comment,style: TextStyle(fontSize: 14),),
+                      ],
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+
+
+          ],
+        ),
+      ),
     );
   }
 }
@@ -483,44 +484,77 @@ class _CommentPageState extends State<CommentPage> {
               padding: const EdgeInsets.only(top: 100.0),
               child: Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+                  borderRadius: BorderRadius.circular(
+                      20.0), // Adjust the radius as needed
                 ),
                 color: Color(0xFFFF997A),
                 elevation: 8,
                 margin: EdgeInsets.all(10),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:widget.commentCount==0?Center(
+                  child: widget.commentCount == 0
+                      ? Center(
                     child: Column(
                       children: [
                         Expanded(
-                            child: Center(child: Text("No Comments yet"))
-                        ),
+                            child:
+                            Center(child: Text("No Comments yet"))),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  // controller: commentController,
-                                  onChanged: (value){
-                                    setState(() {
-                                      comment = value;
-                                    });
-                                  },
-                                  decoration: InputDecoration(hintText: 'Write your comment'),
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Color(0xffD9D9D9),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0),
+                                    child: TextField(
+                                      // controller: commentController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          comment = value;
+                                        });
+                                      },
+                                      cursorColor: Color(0xFF283E50),
+                                      decoration: InputDecoration(
+                                          hintText: 'Add your comment',
+                                          hintStyle: TextStyle(color: Colors.grey)
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: widget.onPressed,
-                                child: Text('Comment',style: TextStyle(color: Colors.white),),
-                              ),
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF283E50),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: TextButton(
+                                      onPressed: widget.onPressed,
+                                      child: Text(
+                                        'Comment',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ):Column(
+                  )
+                      : Column(
                     children: [
                       Expanded(
                         child: ListView(children: [
@@ -535,30 +569,59 @@ class _CommentPageState extends State<CommentPage> {
                       // Add Comment Section
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                // controller: commentController,
-                                onChanged: (value){
-                                  setState(() {
-                                    comment = value;
-                                  });
-                                },
-                                decoration: InputDecoration(hintText: 'Write your comment'),
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Color(0xffD9D9D9),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:8.0),
+                                  child: TextField(
+                                    // controller: commentController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        comment = value;
+                                      });
+                                    },
+                                    cursorColor: Color(0xFF283E50),
+                                    decoration: InputDecoration(
+                                        hintText: 'Add your comment',
+                                        hintStyle: TextStyle(color: Colors.grey)
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: widget.onPressed,
-                              child: Text('Comment',style: TextStyle(color: Colors.white),),
-                            ),
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF283E50),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: widget.onPressed,
+                                    child: Text(
+                                      'Comment',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-
               ),
             ),
 

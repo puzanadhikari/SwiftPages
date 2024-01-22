@@ -13,6 +13,7 @@ import 'package:swiftpages/ui/community/savedPosts.dart';
 import 'package:swiftpages/ui/community/ui.dart';
 import 'package:swiftpages/ui/restoreStreak/ui.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
+import 'package:swiftpages/ui/topNavigatorBar.dart';
 
 import '../signUpPage.dart';
 import 'community/myPosts.dart';
@@ -539,43 +540,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>Community()));
+                                      guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>TopNavigation()));
                                     },
                                     child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
                             SizedBox(height: 20,),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
-                              children: [
-                                Image.asset("assets/envelope.png",height: 20,),
-                                SizedBox(width: 15,),
-                                GestureDetector(
-                                    onTap: (){
-                                      guestLogin==true?_showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>MyPosts()));
-                                    },
-                                    child: Text("My Posts",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
-                              ],
-                            ),
-                            SizedBox(height: 20,),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
-                              children: [
-                                Image.asset("assets/envelope.png",height: 20,),
-                                SizedBox(width: 15,),
-                                GestureDetector(
-                                    onTap: (){
-                                      guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>SavedPosts()));
-                                    },
-                                    child: Text("Saved Posts",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
-                              ],
-                            ),
-                            Divider(
-                              thickness: 1,
-                              color: Colors.black.withOpacity(0.25),
-                            ),
                             Text(
                               "Streak Setting",
                               style: TextStyle(
@@ -700,7 +670,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           child: Container(
-
                             height: 26,
                             child: Center(
                               child: Text(
