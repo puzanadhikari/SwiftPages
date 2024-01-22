@@ -20,6 +20,23 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
   String? currentUserName = FirebaseAuth.instance.currentUser?.displayName;
+  Stream<int> getActivityCountStream() async* {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String currentUserId = user.uid;
+
+      yield* FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .collection('activity')
+          .snapshots()
+          .map((querySnapshot) => querySnapshot.size);
+    } else {
+      yield 0;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +69,42 @@ class _CommunityState extends State<Community> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => ActivityList()));
                 },
-                child: Image.asset(
-                  "assets/search.png",
-                  height: 50,
+                child: Stack(
+                  children: [
+                    Icon(Icons.notifications,size: 35,),
+                    Positioned(
+                      left: 15,
+                      child:StreamBuilder<int>(
+                        stream: getActivityCountStream(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container(); // Return an empty container while loading
+                          } else if (snapshot.hasError) {
+                            return Container(); // Handle the error case
+                          } else {
+                            int activityCount = snapshot.data ?? 0;
+                            return activityCount > 0
+                                ? CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.red,
+                              child: Text(
+                                activityCount.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            )
+                                : Container();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+
             Positioned(
               top: 20,
               left: MediaQuery.of(context).size.width / 3,
@@ -94,6 +141,7 @@ class _CommunityState extends State<Community> {
                       var bookData =
                           bookDocuments[index].data() as Map<String, dynamic>;
                       var documentId = bookDocuments[index].id;
+                      log(bookDocuments[index].id.toString());
 
                       return BookCard(
                         bookData: bookData,
@@ -176,7 +224,7 @@ class _BookCardState extends State<BookCard> {
         List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
     log(comments.length.toString());
     User? user = FirebaseAuth.instance.currentUser;
-    String currentUsername = widget.bookData['username'] ?? '';
+    String currentUsername = user?.displayName ?? '';
     String username = user?.displayName ?? '';
     List<dynamic> likedBy = widget.bookData['likedBy'] ?? [];
 
@@ -260,6 +308,13 @@ class _BookCardState extends State<BookCard> {
                                       docId: widget.documentId,
                                       onPressed: () {
                                         addComment(comment);
+                                        saveActivity(
+                                            context,
+                                            widget.bookData['imageLink'],
+                                            currentUsername ,
+                                            widget.bookData['avatarUrl'],
+                                            'Comment',
+                                            widget.bookData['userId']);
                                       },
                                       commentCount: comments.length,
                                     )));
@@ -276,10 +331,11 @@ class _BookCardState extends State<BookCard> {
                       onTap: () {
                         updateLikes(_isLiked ? likes - 1 : likes + 1,
                             widget.index, username);
+
                         saveActivity(
                             context,
                             widget.bookData['imageLink'],
-                            widget.bookData['username'],
+                            currentUsername,
                             widget.bookData['avatarUrl'],
                             _isLiked ? 'Unliked' : 'Liked',
                             widget.bookData['userId']);
@@ -408,13 +464,6 @@ class _BookCardState extends State<BookCard> {
           .collection('activity')
           .add(savedPost);
 
-      // Show a confirmation message or perform any other action
-      // You can use Flutter's SnackBar to display a message.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Post saved successfully!'),
-        ),
-      );
     }
   }
 
