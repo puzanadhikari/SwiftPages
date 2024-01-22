@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swiftpages/ui/choosePage.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 
 import 'books/allBooks.dart';
@@ -170,7 +171,7 @@ userName  = preferences.getString("userName")!;
               top: 90,
               left: 10,
               child: Text(
-                "Welcome ${userName} !!",
+                "Welcome ${guestLogin==true?'Guest':userName} !!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Color(0xffFEEAD4),
