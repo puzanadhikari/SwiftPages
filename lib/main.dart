@@ -28,10 +28,9 @@ class _MyAppState extends State<MyApp> {
   }
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([Devicegit Orientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );
   }
-}
