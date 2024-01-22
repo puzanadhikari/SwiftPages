@@ -48,6 +48,9 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs =await SharedPreferences.getInstance();
     try {
       prefs.clear();
+      setState(() {
+        guestLogin = false;
+      });
       await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>SplashScreen()));
     } catch (e) {

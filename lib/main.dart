@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
       setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -34,3 +35,4 @@ class _MyAppState extends State<MyApp> {
       home: SplashScreen(),
     );
   }
+}
