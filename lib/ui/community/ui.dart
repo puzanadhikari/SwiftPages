@@ -7,8 +7,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
 
 import '../notificationPage.dart';
+
 TextEditingController commentController = TextEditingController();
-String comment='';
+String comment = '';
+
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
 
@@ -18,6 +20,7 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
   String? currentUserName = FirebaseAuth.instance.currentUser?.displayName;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,8 +48,9 @@ class _CommunityState extends State<Community> {
               top: 10,
               right: 10,
               child: GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ActivityList()));
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ActivityList()));
                 },
                 child: Image.asset(
                   "assets/search.png",
@@ -69,7 +73,7 @@ class _CommunityState extends State<Community> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top: 100.0),
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('communityBooks')
@@ -81,7 +85,8 @@ class _CommunityState extends State<Community> {
                     );
                   }
 
-                  List<QueryDocumentSnapshot> bookDocuments = snapshot.data!.docs;
+                  List<QueryDocumentSnapshot> bookDocuments =
+                      snapshot.data!.docs;
 
                   return ListView.builder(
                     itemCount: bookDocuments.length,
@@ -106,36 +111,44 @@ class _CommunityState extends State<Community> {
     );
   }
 }
-  void savePost(BuildContext context,String imgLink,String postedBy, String postedUserAvatar,String note,) async {
-    User? user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      String currentUserId = user.uid;
+void savePost(
+  BuildContext context,
+  String imgLink,
+  String postedBy,
+  String postedUserAvatar,
+  String note,
+) async {
+  User? user = FirebaseAuth.instance.currentUser;
 
-      // Create a map representing the saved post
-      Map<String, dynamic> savedPost = {
-        'imageLink': imgLink ?? '',
-        'postedBy': postedBy?? '',
-        'avatarUrl': postedUserAvatar ?? '',
-        'note': note ?? '',
-      };
+  if (user != null) {
+    String currentUserId = user.uid;
 
-      // Save the post information to the current user's data
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUserId)
-          .collection('savedPosts')
-          .add(savedPost);
+    // Create a map representing the saved post
+    Map<String, dynamic> savedPost = {
+      'imageLink': imgLink ?? '',
+      'postedBy': postedBy ?? '',
+      'avatarUrl': postedUserAvatar ?? '',
+      'note': note ?? '',
+    };
 
-      // Show a confirmation message or perform any other action
-      // You can use Flutter's SnackBar to display a message.
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Post saved successfully!'),
-        ),
-      );
-    }
+    // Save the post information to the current user's data
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserId)
+        .collection('savedPosts')
+        .add(savedPost);
+
+    // Show a confirmation message or perform any other action
+    // You can use Flutter's SnackBar to display a message.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Post saved successfully!'),
+      ),
+    );
   }
+}
+
 class BookCard extends StatefulWidget {
   final Map<String, dynamic> bookData;
   final String documentId;
@@ -169,137 +182,212 @@ class _BookCardState extends State<BookCard> {
 
     _isLiked = likedBy.contains(username);
 
-    return GestureDetector(
-      onTap: () {
-        savePost(context,widget.bookData['imageLink'],widget.bookData['username'],widget.bookData['avatarUrl'] ,widget.bookData['notes']);
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
-        ),
-        color: Color(0xFFFF997A),
-        elevation: 8,
-        margin: EdgeInsets.all(10),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor:  Color(0xFFFEEAD4),
-                        backgroundImage: NetworkImage(
-                          widget.bookData['avatarUrl'] ?? '',
-                        ),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(20.0), // Adjust the radius as needed
+      ),
+      color: Color(0xFFFF997A),
+      elevation: 8,
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Color(0xFFFEEAD4),
+                      backgroundImage: NetworkImage(
+                        widget.bookData['avatarUrl'] ?? '',
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(widget.bookData['username'] ?? 'Anonymous'),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                    height: 150,
-                    width: 100,
-                    child: Image.network(
-                      widget.bookData['imageLink'] ?? '',
-                      fit: BoxFit.contain,
                     ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(widget.bookData['username'] ?? 'Anonymous'),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 150,
+                  width: 100,
+                  child: Image.network(
+                    widget.bookData['imageLink'] ?? '',
+                    fit: BoxFit.contain,
                   ),
-                  SizedBox(height: 10,)
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Review",
+                      style: TextStyle(
+                          color: Color(0xFF283E50),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      '${comments.length} ',
+                      style: TextStyle(
+                        color: Color(0xFF283E50),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CommentPage(
+                                      comments: comments,
+                                      docId: widget.documentId,
+                                      onPressed: () {
+                                        addComment(comment);
+                                      },
+                                      commentCount: comments.length,
+                                    )));
+                      },
+                      child: SvgPicture.asset(
+                        'assets/comment.svg',
+                        height: 30,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        updateLikes(_isLiked ? likes - 1 : likes + 1,
+                            widget.index, username);
+                        saveActivity(
+                            context,
+                            widget.bookData['imageLink'],
+                            widget.bookData['username'],
+                            widget.bookData['avatarUrl'],
+                            _isLiked ? 'Unliked' : 'Liked',
+                            widget.bookData['userId']);
+                      },
+                      child: SvgPicture.asset(
+                        'assets/like.svg',
+                        height: 25,
+                        color: _isLiked ? Colors.red : Color(0xFFFEEAD4),
+                      ),
+                    ),
+                    Text(
+                      ' ${likes}',
+                      style: TextStyle(
+                        color: Color(0xFF283E50),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Review",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('${comments.length} ',style: TextStyle(color: Color(0xFF283E50),),),
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CommentPage(
-                                    comments: comments,
-                                    docId: widget.documentId,
-                                    onPressed: (){
-                                      addComment(comment);
-                                    },
-                                    commentCount: comments.length,
-                                  )));
-                        },
-                        child: SvgPicture.asset(
-                          'assets/comment.svg',
-                          height: 30,
-                        ),
-                      ),
-                      SizedBox(width: 10,),
-                      GestureDetector(
-                        onTap: (){
-                          updateLikes(
-                              _isLiked ? likes - 1 : likes + 1, widget.index,username);
-                          saveActivity(context,widget.bookData['imageLink'],widget.bookData['username'],widget.bookData['avatarUrl'],_isLiked?'Unliked':'Liked',widget.bookData['userId']);
-                        },
-                        child: SvgPicture.asset(
-                          'assets/like.svg',
-                          height: 25,
-                          color: _isLiked ? Colors.red: Color(0xFFFEEAD4),
-                        ),
-                      ),
 
-                      Text(' ${likes}',style: TextStyle(color: Color(0xFF283E50),),),
-                    ],
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top:20.0),
-                    child: Container(
-                      height:120,
-                      width: 200,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Container(
-                        height: 150,
-                        width: 150,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            '${widget.bookData['notes'] ?? ''}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Color(0xFF686868),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
+                      Container(
+                        height: 120,
+                        width: 200,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Container(
+                          height: 150,
+                          width: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              '${widget.bookData['notes'] ?? ''}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Color(0xFF686868),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      SizedBox(height: 10,),
+                      GestureDetector(
+                          onTap: (){
+                            _showConfirmationDialogToSave(context);
+                          },
+                          child: Icon(Icons.download))
+                    ],
                   ),
+                ),
 
-                ],
-              ),
-
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
-  void saveActivity(BuildContext context, String imgLink, String activityBy, String activityUserAvatar,String type,String userId) async {
+  void _showConfirmationDialogToSave(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Edit User Name",
+            style: TextStyle(color: Colors.blue), // Set title text color
+          ),
+          content: Text("Are you sure want to save this post?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "No",
+                style: TextStyle(color: Colors.red), // Set cancel text color
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                savePost(
+                    context,
+                    widget.bookData['imageLink'],
+                    widget.bookData['username'],
+                    widget.bookData['avatarUrl'],
+                    widget.bookData['notes']);
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.green), // Set save text color
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
+        );
+      },
+    );
+  }
+  void saveActivity(BuildContext context, String imgLink, String activityBy,
+      String activityUserAvatar, String type, String userId) async {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -310,8 +398,7 @@ class _BookCardState extends State<BookCard> {
         'imageLink': imgLink ?? '',
         'activityBy': activityBy ?? '',
         'activityUserAvatar': activityUserAvatar ?? '',
-        'type':type,
-
+        'type': type,
       };
 
       // Save the post information to the current user's data
@@ -331,8 +418,7 @@ class _BookCardState extends State<BookCard> {
     }
   }
 
-
-  void updateLikes(int newLikes, int index,String username) async {
+  void updateLikes(int newLikes, int index, String username) async {
     String currentUsername = widget.bookData['username'] ?? '';
     List<dynamic> likedBy = List<String>.from(widget.bookData['likedBy'] ?? []);
 
@@ -392,7 +478,6 @@ class _BookCardState extends State<BookCard> {
       comment = '';
     });
 
-
     log('Comment added to index: ${widget.index}');
   }
 }
@@ -410,10 +495,16 @@ class CommentWidget extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(avatarUrl),
-        backgroundColor:  Color(0xFFFEEAD4),
+        backgroundColor: Color(0xFFFEEAD4),
       ),
-      title: Text(username.toUpperCase(),style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
-      subtitle: Text(comment,style: TextStyle(fontSize: 14),),
+      title: Text(
+        username.toUpperCase(),
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(
+        comment,
+        style: TextStyle(fontSize: 14),
+      ),
     );
   }
 }
@@ -424,7 +515,12 @@ class CommentPage extends StatefulWidget {
   final VoidCallback onPressed;
   int commentCount;
 
-  CommentPage({Key? key, required this.comments, required this.docId,required this.onPressed,required this.commentCount})
+  CommentPage(
+      {Key? key,
+      required this.comments,
+      required this.docId,
+      required this.onPressed,
+      required this.commentCount})
       : super(key: key);
 
   @override
@@ -432,8 +528,6 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -482,86 +576,94 @@ class _CommentPageState extends State<CommentPage> {
               padding: const EdgeInsets.only(top: 100.0),
               child: Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+                  borderRadius: BorderRadius.circular(
+                      20.0), // Adjust the radius as needed
                 ),
                 color: Color(0xFFFF997A),
                 elevation: 8,
                 margin: EdgeInsets.all(10),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:widget.commentCount==0?Center(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Center(child: Text("No Comments yet"))
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
+                  child: widget.commentCount == 0
+                      ? Center(
+                          child: Column(
                             children: [
                               Expanded(
-                                child: TextField(
-                                  // controller: commentController,
-                                  onChanged: (value){
-                                    setState(() {
-                                      comment = value;
-                                    });
-                                  },
-                                  decoration: InputDecoration(hintText: 'Write your comment'),
+                                  child:
+                                      Center(child: Text("No Comments yet"))),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        // controller: commentController,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            comment = value;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: 'Write your comment'),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: widget.onPressed,
+                                      child: Text(
+                                        'Comment',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: widget.onPressed,
-                                child: Text('Comment',style: TextStyle(color: Colors.white),),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ):Column(
-                        children: [
-                          Expanded(
-                            child: ListView(children: [
-                              for (var comment in widget.comments)
-                                CommentWidget(
-                                    username: comment['username'],
-                                    avatarUrl: comment['avatarUrl'],
-                                    comment: comment['comment'])
-                            ]),
-                          ),
-
-                          // Add Comment Section
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    // controller: commentController,
-                                    onChanged: (value){
-                                      setState(() {
-                                        comment = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(hintText: 'Write your comment'),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: widget.onPressed,
-                                  child: Text('Comment',style: TextStyle(color: Colors.white),),
-                                ),
-                              ],
+                        )
+                      : Column(
+                          children: [
+                            Expanded(
+                              child: ListView(children: [
+                                for (var comment in widget.comments)
+                                  CommentWidget(
+                                      username: comment['username'],
+                                      avatarUrl: comment['avatarUrl'],
+                                      comment: comment['comment'])
+                              ]),
                             ),
-                          ),
-                        ],
-                      ),
-                ),
 
+                            // Add Comment Section
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      // controller: commentController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          comment = value;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: 'Write your comment'),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: widget.onPressed,
+                                    child: Text(
+                                      'Comment',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
               ),
             ),
-
-          
           ],
         ),
       ),
