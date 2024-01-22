@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:swiftpages/signUpPage.dart';
 import 'package:swiftpages/ui/homePage.dart';
 import 'package:swiftpages/ui/mainPage.dart';
-
 import 'choosePage.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override

@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:swiftpages/loginPage.dart';
 import 'package:swiftpages/signUpPage.dart';
+import 'package:swiftpages/ui/mainPage.dart';
 
+bool guestLogin = false;
 class ChoosePage extends StatefulWidget {
   @override
   State<ChoosePage> createState() => _ChoosePageState();
@@ -185,7 +187,10 @@ class _ChoosePageState extends State<ChoosePage> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            _showPersistentBottomSheet(context);
+                            setState(() {
+                              guestLogin = true;
+                            });
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainPage()));
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Color(0xFFFF997A),// Background color
@@ -194,7 +199,6 @@ class _ChoosePageState extends State<ChoosePage> {
                             ),
                           ),
                           child: Container(
-
                             height: 26,
                             child: Center(
                               child: Text(
@@ -213,6 +217,7 @@ class _ChoosePageState extends State<ChoosePage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                            Navigator.pop(context);
                             Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage()));
                           },
                           style: ElevatedButton.styleFrom(
