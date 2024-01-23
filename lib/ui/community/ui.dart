@@ -449,7 +449,7 @@ class _BookCardState extends State<BookCard> {
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.7,
+          heightFactor: 0.85,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -458,7 +458,7 @@ class _BookCardState extends State<BookCard> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,

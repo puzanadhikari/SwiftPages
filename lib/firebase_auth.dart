@@ -35,7 +35,7 @@ class FirebaseAuthService {
   }
 
   Future<User?> SignUpWithEmailAndPassword(
-      BuildContext context, String email, String password, String username,String avatars) async {
+      BuildContext context, String email, String password, String username,String avatars,String dailyGoal) async {
     try {
       UserCredential userCredential =
       await _auth.createUserWithEmailAndPassword(
@@ -51,7 +51,7 @@ class FirebaseAuthService {
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,
           fontSize: 16.0);
-      addUserData(email,username,password,avatars);
+      addUserData(email,username,password,avatars,dailyGoal);
       sendVerificationEmail(context);
 
       Navigator.push(
@@ -72,7 +72,7 @@ class FirebaseAuthService {
       return null;
     }
   }
-  void addUserData(String email,String username,String password,String avatar) async {
+  void addUserData(String email,String username,String password,String avatar,String dailyGoal) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -87,6 +87,7 @@ class FirebaseAuthService {
               "username":username,
               "password":password,
               "avatar":avatar,
+          'dailyGoal':dailyGoal
           // Add other user details as needed
         };
 
@@ -128,6 +129,19 @@ class FirebaseAuthService {
       preferences.setString("profilePicture", credential.user?.photoURL ?? "");
       if (credential.user != null) {
         String uid = credential.user!.uid;
+        DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+        if (userDoc.exists) {
+          preferences.setString(
+            "dailyGoal",
+            userDoc.get('dailyGoal') ?? "", // Replace 'dailyGoal' with the actual field name
+          );
+          preferences.setInt(
+            "currentTime",
+            userDoc.get('currentTime') ?? "", // Replace 'dailyGoal' with the actual field name
+          );
+        }
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
           'lastLoginTimestamp': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
@@ -158,7 +172,7 @@ class FirebaseAuthService {
         );
       }
     } catch (e) {
-      print("Error during login: $e");
+      log("Error during login: $e");
       Fluttertoast.showToast(
           msg: 'Login Failed',
           backgroundColor: Colors.green,

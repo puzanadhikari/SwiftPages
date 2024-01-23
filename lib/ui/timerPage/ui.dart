@@ -7,6 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../homePage.dart';
 import '../myBooks.dart';
 
 class Music {
@@ -26,7 +28,18 @@ class Timer extends StatefulWidget {
 }
 
 class _TimerState extends State<Timer> {
-  final int _duration = 10;
+
+  Future<void> fetchUserInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    dailyGoal  = preferences.getString("dailyGoal")!;
+    _duration = int.parse(dailyGoal);
+    int time = preferences.getInt('currentTime')!;
+
+  }
+String dailyGoal='';
+   int _duration = 0*60;
+   int currentTime=0;
   final CountDownController _controller = CountDownController();
   late bool _isRunning;
   late bool _isPlaying;
@@ -109,9 +122,14 @@ class _TimerState extends State<Timer> {
   @override
   void initState() {
     super.initState();
+    fetchUserInfo();
     loadMusic();
     _isRunning = false;
     _isPlaying = false;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _retrieveStoredTime(); // Retrieve stored time when the widget is loaded
+    });
+
     // WidgetsBinding.instance!.addPostFrameCallback((_) {
     //   _showPersistentMusicBottomSheet(context);
     // });
@@ -271,6 +289,7 @@ class _TimerState extends State<Timer> {
                             SizedBox(
                               height: 20,
                             ),
+
                           ],
                         ),
                       ),
@@ -279,7 +298,7 @@ class _TimerState extends State<Timer> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            widget.book!.imageLink,
+                            widget.book.imageLink,
                             height: 200,
                             width: 200,
                             loadingBuilder: (BuildContext context, Widget child,
@@ -320,7 +339,7 @@ class _TimerState extends State<Timer> {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: CircularCountDownTimer(
-                        duration: _duration,
+                        duration: (_duration*60),
                         controller: _controller,
                         width: MediaQuery.of(context).size.width / 3,
                         height: MediaQuery.of(context).size.height / 3,
@@ -338,20 +357,27 @@ class _TimerState extends State<Timer> {
                         isReverseAnimation: false,
                         isTimerTextShown: true,
                         autoStart: false,
+
                         onStart: () {
                           debugPrint('Countdown Started');
                         },
                         onComplete: () {
                           debugPrint('Countdown Ended');
+
                           setState(() {
                             _isRunning = false;
                           });
                           updateStrikeInFirestore();
                           // Reset the timer when completed
-                          _controller.restart(duration: _duration);
+                          _controller.restart(duration:  (_duration*60));
                         },
+
                         onChange: (String timeStamp) {
                           debugPrint('Countdown Changed $timeStamp');
+                         setState(() {
+
+                         });
+
                         },
                         timeFormatterFunction:
                             (defaultFormatterFunction, duration) {
@@ -360,10 +386,12 @@ class _TimerState extends State<Timer> {
                           } else {
                             return Function.apply(
                                 defaultFormatterFunction, [duration]);
+
                           }
                         },
                       ),
                     ),
+                    Text("Remaining Goal\n${(_duration*60)-currentTime} seconds"),
                     ElevatedButton(
                       onPressed: _handleTimerButtonPressed,
                       child: Text(_isRunning ? 'Pause' : 'Start'),
@@ -608,10 +636,46 @@ class _TimerState extends State<Timer> {
     setState(() {
       if (_isRunning) {
         _controller.pause();
+        currentTime = int.parse(_controller.getTime().toString());
+        _storeCurrentTime();
       } else {
         _controller.resume();
       }
       _isRunning = !_isRunning;
     });
+  }
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> _storeCurrentTime() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'currentTime': (currentTime)});
+      print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+    } catch (error) {
+      print('Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+  Future<void> _retrieveStoredTime() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
+
+      if (userDoc.exists) {
+        int storedTime = userDoc.get('currentTime') ?? 0;
+        setState(() {
+          // _duration = storedTime;
+          currentTime = storedTime;
+        });
+        // if (_duration > 0) {
+        //   _controller.resume();
+        // }
+      }
+    } catch (error) {
+      print('Error retrieving stored time: $error');
+    }
   }
 }

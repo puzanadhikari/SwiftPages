@@ -169,7 +169,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                 hintText: 'Username',
                                 border: InputBorder.none,
                                 prefixIcon: Icon(Icons.person),
-
                               ),
                             ),
                           ),
