@@ -677,7 +677,9 @@ class CommentWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text( username.toUpperCase(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
-                        Text(comment,style: TextStyle(fontSize: 14),),
+                        Container(
+                            width: 250,
+                            child: Text(comment,style: TextStyle(fontSize: 14),)),
                       ],
                     ),
                   ],
@@ -859,9 +861,7 @@ class _CommentPageState extends State<CommentPage> {
                                 Text(widget.bookData['username'] ?? 'Anonymous'),
                               ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
+
                             Container(
                               height: 150,
                               width: 100,
@@ -923,6 +923,18 @@ class _CommentPageState extends State<CommentPage> {
                       ],
                     ),
                   ),
+                            Divider(
+                              color: Color(0xff686868),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Comments ${widget.commentCount}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
+                                Text('${widget.bookData['likes'] } Likes',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            SizedBox(height: 5,),
                             Expanded(
                               child: ListView(children: [
                                 for (var comment in widget.comments)
