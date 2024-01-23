@@ -101,7 +101,29 @@ class _HomePageState extends State<HomePage> {
   String email = ' ';
   String userName = ' ';
   String dailyGoal = ' ';
+  Future<void> _retrieveStoredTime() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
 
+      if (userDoc.exists) {
+        String storedTime = userDoc.get('dailyGoal') ?? 0;
+        setState(() {
+          // _duration = storedTime;
+          dailyGoal = storedTime;
+        });
+        // if (_duration > 0) {
+        //   _controller.resume();
+        // }
+      }
+    } catch (error) {
+      print('Error retrieving stored time: $error');
+    }
+  }
   Future<void> fetchBooks() async {
     final response = await http.get(
       Uri.parse(apiUrl),
@@ -135,12 +157,13 @@ class _HomePageState extends State<HomePage> {
 SharedPreferences preferences = await SharedPreferences.getInstance();
 email  = preferences.getString("email")!;
 userName  = preferences.getString("userName")!;
-dailyGoal  = preferences.getString("dailyGoal")!;
+// dailyGoal  = preferences.getString("dailyGoal")!;
   }
 
   @override
   void initState() {
     super.initState();
+    _retrieveStoredTime();
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {

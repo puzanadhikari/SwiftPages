@@ -31,14 +31,12 @@ class _TimerState extends State<Timer> {
 
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    dailyGoal  = preferences.getString("dailyGoal")!;
-    _duration = int.parse(dailyGoal);
+    
     int time = preferences.getInt('currentTime')!;
 
   }
 String dailyGoal='';
-   int _duration = 0*60;
+   int _duration = 0;
    int currentTime=0;
   final CountDownController _controller = CountDownController();
   late bool _isRunning;
@@ -666,9 +664,11 @@ String dailyGoal='';
 
       if (userDoc.exists) {
         int storedTime = userDoc.get('currentTime') ?? 0;
+        String storedTime2 = userDoc.get('dailyGoal') ?? 0;
         setState(() {
           // _duration = storedTime;
           currentTime = storedTime;
+          _duration = int.parse(storedTime2);
         });
         // if (_duration > 0) {
         //   _controller.resume();
