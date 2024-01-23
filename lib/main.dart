@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:swiftpages/signUpPage.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
 
@@ -25,8 +26,10 @@ class _MyAppState extends State<MyApp> {
       setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),

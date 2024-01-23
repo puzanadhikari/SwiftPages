@@ -50,49 +50,11 @@ class _SavedPostsState extends State<SavedPosts> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xfffeead4),
+        backgroundColor: Color(0xffD9D9D9),
         body: Stack(
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Image.asset(
-                'assets/Ellipse.png', // Replace with the correct image path
-                fit: BoxFit.contain,
-              ),
-            ),
-            Positioned(
-              top: -20,
-              left: -10,
-              child: Image.asset(
-                "assets/logo.png",
-                height: 120,
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Image.asset(
-                "assets/search.png",
-                height: 50,
-              ),
-            ),
-            Positioned(
-              top: 20,
-              left: MediaQuery.of(context).size.width / 3,
-              child: Text(
-                "Saved Posts",
-                style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xfffeead4),
-                  height: 29 / 22,
-                ),
-              ),
-            ),
             Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top:10.0),
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('users')
