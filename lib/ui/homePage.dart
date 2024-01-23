@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/ui/choosePage.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 
+import '../signUpPage.dart';
 import 'books/allBooks.dart';
 
 class HomePage extends StatefulWidget {
@@ -334,7 +336,7 @@ userName  = preferences.getString("userName")!;
                                                 SizedBox(height: 10),
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    _showConfirmationDialog(books[index].author, books[index].imageLink);
+                                                    guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].author, books[index].imageLink);
                                                   },
                                                   child: Text("Read"),
                                                   style: ButtonStyle(
@@ -436,7 +438,127 @@ userName  = preferences.getString("userName")!;
       },
     );
   }
+  void _showPersistentBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Color(0xFFFEEAD4),
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(0xFFFEEAD4),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+            ),
+            child: Container(
+              color: Color(0xFFFEEAD4),
+              width: MediaQuery.of(context).size.width * 0.9, // Adjust width as needed
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/oops.svg',
+                    ),
+                    Text("OOPS!!!",style: TextStyle(fontSize: 30,   color: Color(0xFF686868),),),
+                    SizedBox(height: 30,),
+                    Text("Looks like you haven’t signed in yet.",style: TextStyle(
+                      color: Color(0xFF686868),
+                      fontSize: 14,
+                      fontFamily: 'Abhaya Libre',
+                      fontWeight: FontWeight.w700,
+                      height: 0,
+                    ),),
+                    SizedBox(height: 50,),
+                    Text("To access this exciting feature, please sign in to your account. Join our community to interact with fellow readers, share your thoughts, and discover more.",style: TextStyle(
+                      color: Color(0xFF686868),
+                      fontSize: 14,
+                      fontFamily: 'Abhaya Libre',
+                      fontWeight: FontWeight.w700,
+                      height: 0,
+                    ),),
+                    SizedBox(height: 50,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainPage()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFFFF997A),// Background color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
+                            ),
+                          ),
+                          child: Container(
+                            height: 26,
+                            child: Center(
+                              child: Text(
+                                'GO BACK',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:   Color(0xFF283E50),
+                                  fontSize: 14,
+                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontWeight: FontWeight.w800,
+                                  height: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            setState(() {
+                              guestLogin= false;
+                            });
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpPage()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary:  Color(0xFF283E50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
+                            ),
+                          ),
+                          child: Container(
+                            height: 26,
+                            child: Center(
+                              child: Text(
+                                'SIGN UP',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFFFF997A),
+                                  fontSize: 16,
+                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontWeight: FontWeight.w800,
+                                  height: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+
 
 class Book {
   final String author;

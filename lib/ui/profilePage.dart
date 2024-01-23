@@ -452,7 +452,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      guestLogin==true?'':   _showEditDisplayNameDialog();
+                                      guestLogin==true?_showPersistentBottomSheet( context):   _showEditDisplayNameDialog();
                                     },
                                     child: Text("Change Username",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
@@ -465,7 +465,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(width: 15,),
                                 GestureDetector(
                                   onTap: (){
-                                    guestLogin==true?'':   _showEditPasswordDialog();
+                                    guestLogin==true?_showPersistentBottomSheet( context):   _showEditPasswordDialog();
                                   },
                                     child: Text("Change Password",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
@@ -478,7 +478,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      guestLogin==true?'':  _showEditEmailDialog();
+                                      guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
                                     },
                                     child: Text("Change Email Address",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
@@ -495,8 +495,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(height: 20,),
                             GestureDetector(
                               onTap: (){
-                                guestLogin==true?'':   _generateInvitationCode();
-                                guestLogin==true?'':   _fetchInvitationCode();
+                                guestLogin==true?_showPersistentBottomSheet( context):   _generateInvitationCode();
+                                guestLogin==true?_showPersistentBottomSheet( context):   _fetchInvitationCode();
                               },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -510,7 +510,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(height: 20,),
                             GestureDetector(
                               onTap: (){
-                                guestLogin==true?'':    _showInvitationCodeEnterPopup();
+                                guestLogin==true?_showPersistentBottomSheet( context):    _showInvitationCodeEnterPopup();
                                 // _fetchInvitationCode();
                               },
                               child: Row(
@@ -560,7 +560,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      guestLogin==true?'':     Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
+                                      guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
                                     },
                                     child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
