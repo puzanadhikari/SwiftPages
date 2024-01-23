@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   TextEditingController _textFieldController = TextEditingController();
   TextEditingController _passwordFieldController = TextEditingController();
-  TextEditingController _emailFieldController = TextEditingController();
+  TextEditingController newGoal = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -75,25 +75,17 @@ class _ProfilePageState extends State<ProfilePage> {
       print("Error updating display name: $e");
          }
   }
-  Future<void> _changeEmail() async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
+  Future<void> _changeGoal() async {
 
-      if (user != null) {
-        await user.updateEmail(_emailFieldController.text);
-
-        // After updating email, you might want to re-authenticate the user
-        // If needed, call user.reauthenticateWithCredential(credential);
-
-        print('Email updated successfully: ${_emailFieldController.text}');
-      } else {
-        // Handle the case where the user is not signed in
-        print('User not signed in.');
+      final FirebaseAuth _auth = FirebaseAuth.instance;
+      try {
+        await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text)});
+        print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+      } catch (error) {
+        print('Error increasing strikes for user with ID: ${_auth.currentUser
+            ?.uid} - $error');
+        // Handle the error (e.g., show an error message)
       }
-    } catch (e) {
-      print('Error updating email: $e');
-      // Handle the error (e.g., show an error message)
-    }
   }
   Future<void> _sendPasswordResetEmail() async {
     try {
@@ -480,7 +472,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onTap: (){
                                       guestLogin==true?'':  _showEditEmailDialog();
                                     },
-                                    child: Text("Change Email Address",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: Text("Change Time Goal",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
                              Divider(
@@ -749,13 +741,13 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Edit Email Address",
+            "Edit Goal Time",
             style: TextStyle(color: Colors.blue),
           ),
           content: TextField(
-            controller: _emailFieldController,
+            controller: newGoal,
             decoration: InputDecoration(
-              hintText: "Enter new email address",
+              hintText: "Enter new goal Time",
               hintStyle: TextStyle(color: Colors.grey),
             ),
           ),
@@ -771,7 +763,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextButton(
               onPressed: () {
-                _changeEmail();
+                _changeGoal();
                 Navigator.pop(context);
               },
               child: Text(
