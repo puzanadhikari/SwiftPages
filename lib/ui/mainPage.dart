@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
@@ -36,10 +38,17 @@ class _MainPageState extends State<MainPage> {
       Timestamp lastStrikeTimestamp = userDoc['lastStrikeTimestamp'];
 
       // Calculate the time difference in hours
-      int timeDifferenceInHours = loginTimestamp.seconds - lastStrikeTimestamp.seconds ~/ 3600;
+      // int timeDifferenceInHours = loginTimestamp.seconds - lastStrikeTimestamp.seconds ~/ 3600;
+      // Calculate the time difference in hours
+      int timeDifferenceInSeconds = (loginTimestamp.seconds) - lastStrikeTimestamp.seconds;
+      int timeDifferenceInHours = (timeDifferenceInSeconds / 3600).floor();
+      log("time diff: " + timeDifferenceInHours.toString() + " hours");
 
-      // Check if the time difference is more than 24 hours
-      if (timeDifferenceInHours > 24) {
+      log("logintime"+loginTimestamp.seconds.toString());
+        log("striktime"+lastStrikeTimestamp.seconds.toString());
+        log("time diff"+timeDifferenceInHours.toString());
+
+      if (timeDifferenceInHours > 24||timeDifferenceInHours ==24) {
         // Update the strike to 0
       setState(() async{
         await usersCollection.doc(user?.uid).update({'lastStrike': userDoc['strikes'],'strikes':0});

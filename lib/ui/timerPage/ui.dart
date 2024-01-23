@@ -1,16 +1,17 @@
 import 'dart:developer';
-import 'dart:io';
-import 'package:just_audio/just_audio.dart';
 
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'package:just_audio/just_audio.dart';
+import 'dart:async';
+// import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 import '../homePage.dart';
 import '../myBooks.dart';
-
+import 'package:timer_count_down/timer_controller.dart';
 class Music {
   final String title;
   final String path; // Add this field for storing the path
@@ -28,17 +29,19 @@ class Timer extends StatefulWidget {
 }
 
 class _TimerState extends State<Timer> {
-
+  late Timer _timer;
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     
     int time = preferences.getInt('currentTime')!;
 
   }
-String dailyGoal='';
+  final CountdownController _controller = CountdownController(autoStart: false);
+
+  String dailyGoal='';
    int _duration = 0;
    int currentTime=0;
-  final CountDownController _controller = CountDownController();
+  // final CountDownController _controller = CountDownController();
   late bool _isRunning;
   late bool _isPlaying;
   int totalPages = 150;
@@ -328,83 +331,145 @@ String dailyGoal='';
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+            Padding(
+              padding: const EdgeInsets.only(top:100.0),
+              child:  Center(
                 child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: CircularCountDownTimer(
-                        duration: (_duration*60),
-                        controller: _controller,
-                        width: MediaQuery.of(context).size.width / 3,
-                        height: MediaQuery.of(context).size.height / 3,
-                        ringColor: Colors.grey[300]!,
-                        fillColor: Color(0xFF283E50)!,
-                        backgroundColor: Color(0xFFFEEAD4),
-                        strokeWidth: 15.0,
-                        strokeCap: StrokeCap.round,
-                        textStyle: const TextStyle(
-                          fontSize: 33.0,
-                          color: Color(0xFF283E50),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        isReverse: false,
-                        isReverseAnimation: false,
-                        isTimerTextShown: true,
-                        autoStart: false,
-
-                        onStart: () {
-                          debugPrint('Countdown Started');
-                        },
-                        onComplete: () {
-                          debugPrint('Countdown Ended');
-
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: ElevatedButton(
+                        child: Text(_isRunning ? 'Pause' : 'Start'),
+                        onPressed: () {
                           setState(() {
-                            _isRunning = false;
+                            _isRunning = !_isRunning;
+                            if (_isRunning) {
+                              _controller.start();
+                            } else {
+                              _storeCurrentTime();
+                              _controller.pause();
+                            }
                           });
-                          updateStrikeInFirestore();
-                          // Reset the timer when completed
-                          _controller.restart(duration:  (_duration*60));
-                        },
-
-                        onChange: (String timeStamp) {
-                          debugPrint('Countdown Changed $timeStamp');
-                         setState(() {
-
-                         });
-
-                        },
-                        timeFormatterFunction:
-                            (defaultFormatterFunction, duration) {
-                          if (duration.inSeconds == 0) {
-                            return "Start";
-                          } else {
-                            return Function.apply(
-                                defaultFormatterFunction, [duration]);
-
-                          }
                         },
                       ),
                     ),
-                    Text("Remaining Goal\n${(_duration*60)-currentTime} seconds"),
-                    ElevatedButton(
-                      onPressed: _handleTimerButtonPressed,
-                      child: Text(_isRunning ? 'Pause' : 'Start'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF283E50), // Background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8), // Adjust the border radius as needed
-                        ),
-                      ),
+                    Countdown(
+                      controller: _controller,
+                      seconds: currentTime==0?_duration*60:currentTime,
+                      build: (_, double time) {
+                        currentTime =  time.toInt();
+                        return Text(
+                          time.toString(),
+                          style: TextStyle(
+                            fontSize: 100,
+                          ),
+                        );
+                      },
+                      interval: Duration(milliseconds: 100),
+
+                      onFinished: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Timer is done!'),
+                          ),
+                        );
+
+                        updateStrikeInFirestore();
+                        _storeCurrentTimeOnFinished();
+                        setState(() {
+                          _isRunning = false;
+                        });
+
+                      },
                     ),
                   ],
                 ),
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                _handleTimerButtonPressed();
+              },
+              child: Text(_isRunning ? 'Pause' : 'Start'),
+            ),
+            // Align(
+            //   alignment: Alignment.topLeft,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10.0),
+            //     child: Column(
+            //       children: [
+            //         Padding(
+            //           padding: const EdgeInsets.all(15.0),
+            //           child: CircularCountDownTimer(
+            //             duration: (_duration*60),
+            //             controller: _controller,
+            //             width: MediaQuery.of(context).size.width / 3,
+            //             height: MediaQuery.of(context).size.height / 3,
+            //             ringColor: Colors.grey[300]!,
+            //             fillColor: Color(0xFF283E50)!,
+            //             backgroundColor: Color(0xFFFEEAD4),
+            //             strokeWidth: 15.0,
+            //             strokeCap: StrokeCap.round,
+            //             textStyle: const TextStyle(
+            //               fontSize: 33.0,
+            //               color: Color(0xFF283E50),
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //             isReverse: false,
+            //             isReverseAnimation: false,
+            //             isTimerTextShown: true,
+            //             autoStart: false,
+            //
+            //             onStart: () {
+            //               debugPrint('Countdown Started');
+            //             },
+            //             onComplete: () {
+            //               log('Countdown Ended');
+            //               setState(() {
+            //                 _isRunning = false;
+            //               });
+            //               updateStrikeInFirestore();
+            //               _controller.restart(duration: (_duration * 60));
+            //             },
+            //             onChange: (String timeStamp) {
+            //               debugPrint('Countdown Changed $timeStamp');
+            //              setState(() {
+            //
+            //              });
+            //
+            //             },
+            //             timeFormatterFunction:
+            //                 (defaultFormatterFunction, duration) {
+            //               if (duration.inSeconds == 0) {
+            //                 return "Start";
+            //               } else {
+            //                 return Function.apply(
+            //                     defaultFormatterFunction, [duration]);
+            //
+            //               }
+            //             },
+            //           ),
+            //         ),
+            //         Text("Remaining Goal\n${(_duration*60)-currentTime} seconds"),
+            //         ElevatedButton(
+            //           onPressed: _handleTimerButtonPressed,
+            //           child: Text(_isRunning ? 'Pause' : 'Start'),
+            //           style: ElevatedButton.styleFrom(
+            //             primary: Color(0xFF283E50), // Background color
+            //             shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(
+            //                   8), // Adjust the border radius as needed
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             DraggableScrollableSheet(
                 initialChildSize: 0.3,
                 minChildSize: 0.3,
@@ -461,6 +526,7 @@ String dailyGoal='';
                           //       },
                           //     ),
                         ),
+
                         Expanded(
                           child: ListView.builder(
                             controller: scrollSheetController,
@@ -588,16 +654,14 @@ String dailyGoal='';
           // Get the 'lastStrikeTimestamp' field
           DateTime lastStrikeTimestamp =
               (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
+          if (DateTime.now().difference(lastStrikeTimestamp).inHours >= 12) {
 
-          // Check if 24 hours have passed since the last strike
-          if (DateTime.now().difference(lastStrikeTimestamp).inHours >= 24) {
-            // Update 'lastStrikeTimestamp' to the current time
             await FirebaseFirestore.instance
                 .collection('users')
                 .doc(uid)
                 .update({'lastStrikeTimestamp': FieldValue.serverTimestamp()});
 
-            // Increment the strikes count
+
             int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
                 ? userDoc.get('strikes')
                 : 0;
@@ -629,30 +693,56 @@ String dailyGoal='';
       print('Error updating strike in Firestore: $e');
     }
   }
-
   void _handleTimerButtonPressed() {
     setState(() {
-      if (_isRunning) {
-        _controller.pause();
-        currentTime = int.parse(_controller.getTime().toString());
-        _storeCurrentTime();
-      } else {
-        _controller.resume();
-      }
       _isRunning = !_isRunning;
     });
   }
+
+  // void _handleTimerButtonPressed() {
+  //   setState(() {
+  //     if (_isRunning) {
+  //       _controller.pause();
+  //       currentTime = int.parse(_controller.getTime().toString());
+  //       _storeCurrentTime();
+  //     } else {
+  //       // Only start the timer if it's not already running
+  //       if (!_controller.isStarted) {
+  //         _controller.start();
+  //       }
+  //     }
+  //     _isRunning = !_isRunning;
+  //   });
+  // }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> _storeCurrentTime() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
-      await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'currentTime': (currentTime)});
+      await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'currentTime':currentTime});
       print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
     } catch (error) {
       print('Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
       // Handle the error (e.g., show an error message)
     }
   }
+  Future<void> _storeCurrentTimeOnFinished() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'currentTime':0});
+      print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+    } catch (error) {
+      print('Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$twoDigitMinutes:$twoDigitSeconds';
+  }
+
   Future<void> _retrieveStoredTime() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
