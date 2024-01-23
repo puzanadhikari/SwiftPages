@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 class ActivityList extends StatefulWidget {
@@ -80,6 +81,7 @@ class _ActivityListState extends State<ActivityList> {
                       itemCount: activityList.length,
                       itemBuilder: (context, index) {
                         var activity = activityList[index];
+                        final timeFormatter = DateFormat('hh:mm a');
                         return Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
@@ -91,64 +93,67 @@ class _ActivityListState extends State<ActivityList> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    Row(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Visibility(
-                                                visible: activity['type'] ==
-                                                    'Liked' ||
-                                                    activity['type'] ==
-                                                        'Unliked'
-                                                    ? true
-                                                    : false,
-                                                child: Icon(activity['type'] ==
-                                                    'Liked'
-                                                    ? Icons.thumb_up
-                                                    : Icons.thumb_down)),
-                                            Visibility(
-                                              visible: activity['type'] ==
-                                                  'Comment'
-                                                  ? true
-                                                  : false,
-                                              child: Icon(
-                                                  activity['type'] == 'Comment'
-                                                      ? Icons.comment
-                                                      : Icons.add),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text("${activity['activityBy']}"),
-                                            Visibility(
-                                                visible: activity['type'] ==
-                                                    'Liked' ||
-                                                    activity['type'] ==
-                                                        'Unliked'
-                                                    ? true
-                                                    : false,
-                                                child: Text(
-                                                    activity['type'] == 'Liked'
-                                                        ? ' liked your post'
-                                                        : ' disliked' +
-                                                        ' your post')),
-                                            Visibility(
-                                                visible: activity['type'] ==
-                                                    'Comment'
-                                                    ? true
-                                                    : false,
-                                                child: Text(activity['type'] ==
-                                                    'Comment'
-                                                    ? ' commented your post'
-                                                    : ''))
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: NetworkImage(activity['avatar'] ?? ''),
+                                          backgroundColor: Color(0xfffeead4),
+                                        ),
+                                        SizedBox(width: 5,),
+                                        Text("${activity['activityBy']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+
                                       ],
                                     ),
-                              ],
-                            ),
+                                    // Visibility(
+                                    //     visible: activity['type'] ==
+                                    //         'Liked' ||
+                                    //         activity['type'] ==
+                                    //             'Unliked'
+                                    //         ? true
+                                    //         : false,
+                                    //     child: Icon(activity['type'] ==
+                                    //         'Liked'
+                                    //         ? Icons.thumb_up
+                                    //         : Icons.thumb_down)),
+                                    // Visibility(
+                                    //   visible: activity['type'] ==
+                                    //       'Comment'
+                                    //       ? true
+                                    //       : false,
+                                    //   child: Icon(
+                                    //       activity['type'] == 'Comment'
+                                    //           ? Icons.comment
+                                    //           : Icons.add),
+                                    // ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
+                                    Visibility(
+                                        visible: activity['type'] ==
+                                            'Liked' ||
+                                            activity['type'] ==
+                                                'Unliked'
+                                            ? true
+                                            : false,
+                                        child: Text(
+                                            activity['type'] == 'Liked'
+                                                ? ' liked your post'
+                                                : ' disliked' +
+                                                ' your post',style: TextStyle(color: Color(0xff283E50)),)),
+                                    Visibility(
+                                        visible: activity['type'] ==
+                                            'Comment'
+                                            ? true
+                                            : false,
+                                        child: Text(activity['type'] ==
+                                            'Comment'
+                                            ? ' commented your post'
+                                            : '',style: TextStyle(color: Color(0xff283E50)),)),
+                                    Text(  '${timeFormatter.format(activity['time'].toDate())}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 12),),
                           ]),
                         ) );
 

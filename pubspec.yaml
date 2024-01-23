@@ -38,6 +38,7 @@ dependencies:
   url_launcher:
 
   cached_network_image:
+  intl:
   firebase_core: ^2.24.2
   http:
   fluttertoast:

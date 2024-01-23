@@ -226,6 +226,7 @@ class _BookCardState extends State<BookCard> {
     log(comments.length.toString());
     User? user = FirebaseAuth.instance.currentUser;
     String currentUsername = user?.displayName ?? '';
+    String currentUserAvatar = user?.photoURL ?? '';
     String username = user?.displayName ?? '';
     List<dynamic> likedBy = widget.bookData['likedBy'] ?? [];
 
@@ -325,6 +326,9 @@ class _BookCardState extends State<BookCard> {
                                             widget.bookData['avatarUrl'],
                                             'Comment',
                                             widget.bookData['userId'],
+                                            currentUserAvatar,
+                                          DateTime.now()
+
                                         );
                                       },
                                       commentCount: comments.length, bookData: widget.bookData,
@@ -343,14 +347,13 @@ class _BookCardState extends State<BookCard> {
                       onTap: () {
                         updateLikes(_isLiked ? likes - 1 : likes + 1,
                             widget.index, username);
-
                         saveActivity(
                             context,
                             widget.bookData['imageLink'],
                             currentUsername,
                             widget.bookData['avatarUrl'],
                             _isLiked ? 'Unliked' : 'Liked',
-                            widget.bookData['userId']);
+                            widget.bookData['userId'],currentUserAvatar, DateTime.now());
                       },
                       child: SvgPicture.asset(
                         'assets/like.svg',
@@ -547,7 +550,7 @@ class _BookCardState extends State<BookCard> {
     );
   }
   void saveActivity(BuildContext context, String imgLink, String activityBy,
-      String activityUserAvatar, String type, String userId) async {
+      String activityUserAvatar, String type, String userId,String userAvatar,DateTime time) async {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -559,6 +562,8 @@ class _BookCardState extends State<BookCard> {
         'activityBy': activityBy ?? '',
         'activityUserAvatar': activityUserAvatar ?? '',
         'type': type,
+        'avatar':userAvatar,
+        'time':time
       };
 
       // Save the post information to the current user's data
