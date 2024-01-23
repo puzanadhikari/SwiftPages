@@ -324,9 +324,11 @@ class _BookCardState extends State<BookCard> {
                                             currentUsername ,
                                             widget.bookData['avatarUrl'],
                                             'Comment',
-                                            widget.bookData['userId']);
+                                            widget.bookData['userId'],
+                                        );
                                       },
-                                      commentCount: comments.length,
+                                      commentCount: comments.length, bookData: widget.bookData,
+
                                     )));
                       },
                       child: SvgPicture.asset(
@@ -697,13 +699,15 @@ class CommentPage extends StatefulWidget {
   String docId;
   final VoidCallback onPressed;
   int commentCount;
+  final Map<String, dynamic> bookData;
 
   CommentPage(
       {Key? key,
       required this.comments,
       required this.docId,
       required this.onPressed,
-      required this.commentCount})
+      required this.commentCount,
+      required this.bookData})
       : super(key: key);
 
   @override
@@ -831,6 +835,94 @@ class _CommentPageState extends State<CommentPage> {
                         )
                       : Column(
                           children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Color(0xFFFEEAD4),
+                                  backgroundImage: NetworkImage(
+                                    widget.bookData['avatarUrl'] ?? '',
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(widget.bookData['username'] ?? 'Anonymous'),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 150,
+                              width: 100,
+                              child: Image.network(
+                                widget.bookData['imageLink'] ?? '',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+
+                                  Container(
+                                    height: 120,
+                                    width: 200,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: Text(
+                                          '${widget.bookData['notes'] ?? ''}',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: Color(0xFF686868),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10,),
+                                  // GestureDetector(
+                                  //     onTap: (){
+                                  //       _showConfirmationDialogToSave(context);
+                                  //     },
+                                  //     child: Icon(Icons.download))
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                             Expanded(
                               child: ListView(children: [
                                 for (var comment in widget.comments)

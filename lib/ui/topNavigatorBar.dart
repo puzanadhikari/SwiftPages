@@ -92,7 +92,7 @@ class TopNavigationBar extends StatelessWidget {
                     Tab(text: 'Activity'),
                     Tab(text: 'My Post'),
                     Tab(text: 'Saved'),
-                    Tab(text: 'Notify'),
+                    Tab(text: 'Notification'),
                   ],
                   labelColor: Color(0xFF283E50),
                   indicatorPadding: EdgeInsets.all(2),

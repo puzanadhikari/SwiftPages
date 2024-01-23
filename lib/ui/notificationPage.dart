@@ -56,6 +56,7 @@ class _ActivityListState extends State<ActivityList> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffD9D9D9),
         body:Stack(
           children: [
             Padding(
