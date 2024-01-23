@@ -113,7 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     children: [
                       // Remove the Image.asset from here
 
-                      SizedBox(height: 150),
+                      SizedBox(height: 160),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -169,7 +169,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                 hintText: 'Username',
                                 border: InputBorder.none,
                                 prefixIcon: Icon(Icons.person),
-
                               ),
                             ),
                           ),
@@ -247,35 +246,35 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          _handleGoogleSignIn();
-                           },
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFFF997A),// Background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
-                          ),
-                        ),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width/1.5,
-                          height: 26,
-                          child: Center(
-                            child: Text(
-                              'Sign Up with Google',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFF283E50),
-                                fontSize: 20,
-                                fontFamily: 'Abhaya Libre ExtraBold',
-                                fontWeight: FontWeight.w800,
-                                height: 0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // SizedBox(height: 16.0),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     _handleGoogleSignIn();
+                      //      },
+                      //   style: ElevatedButton.styleFrom(
+                      //     primary: Color(0xFFFF997A),// Background color
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
+                      //     ),
+                      //   ),
+                      //   child: Container(
+                      //     width: MediaQuery.of(context).size.width/1.5,
+                      //     height: 26,
+                      //     child: Center(
+                      //       child: Text(
+                      //         'Sign Up with Google',
+                      //         textAlign: TextAlign.center,
+                      //         style: TextStyle(
+                      //           color: Color(0xFF283E50),
+                      //           fontSize: 20,
+                      //           fontFamily: 'Abhaya Libre ExtraBold',
+                      //           fontWeight: FontWeight.w800,
+                      //           height: 0,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: 16),
                       Row(

@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       // Remove the Image.asset from here
 
-                      SizedBox(height: 150),
+                      SizedBox(height: 170),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

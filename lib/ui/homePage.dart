@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:swiftpages/ui/timerPage/ui.dart';
 
 import '../signUpPage.dart';
 import 'books/allBooks.dart';
-
+int currentTimeCount = 0;
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
       "https://book-finder1.p.rapidapi.com/api/search?page=2";
   int strikesCount = 0;
 
+
   Future<void> fetchStrikes() async {
     try {
       // Get the current user
@@ -41,6 +43,10 @@ class _HomePageState extends State<HomePage> {
         strikesCount = userDoc.data()?.containsKey('strikes') ?? false
             ? userDoc.get('strikes')
             : 0;
+        currentTimeCount = userDoc.data()?.containsKey('currentTime') ?? false
+            ? userDoc.get('currentTime')
+            : 0;
+        log(currentTimeCount.toString());
 
         // Update the UI with the new strikes count
         setState(() {});
@@ -94,6 +100,7 @@ class _HomePageState extends State<HomePage> {
   List<Book> books = [];
   String email = ' ';
   String userName = ' ';
+  String dailyGoal = ' ';
 
   Future<void> fetchBooks() async {
     final response = await http.get(
@@ -128,6 +135,7 @@ class _HomePageState extends State<HomePage> {
 SharedPreferences preferences = await SharedPreferences.getInstance();
 email  = preferences.getString("email")!;
 userName  = preferences.getString("userName")!;
+dailyGoal  = preferences.getString("dailyGoal")!;
   }
 
   @override
@@ -224,8 +232,8 @@ userName  = preferences.getString("userName")!;
                           ),
                         ),
                         const SizedBox(height: 5,),
-                        const Text(
-                          "Today: 30 mins",
+                         Text(
+                          "Today: ${dailyGoal} mins",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Color(0xFF686868),

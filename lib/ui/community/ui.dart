@@ -226,6 +226,7 @@ class _BookCardState extends State<BookCard> {
     log(comments.length.toString());
     User? user = FirebaseAuth.instance.currentUser;
     String currentUsername = user?.displayName ?? '';
+    String currentUserAvatar = user?.photoURL ?? '';
     String username = user?.displayName ?? '';
     List<dynamic> likedBy = widget.bookData['likedBy'] ?? [];
 
@@ -251,7 +252,6 @@ class _BookCardState extends State<BookCard> {
                 GestureDetector(
                   onTap: ()async{
                     fetchUserDetailsById(widget.bookData['userId']);
-
                   },
                   child: Row(
                     children: [
@@ -324,9 +324,14 @@ class _BookCardState extends State<BookCard> {
                                             currentUsername ,
                                             widget.bookData['avatarUrl'],
                                             'Comment',
-                                            widget.bookData['userId']);
+                                            widget.bookData['userId'],
+                                            currentUserAvatar,
+                                          DateTime.now()
+
+                                        );
                                       },
-                                      commentCount: comments.length,
+                                      commentCount: comments.length, bookData: widget.bookData,
+
                                     )));
                       },
                       child: SvgPicture.asset(
@@ -341,14 +346,14 @@ class _BookCardState extends State<BookCard> {
                       onTap: () {
                         updateLikes(_isLiked ? likes - 1 : likes + 1,
                             widget.index, username);
-
-                        saveActivity(
+                        log(currentUsername+widget.bookData['username']);
+                       currentUsername==widget.bookData['username']?'': saveActivity(
                             context,
                             widget.bookData['imageLink'],
                             currentUsername,
                             widget.bookData['avatarUrl'],
                             _isLiked ? 'Unliked' : 'Liked',
-                            widget.bookData['userId']);
+                            widget.bookData['userId'],currentUserAvatar, DateTime.now());
                       },
                       child: SvgPicture.asset(
                         'assets/like.svg',
@@ -420,7 +425,8 @@ class _BookCardState extends State<BookCard> {
 
 
             Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-            _showUserDetail(context, userData['email'], userData['strikes']);
+            // _showUserDetail(context, userData['email'], userData['strikes']);
+          _showPersistentBottomSheet(context,userData);
             return userData;
 
 
@@ -432,7 +438,114 @@ class _BookCardState extends State<BookCard> {
       throw Exception("Failed to fetch user details.");
     }
   }
+  void _showPersistentBottomSheet(BuildContext context,Map<String, dynamic> userData) {
+    showModalBottomSheet(
+      backgroundColor:Color(0xffD9D9D9),
+      context: context,
 
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+      ),
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: 0.85,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xffD9D9D9),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundImage: NetworkImage(userData['avatar'] ?? ''),
+                              backgroundColor:  Color(0xFFFEEAD4),
+                            ),
+                            SizedBox(width: 10,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                                Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
+                              ],
+                            ),
+
+                          ],
+                        ),
+                          Row(
+                          children: [
+                            Image.asset(
+                              "assets/strick.png",
+                              height: 40,
+                              color: Colors.black,
+                            ),
+                            Text(userData['strikes'].toString(), style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            )),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                    Divider(
+                      color: Color(0xff283E50),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:10.0),
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('communityBooks').where('username', isEqualTo: userData['username'])
+                              .snapshots(),
+                          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            List<QueryDocumentSnapshot> bookDocuments = snapshot.data!.docs;
+
+                            return ListView.builder(
+                              itemCount: bookDocuments.length,
+                              itemBuilder: (context, index) {
+                                var bookData =
+                                bookDocuments[index].data() as Map<String, dynamic>;
+                                var documentId = bookDocuments[index].id;
+
+                                return BookCardSheet(
+                                  bookData: bookData,
+                                  documentId: documentId,
+                                  index: index,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
   void _showUserDetail(BuildContext context,String email,int strikes) {
 
     showDialog(
@@ -545,7 +658,7 @@ class _BookCardState extends State<BookCard> {
     );
   }
   void saveActivity(BuildContext context, String imgLink, String activityBy,
-      String activityUserAvatar, String type, String userId) async {
+      String activityUserAvatar, String type, String userId,String userAvatar,DateTime time) async {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -557,6 +670,8 @@ class _BookCardState extends State<BookCard> {
         'activityBy': activityBy ?? '',
         'activityUserAvatar': activityUserAvatar ?? '',
         'type': type,
+        'avatar':userAvatar,
+        'time':time
       };
 
       // Save the post information to the current user's data
@@ -567,6 +682,8 @@ class _BookCardState extends State<BookCard> {
           .add(savedPost);
 
     }
+
+
   }
 
   void updateLikes(int newLikes, int index, String username) async {
@@ -633,6 +750,558 @@ class _BookCardState extends State<BookCard> {
   }
 }
 
+class BookCardSheet extends StatefulWidget {
+  final Map<String, dynamic> bookData;
+  final String documentId;
+  final int index;
+
+  BookCardSheet(
+      {Key? key,
+        required this.bookData,
+        required this.documentId,
+        required this.index})
+      : super(key: key);
+
+  @override
+  State<BookCardSheet> createState() => _BookCardSheetState();
+}
+
+class _BookCardSheetState extends State<BookCardSheet> {
+  bool _isLiked = false;
+  TextEditingController commentController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    int likes = widget.bookData['likes'] ?? 0;
+    List<Map<String, dynamic>> comments =
+    List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+    log(comments.length.toString());
+    User? user = FirebaseAuth.instance.currentUser;
+    String currentUsername = user?.displayName ?? '';
+    String currentUserAvatar = user?.photoURL ?? '';
+    String username = user?.displayName ?? '';
+    List<dynamic> likedBy = widget.bookData['likedBy'] ?? [];
+
+    _isLiked = likedBy.contains(username);
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius:
+        BorderRadius.circular(20.0), // Adjust the radius as needed
+      ),
+      color: Color(0xFFFF997A),
+      elevation: 8,
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: ()async{
+                    fetchUserDetailsById(widget.bookData['userId']);
+                  },
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Color(0xFFFEEAD4),
+                        backgroundImage: NetworkImage(
+                          widget.bookData['avatarUrl'] ?? '',
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(widget.bookData['username'] ?? 'Anonymous'),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 100,
+                  width: 100,
+                  child: Image.network(
+                    widget.bookData['imageLink'] ?? '',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+
+                    GestureDetector(
+                      onTap: (){
+                        _showConfirmationDialogToSave(context);
+                      },
+                      child: SvgPicture.asset(
+                        'assets/save.svg',
+                        height: 25,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      '${comments.length} ',
+                      style: TextStyle(
+                        color: Color(0xFF283E50),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CommentPage(
+                                  comments: comments,
+                                  docId: widget.documentId,
+                                  onPressed: () {
+                                    addComment(comment);
+                                    saveActivity(
+                                        context,
+                                        widget.bookData['imageLink'],
+                                        currentUsername ,
+                                        widget.bookData['avatarUrl'],
+                                        'Comment',
+                                        widget.bookData['userId'],
+                                        currentUserAvatar,
+                                        DateTime.now()
+
+                                    );
+                                  },
+                                  commentCount: comments.length, bookData: widget.bookData,
+
+                                )));
+                      },
+                      child: SvgPicture.asset(
+                        'assets/comment.svg',
+                        height: 30,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        updateLikes(_isLiked ? likes - 1 : likes + 1,
+                            widget.index, username);
+                        log(currentUsername+widget.bookData['username']);
+                        currentUsername==widget.bookData['username']?'': saveActivity(
+                            context,
+                            widget.bookData['imageLink'],
+                            currentUsername,
+                            widget.bookData['avatarUrl'],
+                            _isLiked ? 'Unliked' : 'Liked',
+                            widget.bookData['userId'],currentUserAvatar, DateTime.now());
+                      },
+                      child: SvgPicture.asset(
+                        'assets/like.svg',
+                        height: 25,
+                        color: _isLiked ? Colors.red : Color(0xFFFEEAD4),
+                      ),
+                    ),
+                    Text(
+                      ' ${likes}',
+                      style: TextStyle(
+                        color: Color(0xFF283E50),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+
+                      Container(
+                        height: 100,
+                        width: 150,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Container(
+                          height: 150,
+                          width: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              '${widget.bookData['notes'] ?? ''}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Color(0xFF686868),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      // GestureDetector(
+                      //     onTap: (){
+                      //       _showConfirmationDialogToSave(context);
+                      //     },
+                      //     child: Icon(Icons.download))
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Future<Map<String, dynamic>> fetchUserDetailsById(String userId) async {
+    log(userId.toString());
+    try {
+
+      DocumentSnapshot userSnapshot =
+      await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+
+      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+      // _showUserDetail(context, userData['email'], userData['strikes']);
+      _showPersistentBottomSheet(context,userData);
+      return userData;
+
+
+
+
+    } catch (error) {
+      // Handle errors appropriately
+      log("Error fetching user details: $error");
+      throw Exception("Failed to fetch user details.");
+    }
+  }
+  void _showPersistentBottomSheet(BuildContext context,Map<String, dynamic> userData) {
+    showModalBottomSheet(
+      backgroundColor: Color(0xFFFEEAD4),
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(0xFFFEEAD4),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+            ),
+            child: Container(
+              color: Color(0xFFFEEAD4),
+              width: MediaQuery.of(context).size.width * 0.9, // Adjust width as needed
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundImage: NetworkImage(userData['avatar'] ?? ''),
+                              backgroundColor: Color(0xffD9D9D9),
+                            ),
+                            SizedBox(width: 10,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                                Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
+                              ],
+                            ),
+
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Image.asset(
+                              "assets/strick.png",
+                              height: 40,
+                              color: Colors.black,
+                            ),
+                            Text(userData['strikes'].toString(), style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            )),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                    Divider(
+                      color: Color(0xff283E50),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:10.0),
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('communityBooks').where('username', isEqualTo: userData['username'])
+                              .snapshots(),
+                          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            List<QueryDocumentSnapshot> bookDocuments = snapshot.data!.docs;
+
+                            return ListView.builder(
+                              itemCount: bookDocuments.length,
+                              itemBuilder: (context, index) {
+                                var bookData =
+                                bookDocuments[index].data() as Map<String, dynamic>;
+                                var documentId = bookDocuments[index].id;
+
+                                return BookCard(
+                                  bookData: bookData,
+                                  documentId: documentId,
+                                  index: index,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+  void _showUserDetail(BuildContext context,String email,int strikes) {
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Swift Pages user detail",
+            style: TextStyle(color: Colors.black), // Set title text color
+          ),
+          actions: <Widget>[
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
+              ),
+              color: Color(0xFFFF997A),
+              elevation: 8,
+              margin: EdgeInsets.all(10),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Color(0xFFFEEAD4),
+                          backgroundImage: NetworkImage(
+                            widget.bookData['avatarUrl'] ?? '',
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.bookData['username'] ?? 'Anonymous'),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Image.asset(
+                          "assets/strick.png",
+                          height: 40,
+                          color: Colors.black,
+                        ),
+                        Text(strikes.toString(), style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(email),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9),
+
+        );
+      },
+    );
+  }
+  void _showConfirmationDialogToSave(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Save post",
+            style: TextStyle(color: Colors.blue), // Set title text color
+          ),
+          content: Text("Are you sure want to save this post?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "No",
+                style: TextStyle(color: Colors.red), // Set cancel text color
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                savePost(
+                    context,
+                    widget.bookData['imageLink'],
+                    widget.bookData['username'],
+                    widget.bookData['avatarUrl'],
+                    widget.bookData['notes']);
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.green), // Set save text color
+              ),
+            ),
+          ],
+          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
+        );
+      },
+    );
+  }
+  void saveActivity(BuildContext context, String imgLink, String activityBy,
+      String activityUserAvatar, String type, String userId,String userAvatar,DateTime time) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String currentUserId = user.uid;
+
+      // Create a map representing the saved post
+      Map<String, dynamic> savedPost = {
+        'imageLink': imgLink ?? '',
+        'activityBy': activityBy ?? '',
+        'activityUserAvatar': activityUserAvatar ?? '',
+        'type': type,
+        'avatar':userAvatar,
+        'time':time
+      };
+
+      // Save the post information to the current user's data
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('activity')
+          .add(savedPost);
+
+    }
+
+
+  }
+
+  void updateLikes(int newLikes, int index, String username) async {
+    String currentUsername = widget.bookData['username'] ?? '';
+    List<dynamic> likedBy = List<String>.from(widget.bookData['likedBy'] ?? []);
+
+    if (!likedBy.contains(username)) {
+      likedBy.add(username);
+
+      // Update Firestore document with newLikes and updated likedBy
+      await FirebaseFirestore.instance
+          .collection('communityBooks')
+          .doc(widget.documentId)
+          .update({'likes': newLikes, 'likedBy': likedBy});
+
+      log('Liked on index: $index');
+    } else {
+      likedBy.remove(username);
+
+      // Update Firestore document with newLikes and updated likedBy
+      await FirebaseFirestore.instance
+          .collection('communityBooks')
+          .doc(widget.documentId)
+          .update({'likes': newLikes, 'likedBy': likedBy});
+
+      log('Unliked on index: $index');
+    }
+
+    // Update isLiked locally after Firestore update is complete
+    setState(() {
+      _isLiked = !_isLiked;
+    });
+  }
+
+  void addComment(String newComment) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String currentUsername = user?.displayName ?? 'Anonymous';
+    String avatarUrl = user?.photoURL ?? '';
+
+    // Create a map representing the comment with username and avatar
+    Map<String, dynamic> commentData = {
+      'username': currentUsername,
+      'avatarUrl': avatarUrl,
+      'comment': newComment,
+    };
+
+    List<Map<String, dynamic>> updatedComments =
+    List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+    updatedComments.add(commentData);
+
+    // Update Firestore document with the new comments
+    await FirebaseFirestore.instance
+        .collection('communityBooks')
+        .doc(widget.documentId)
+        .update({'comments': updatedComments});
+
+    // Clear the comment text field after adding a comment
+    setState(() {
+      commentController.clear();
+      comment = '';
+    });
+
+    log('Comment added to index: ${widget.index}');
+  }
+}
+
 class CommentWidget extends StatelessWidget {
   final String username;
   final String avatarUrl;
@@ -675,7 +1344,9 @@ class CommentWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text( username.toUpperCase(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
-                        Text(comment,style: TextStyle(fontSize: 14),),
+                        Container(
+                            width: 250,
+                            child: Text(comment,style: TextStyle(fontSize: 14),)),
                       ],
                     ),
                   ],
@@ -697,13 +1368,15 @@ class CommentPage extends StatefulWidget {
   String docId;
   final VoidCallback onPressed;
   int commentCount;
+  final Map<String, dynamic> bookData;
 
   CommentPage(
       {Key? key,
       required this.comments,
       required this.docId,
       required this.onPressed,
-      required this.commentCount})
+      required this.commentCount,
+      required this.bookData})
       : super(key: key);
 
   @override
@@ -831,6 +1504,104 @@ class _CommentPageState extends State<CommentPage> {
                         )
                       : Column(
                           children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Color(0xFFFEEAD4),
+                                  backgroundImage: NetworkImage(
+                                    widget.bookData['avatarUrl'] ?? '',
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(widget.bookData['username'] ?? 'Anonymous'),
+                              ],
+                            ),
+
+                            Container(
+                              height: 150,
+                              width: 100,
+                              child: Image.network(
+                                widget.bookData['imageLink'] ?? '',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+
+                                  Container(
+                                    height: 120,
+                                    width: 200,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Container(
+                                      height: 150,
+                                      width: 150,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: Text(
+                                          '${widget.bookData['notes'] ?? ''}',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: Color(0xFF686868),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10,),
+                                  // GestureDetector(
+                                  //     onTap: (){
+                                  //       _showConfirmationDialogToSave(context);
+                                  //     },
+                                  //     child: Icon(Icons.download))
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                            Divider(
+                              color: Color(0xff686868),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Comments ${widget.commentCount}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
+                                Text('${widget.bookData['likes'] } Likes',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            SizedBox(height: 5,),
                             Expanded(
                               child: ListView(children: [
                                 for (var comment in widget.comments)
@@ -904,6 +1675,7 @@ class _CommentPageState extends State<CommentPage> {
       ),
     );
   }
+
 
   void addComment(String newComment) async {
     User? user = FirebaseAuth.instance.currentUser;
