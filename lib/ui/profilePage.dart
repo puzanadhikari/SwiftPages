@@ -668,7 +668,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Container(
                             height: 26,
                             child: Center(
-                              child: Text(
+                              child: Text(  
                                 'GO BACK',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
