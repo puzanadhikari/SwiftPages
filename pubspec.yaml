@@ -49,6 +49,7 @@ dependencies:
   audioplayers:
   flutter_countdown_timer:
   timer_count_down:
+  flutter_local_notifications:
   timer_builder:
   circular_countdown_timer: ^0.2.3
   flutter:

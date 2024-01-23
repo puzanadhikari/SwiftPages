@@ -300,8 +300,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   Future<void> _increaseStrikes(String userId) async {
     try {
-      // Increment the 'strikes' field by 10 for the given user ID
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
+      // String strikeIncreseCount = userDoc.get('dailyGoal') ?? 0;
       await _firestore.collection('users').doc(userId).update({'strikes': FieldValue.increment(10)});
+      // await _firestore.collection('users').doc(userId).get();
       print('Strikes increased for user with ID: $userId');
     } catch (error) {
       print('Error increasing strikes for user with ID: $userId - $error');

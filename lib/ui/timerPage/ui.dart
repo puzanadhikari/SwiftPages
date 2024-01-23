@@ -377,13 +377,11 @@ class _TimerState extends State<Timer> {
                             content: Text('Timer is done!'),
                           ),
                         );
-
                         updateStrikeInFirestore();
                         _storeCurrentTimeOnFinished();
                         setState(() {
                           _isRunning = false;
                         });
-
                       },
                     ),
                   ],

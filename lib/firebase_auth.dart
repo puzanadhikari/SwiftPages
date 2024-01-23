@@ -87,14 +87,12 @@ class FirebaseAuthService {
               "username":username,
               "password":password,
               "avatar":avatar,
-          'dailyGoal':dailyGoal
-          // Add other user details as needed
+          'dailyGoal':dailyGoal,
+          'currentTime':0,
         };
 
-        // Reference to the 'users' collection with the UID as the document ID
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
 
-        // Store the user data in Firestore
         await userRef.set(userData);
 
         print('User data stored successfully!');
