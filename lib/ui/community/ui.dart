@@ -347,7 +347,8 @@ class _BookCardState extends State<BookCard> {
                       onTap: () {
                         updateLikes(_isLiked ? likes - 1 : likes + 1,
                             widget.index, username);
-                        saveActivity(
+                        log(currentUsername+widget.bookData['username']);
+                       currentUsername==widget.bookData['username']?'': saveActivity(
                             context,
                             widget.bookData['imageLink'],
                             currentUsername,
@@ -574,6 +575,8 @@ class _BookCardState extends State<BookCard> {
           .add(savedPost);
 
     }
+
+
   }
 
   void updateLikes(int newLikes, int index, String username) async {
