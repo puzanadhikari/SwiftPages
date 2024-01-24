@@ -32,10 +32,10 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: Color(0xFFFEEAD4),
         body: isLoading == true ? Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
-          color:Color(0xFF283E50),
-      size: 100,
-    ),
+      child: CircularProgressIndicator(
+        strokeWidth: 4.0,
+        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF283E50)),
+      ),
     ) : Stack(
           children: [
             Positioned(
