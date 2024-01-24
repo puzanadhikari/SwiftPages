@@ -137,7 +137,7 @@ class _ChatPageState extends State<ChatPage> {
                                       padding: EdgeInsets.all(12.0),
                                       decoration: BoxDecoration(
                                         color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(50.0),
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.end,
