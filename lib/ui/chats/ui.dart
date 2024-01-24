@@ -190,29 +190,83 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _messageController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Color(0xFF283E50)),
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color:Color(0xffFEEAD4),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:8.0),
+                                  child: TextField(
+                                    controller: _messageController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        // comment = value;
+                                      });
+                                    },
+                                    cursorColor: Color(0xFF283E50),
+                                    decoration: InputDecoration(
+                                        hintText: 'Type your message...',
+                                        hintStyle: TextStyle(color: Colors.grey)
+                                    ),
                                   ),
-                                  hintText: 'Type your message...',
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.send),
-                              onPressed: () {
-                                _sendMessage(currentUserId);
-                              },
-                            ),
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF283E50),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: (){
+                                      _sendMessage(currentUserId);
+                                    },
+                                    child: Text(
+                                      'Send',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: Row(
+                      //     children: [
+                      //       Expanded(
+                      //         child: TextField(
+                      //           controller: _messageController,
+                      //           decoration: InputDecoration(
+                      //             border: OutlineInputBorder(
+                      //                 borderSide: BorderSide(color: Color(0xFF283E50)),
+                      //               borderRadius: BorderRadius.all(Radius.circular(10.0))
+                      //             ),
+                      //             hintText: 'Type your message...',
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       IconButton(
+                      //         icon: Icon(Icons.send),
+                      //         onPressed: () {
+                      //           _sendMessage(currentUserId);
+                      //         },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
           ),
