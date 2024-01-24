@@ -81,8 +81,24 @@ class _ChatPageState extends State<ChatPage> {
                 height: 120,
               ),
             ),
+            Positioned(
+              top:110,
+              left: 20,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white, // Customize as needed
+                    backgroundImage: NetworkImage(widget.recipientAvatar),
+                  ),
+                  SizedBox(width: 10,),
+                  Text(widget.recipientUsername,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),)
+                ],
+              ),
+            ),
         Padding(
-          padding: const EdgeInsets.only(top:120.0),
+          padding: const EdgeInsets.only(top:200.0),
           child: Container(
             decoration: BoxDecoration(
               color: Color(0xffD9D9D9),
@@ -93,32 +109,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             child: Column(
                     children: [
-                      Card(
-                        // elevation:5,
-                        color: Color(0xffD9D9D9),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40.0), // Set the border radius
-                        ),
-                        child: Container(
-                          // height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                              CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Colors.white, // Customize as needed
-                                  backgroundImage: NetworkImage(widget.recipientAvatar),
-                                ),
-                                SizedBox(width: 10,),
-                                Text(widget.recipientUsername,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+
                       Expanded(
                         child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                           stream: _firestore.collection('chats').doc(roomId).snapshots(),

@@ -359,9 +359,17 @@ class ChatListItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                lastMessageText,
-                                style: TextStyle(),
+                                lastMessageText.length > 20
+                                    ? '${lastMessageText.substring(0, 20)}...'
+                                    : lastMessageText,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16.0,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
+
                               SizedBox(
                                 width: 10,
                               ),
