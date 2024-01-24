@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
 
+import '../chats/ui.dart';
 import '../notificationPage.dart';
 
 TextEditingController commentController = TextEditingController();
@@ -425,8 +426,7 @@ class _BookCardState extends State<BookCard> {
 
 
             Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-            // _showUserDetail(context, userData['email'], userData['strikes']);
-          _showPersistentBottomSheet(context,userData);
+          _showPersistentBottomSheet(context,userData,userId);
             return userData;
 
 
@@ -438,7 +438,7 @@ class _BookCardState extends State<BookCard> {
       throw Exception("Failed to fetch user details.");
     }
   }
-  void _showPersistentBottomSheet(BuildContext context,Map<String, dynamic> userData) {
+  void _showPersistentBottomSheet(BuildContext context,Map<String, dynamic> userData , String userId) {
     showModalBottomSheet(
       backgroundColor:Color(0xffD9D9D9),
       context: context,
@@ -484,6 +484,9 @@ class _BookCardState extends State<BookCard> {
 
                           ],
                         ),
+                        ElevatedButton(onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(recipientUserId: userId,recipientUsername: userData['username'],)));
+                        }, child: Text("Chat")),
                           Row(
                           children: [
                             Image.asset(
@@ -1036,6 +1039,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
 
                           ],
                         ),
+
                         Row(
                           children: [
                             Image.asset(
@@ -1052,6 +1056,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
 
                       ],
                     ),
+
                     Divider(
                       color: Color(0xff283E50),
                     ),
