@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:swiftpages/ui/profilePage.dart';
 
+import 'chats/chatUiListing.dart';
 import 'community/myPosts.dart';
 import 'community/savedPosts.dart';
 import 'community/ui.dart';
@@ -92,7 +93,7 @@ class TopNavigationBar extends StatelessWidget {
                     Tab(text: 'Activity'),
                     Tab(text: 'My Post'),
                     Tab(text: 'Saved'),
-                    Tab(text: 'Notification'),
+                    Tab(text: 'Chats'),
                   ],
                   labelColor: Color(0xFF283E50),
                   indicatorPadding: EdgeInsets.all(2),
@@ -104,7 +105,7 @@ class TopNavigationBar extends StatelessWidget {
                       Community(),
                       MyPosts(),
                       SavedPosts(),
-                      ActivityList(),
+                      ChatList(),
                     ],
                   ),
                 ),

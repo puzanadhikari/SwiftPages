@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +26,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
+    log(widget.recipientUserId+widget.recipientUsername);
     roomId = _getRoomId(_auth.currentUser?.uid, widget.recipientUserId);
   }
 
@@ -57,7 +60,7 @@ class _ChatPageState extends State<ChatPage> {
               top: 20,
               left: MediaQuery.of(context).size.width / 2.5,
               child:  Text(
-                "${widget.recipientUsername}",
+                widget.recipientUsername,
                 style: TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 20,
