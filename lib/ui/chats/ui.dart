@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
   final String recipientUserId;
@@ -29,67 +31,152 @@ class _ChatPageState extends State<ChatPage> {
     List<String?> sortedIds = [userId1, userId2]..sort();
     return "${sortedIds[0]}_${sortedIds[1]}";
   }
+  String _formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('HH:mm').format(dateTime); // Format the timestamp as per your requirement
+  }
 
   @override
   Widget build(BuildContext context) {
     String currentUserId = _auth.currentUser?.uid ?? '';
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat with ${widget.recipientUsername}'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              stream: _firestore.collection('chats').doc(roomId).snapshots(),
-              builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
-                if (!snapshot.hasData || !snapshot.data!.exists) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                var chatDocument = snapshot.data!;
-                var messages = chatDocument['messages'] as List<dynamic>? ?? [];
-                return ListView.builder(
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    var message = messages[index];
-                    return ListTile(
-                      title: Text(message['text']),
-                      subtitle: Text(message['sender']),
-                    );
-                  },
-                );
-              },
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFEEAD4),
+        body: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Image.asset(
+                'assets/Ellipse.png', // Replace with the correct image path
+                fit: BoxFit.contain,
+              ),
             ),
+            Positioned(
+              top: 20,
+              left: MediaQuery.of(context).size.width / 2.5,
+              child:  Text(
+                "${widget.recipientUsername}",
+                style: TextStyle(
+                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xfffeead4),
+                  height: 29 / 20,
+                ),
+              ),
+            ),
+            Positioned(
+              top: -20,
+              left: -10,
+              child: Image.asset(
+                "assets/logo.png",
+                height: 120,
+              ),
+            ),
+        Padding(
+          padding: const EdgeInsets.only(top:120.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(0xffD9D9D9),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(50),
+                topLeft: Radius.circular(50),
+              ),
+            ),
+            child: Column(
+                    children: [
+                      Expanded(
+                        child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                          stream: _firestore.collection('chats').doc(roomId).snapshots(),
+                          builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                            if (!snapshot.hasData || !snapshot.data!.exists) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            var chatDocument = snapshot.data!;
+                            var messages = chatDocument['messages'].reversed.toList() as List<dynamic>? ?? [];
+                            return Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child:  ListView.builder(
+                              itemCount: messages.length,
+                              reverse: true, // Reverse the order of messages to display the latest at the bottom
+                              itemBuilder: (context, index) {
+                                var message = messages[index];
+                                bool isCurrentUser = message['sender'] == _auth.currentUser?.displayName;
 
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type your message...',
-                    ),
+                                return Align(
+                                  alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                    padding: EdgeInsets.all(12.0),
+                                    decoration: BoxDecoration(
+                                      color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          message['text'],
+                                          style: TextStyle(
+                                            color: isCurrentUser ? Colors.white : Colors.black,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4.0),
+                                        Text(
+                                          _formatTimestamp(message['timestamp']),
+                                          style: TextStyle(
+                                            color: isCurrentUser ? Colors.white70 : Colors.black54,
+                                            fontSize: 12.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+
+                            );
+
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _messageController,
+                                decoration: InputDecoration(
+                                  hintText: 'Type your message...',
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.send),
+                              onPressed: () {
+                                _sendMessage(currentUserId);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    _sendMessage(currentUserId);
-                  },
-                ),
-              ],
-            ),
           ),
-        ],
+        ),
+          ],
+        ),
       ),
     );
   }
+
 
   void _sendMessage(String currentUserId) async {
     String messageText = _messageController.text.trim();

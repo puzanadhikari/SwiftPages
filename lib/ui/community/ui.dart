@@ -461,7 +461,7 @@ class _BookCardState extends State<BookCard> {
                 padding: const EdgeInsets.all(5.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -484,9 +484,7 @@ class _BookCardState extends State<BookCard> {
 
                           ],
                         ),
-                        ElevatedButton(onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(recipientUserId: userId,recipientUsername: userData['username'],)));
-                        }, child: Text("Chat")),
+
                           Row(
                           children: [
                             Image.asset(
@@ -503,6 +501,27 @@ class _BookCardState extends State<BookCard> {
 
                       ],
                     ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                              recipientUserId: userId,
+                              recipientUsername: userData['username'],
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+                        ),
+                        primary:  Color(0xff283E50),// Set your desired button color
+                      ),
+                      child: Text("Chat"),
+                    ),
+
                     Divider(
                       color: Color(0xff283E50),
                     ),
