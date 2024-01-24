@@ -113,7 +113,6 @@ class _ChatListState extends State<ChatList> {
                             var user = _users[index];
                             var userId = user['userId'];
                             var username = user['username'];
-
                             var avatar = user['avatar'];
 
                             return ListTile(

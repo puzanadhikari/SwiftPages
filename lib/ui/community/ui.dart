@@ -1409,6 +1409,25 @@ class CommentPage extends StatefulWidget {
 
 class _CommentPageState extends State<CommentPage> {
   bool isLoading = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+  Future<void> reloadComments() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('communityBooks')
+        .doc(widget.docId)
+        .collection('comments')
+        .get();
+
+    // Update the comments list
+    setState(() {
+      widget.comments = snapshot.docs.map<Map<String, dynamic>>((doc) => doc.data()! as Map<String, dynamic>).toList();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -1453,6 +1472,7 @@ class _CommentPageState extends State<CommentPage> {
                 ),
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 100.0),
               child: Card(
@@ -1553,7 +1573,6 @@ class _CommentPageState extends State<CommentPage> {
                                 Text(widget.bookData['username'] ?? 'Anonymous'),
                               ],
                             ),
-
                             Container(
                               height: 150,
                               width: 100,
@@ -1680,8 +1699,13 @@ class _CommentPageState extends State<CommentPage> {
                                         ),
                                         child: TextButton(
                                           onPressed:(){
-                                            commentController.clear();
-                                            widget.onPressed();
+
+                                            setState(() {
+
+                                              widget.onPressed();
+                                              commentController.clear();
+                                              Navigator.pop(context);
+                                            });
                                           },
                                           child: Text(
                                             'Comment',
@@ -1726,5 +1750,6 @@ class _CommentPageState extends State<CommentPage> {
     setState(() {
       commentController.clear();
     });
+    reloadComments();
   }
 }

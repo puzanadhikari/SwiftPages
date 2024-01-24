@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:swiftpages/ui/profilePage.dart';
@@ -14,6 +16,22 @@ class TopNavigation extends StatefulWidget {
 }
 
 class _TopNavigationState extends State<TopNavigation> {
+  Stream<int> getActivityCountStream() async* {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String currentUserId = user.uid;
+
+      yield* FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .collection('activity')
+          .snapshots()
+          .map((querySnapshot) => querySnapshot.size);
+    } else {
+      yield 0;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,6 +77,49 @@ class _TopNavigationState extends State<TopNavigation> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TopNavigationBar(),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ActivityList()));
+                },
+                child: Stack(
+                  children: [
+                    Icon(Icons.notifications,size: 35,),
+                    Positioned(
+                      left: 15,
+                      child:StreamBuilder<int>(
+                        stream: getActivityCountStream(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container(); // Return an empty container while loading
+                          } else if (snapshot.hasError) {
+                            return Container(); // Handle the error case
+                          } else {
+                            int activityCount = snapshot.data ?? 0;
+                            return activityCount > 0
+                                ? CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.red,
+                              child: Text(
+                                activityCount.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            )
+                                : Container();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
