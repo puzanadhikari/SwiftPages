@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:swiftpages/signUpPage.dart';
 
 import 'firebase_auth.dart';
@@ -12,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isLoading = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -29,7 +31,12 @@ class _LoginPageState extends State<LoginPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFFEEAD4),
-        body: Stack(
+        body: isLoading == true ? Center(
+      child: LoadingAnimationWidget.staggeredDotsWave(
+          color:Color(0xFF283E50),
+      size: 100,
+    ),
+    ) : Stack(
           children: [
             Positioned(
               top: 0,
@@ -159,12 +166,20 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 16.0),
                       ElevatedButton(
-                        onPressed: ()async {
-
-                          _auth.signInWithEmailAndPassword(context,
-                              emailController.text, passwordController.text);
-                          emailController.clear();
-                          passwordController.clear();
+                        onPressed: () async {
+                          try {
+                            setState(() {
+                              isLoading = true;
+                              _auth.signInWithEmailAndPassword(context,
+                                  emailController.text, passwordController.text);
+                              emailController.clear();
+                              passwordController.clear();
+                            });
+                          } catch(e) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          };
                         },
                         style: ElevatedButton.styleFrom(
                           primary:Color(0xFF283E50),// Background color
