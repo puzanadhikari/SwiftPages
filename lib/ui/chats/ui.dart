@@ -9,8 +9,10 @@ import 'package:intl/intl.dart';
 class ChatPage extends StatefulWidget {
   final String recipientUserId;
   final String recipientUsername;
+  final String recipientAvatar;
 
-  const ChatPage({Key? key, required this.recipientUserId, required this.recipientUsername}) : super(key: key);
+
+  const ChatPage({Key? key, required this.recipientUserId, required this.recipientUsername,required this.recipientAvatar}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -20,13 +22,14 @@ class _ChatPageState extends State<ChatPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _messageController = TextEditingController();
-
+   String? currentUserAvatar ;
   late String roomId; // Add this line
 
   @override
   void initState() {
     super.initState();
-    log(widget.recipientUserId+widget.recipientUsername);
+    currentUserAvatar = _auth.currentUser!.photoURL;
+    log(widget.recipientUserId+widget.recipientAvatar);
     roomId = _getRoomId(_auth.currentUser?.uid, widget.recipientUserId);
   }
 
@@ -60,7 +63,7 @@ class _ChatPageState extends State<ChatPage> {
               top: 20,
               left: MediaQuery.of(context).size.width / 2.5,
               child:  Text(
-                widget.recipientUsername,
+                'Chat Box',
                 style: TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 20,
@@ -90,6 +93,32 @@ class _ChatPageState extends State<ChatPage> {
             ),
             child: Column(
                     children: [
+                      Card(
+                        // elevation:5,
+                        color: Color(0xffD9D9D9),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40.0), // Set the border radius
+                        ),
+                        child: Container(
+                          // height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                              CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.white, // Customize as needed
+                                  backgroundImage: NetworkImage(widget.recipientAvatar),
+                                ),
+                                SizedBox(width: 10,),
+                                Text(widget.recipientUsername,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       Expanded(
                         child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                           stream: _firestore.collection('chats').doc(roomId).snapshots(),
@@ -104,45 +133,64 @@ class _ChatPageState extends State<ChatPage> {
                             return Padding(
                               padding: const EdgeInsets.all(15.0),
                               child:  ListView.builder(
-                              itemCount: messages.length,
-                              reverse: true, // Reverse the order of messages to display the latest at the bottom
-                              itemBuilder: (context, index) {
-                                var message = messages[index];
-                                bool isCurrentUser = message['sender'] == _auth.currentUser?.displayName;
+                                itemCount: messages.length,
+                                reverse: true,
+                                itemBuilder: (context, index) {
+                                  var message = messages[index];
+                                  bool isCurrentUser = message['sender'] == _auth.currentUser?.displayName;
 
-                                return Align(
-                                  alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                    padding: EdgeInsets.all(12.0),
-                                    decoration: BoxDecoration(
-                                      color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          message['text'],
-                                          style: TextStyle(
-                                            color: isCurrentUser ? Colors.white : Colors.black,
-                                            fontSize: 16.0,
+                                  return Align(
+                                    alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                      padding: EdgeInsets.all(12.0),
+                                      decoration: BoxDecoration(
+                                        color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          // if (!isCurrentUser)
+                                          //   CircleAvatar(
+                                          //     radius: 15,
+                                          //     backgroundColor: Colors.white, // Customize as needed
+                                          //     backgroundImage: NetworkImage(widget.recipientAvatar),
+                                          //   ),
+                                          // if (isCurrentUser)
+                                          //   CircleAvatar(
+                                          //     radius: 15,
+                                          //     backgroundColor: Colors.white, // Customize as needed
+                                          //     // Use the current user's avatar here
+                                          //     backgroundImage: NetworkImage(currentUserAvatar!),
+                                          //   ),
+                                          Text(
+                                            message['text'],
+                                            style: TextStyle(
+                                              color: isCurrentUser ? Colors.white : Colors.black,
+                                              fontSize: 14.0,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(height: 4.0),
-                                        Text(
-                                          _formatTimestamp(message['timestamp']),
-                                          style: TextStyle(
-                                            color: isCurrentUser ? Colors.white70 : Colors.black54,
-                                            fontSize: 12.0,
+                                          // SizedBox(height: 5,),
+                                          Text(
+                                            _formatTimestamp(message['timestamp']),
+                                            style: TextStyle(
+                                              color: isCurrentUser ? Colors.white : Colors.black,
+                                              fontSize: 10.0,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+
+
+                                          // Display the avatars
+
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            )
+
+                                  );
+                                },
+                              )
+
 
                             );
 

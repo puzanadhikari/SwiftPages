@@ -133,6 +133,7 @@ class _ChatListState extends State<ChatList> {
                                     builder: (context) => ChatPage(
                                       recipientUserId: userId,
                                       recipientUsername: username,
+                                      recipientAvatar: avatar,
                                     ),
                                   ),
                                 );
@@ -327,58 +328,69 @@ class ChatListItem extends StatelessWidget {
             var lastMessageText = lastMessage['text'] ?? 'No messages yet';
             var lastMessageTimestamp = lastMessage['timestamp'];
 
-            return ListTile(
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(participantAvatar),
-                    radius: 20,
-                    backgroundColor: Color(0xFF283E50),
-                  ),
-                  SizedBox(width: 10),
-                  Column(
+            return Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Card(
+
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      20.0), // Adjust the radius as needed
+                ),
+                color: Color(0xFFFF997A),
+                child: ListTile(
+                  title: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        participantUsername,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(participantAvatar),
+                        radius: 20,
+                        backgroundColor: Color(0xFF283E50),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            lastMessageText,
-                            style: TextStyle(color: Colors.grey),
+                            participantUsername,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
-                            width: 10,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                lastMessageText,
+                                style: TextStyle(),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                _formatTimestamp(lastMessageTimestamp),
+                                style: TextStyle( fontSize: 12),
+                              ),
+                            ],
                           ),
-                          Text(
-                            _formatTimestamp(lastMessageTimestamp),
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
+
                         ],
-                      ),
-                      SizedBox(
-                        height: 20,
                       ),
                     ],
                   ),
-                ],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                          recipientUserId: participantId,
+                          recipientUsername: participantUsername,
+                          recipientAvatar: participantAvatar,
+
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatPage(
-                      recipientUserId: participantId,
-                      recipientUsername: participantUsername,
-                    ),
-                  ),
-                );
-              },
             );
           },
         );

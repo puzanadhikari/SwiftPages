@@ -509,6 +509,7 @@ class _BookCardState extends State<BookCard> {
                             builder: (context) => ChatPage(
                               recipientUserId: userId,
                               recipientUsername: userData['username'],
+                              recipientAvatar: userData['avatar'],
                             ),
                           ),
                         );
