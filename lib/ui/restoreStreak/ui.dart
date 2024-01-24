@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RestoreStreakPage extends StatefulWidget {
@@ -117,7 +118,7 @@ Future<void> loadQr() async {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          avatarUrls==''?Center(child: CircularProgressIndicator()):Center(child: Image.network(avatarUrls)),
+                          avatarUrls==''?Center(child: LoadingAnimationWidget.staggeredDotsWave(color:Color(0xFF283E50),size: 100)):Center(child: Image.network(avatarUrls)),
                           SizedBox(height: 20,),
                 Center(child: Text("Pay and Click Done",style: TextStyle(fontSize: 16,color:   Colors.black,),)),
                           SizedBox(height: 20,),

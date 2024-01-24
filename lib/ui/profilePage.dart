@@ -173,6 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
         return AlertDialog(
           title: Text('Enter Your Invitation Code'),
           content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: _invitationCodeController,

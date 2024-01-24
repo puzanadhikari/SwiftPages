@@ -154,6 +154,10 @@ class _ChatPageState extends State<ChatPage> {
                               child: TextField(
                                 controller: _messageController,
                                 decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Color(0xFF283E50)),
+                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                  ),
                                   hintText: 'Type your message...',
                                 ),
                               ),

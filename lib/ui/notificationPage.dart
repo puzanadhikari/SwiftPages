@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 
 class ActivityList extends StatefulWidget {
@@ -67,7 +68,10 @@ class _ActivityListState extends State<ActivityList> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color:Color(0xFF283E50),
+                        size: 80,
+                      ),
                     );
                   } else if (snapshot.hasError) {
                     return Center(

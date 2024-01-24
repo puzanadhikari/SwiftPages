@@ -1408,6 +1408,7 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -1653,7 +1654,7 @@ class _CommentPageState extends State<CommentPage> {
                                       child: Padding(
                                         padding: const EdgeInsets.only(left:8.0),
                                         child: TextField(
-                                          // controller: commentController,
+                                          controller: commentController,
                                           onChanged: (value) {
                                             setState(() {
                                               comment = value;
@@ -1662,7 +1663,8 @@ class _CommentPageState extends State<CommentPage> {
                                           cursorColor: Color(0xFF283E50),
                                           decoration: InputDecoration(
                                               hintText: 'Add your comment',
-                                              hintStyle: TextStyle(color: Colors.grey)
+                                              hintStyle: TextStyle(color: Colors.grey),
+                                              border: InputBorder.none,
                                           ),
                                         ),
                                       ),
@@ -1677,7 +1679,10 @@ class _CommentPageState extends State<CommentPage> {
                                           ),
                                         ),
                                         child: TextButton(
-                                          onPressed: widget.onPressed,
+                                          onPressed:(){
+                                            commentController.clear();
+                                            widget.onPressed();
+                                          },
                                           child: Text(
                                             'Comment',
                                             style: TextStyle(color: Colors.white),
