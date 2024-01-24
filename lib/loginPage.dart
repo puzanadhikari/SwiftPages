@@ -160,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: ()async {
+
                           _auth.signInWithEmailAndPassword(context,
                               emailController.text, passwordController.text);
                           emailController.clear();

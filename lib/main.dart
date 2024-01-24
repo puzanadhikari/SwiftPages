@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:swiftpages/signUpPage.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
 
 Future<void> main() async {
@@ -99,7 +97,7 @@ Future<void> showNotification(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
     String type,
     String activityBy) async {
-  log(type + activityBy);
+  log("here"+type + activityBy);
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     'notification_swift_pages',
     'Swift Pages',

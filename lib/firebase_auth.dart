@@ -116,7 +116,7 @@ class FirebaseAuthService {
   // }
 
   Future<User?> signInWithEmailAndPassword(
-      BuildContext context, String email, String password) async {
+      BuildContext context, String email, String password ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
@@ -144,7 +144,7 @@ class FirebaseAuthService {
           'lastLoginTimestamp': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
       }
-      // Check if the user's email is verified
+
       if (credential.user != null && credential.user!.emailVerified) {
         Fluttertoast.showToast(
             msg: 'Login successfully',

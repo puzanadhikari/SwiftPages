@@ -255,7 +255,7 @@ class _MyBooksState extends State<MyBooks> {
                                           children: [
                                             ElevatedButton(
                                               onPressed: () {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer(book: books[index],)));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: books[index],)));
                                               },
                                               child: Text("Read"),
                                               style: ButtonStyle(

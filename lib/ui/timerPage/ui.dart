@@ -12,6 +12,8 @@ import 'package:timer_count_down/timer_count_down.dart';
 import '../homePage.dart';
 import '../myBooks.dart';
 import 'package:timer_count_down/timer_controller.dart';
+
+
 class Music {
   final String title;
   final String path; // Add this field for storing the path
@@ -19,17 +21,18 @@ class Music {
   Music({required this.title, required this.path});
 }
 
-class Timer extends StatefulWidget {
+class TimerPage extends StatefulWidget {
   DetailBook book;
 
-  Timer({Key? key, required this.book}) : super(key: key);
+  TimerPage({Key? key, required this.book}) : super(key: key);
 
   @override
-  State<Timer> createState() => _TimerState();
+  State<TimerPage> createState() => _TimerPageState();
 }
 
-class _TimerState extends State<Timer> {
+class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
+  int additionalTimerValue = 0;
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     
@@ -37,6 +40,7 @@ class _TimerState extends State<Timer> {
 
   }
   final CountdownController _controller = CountdownController(autoStart: false);
+  final CountdownController _additionalController = CountdownController(autoStart: false);
 
   String dailyGoal='';
    int _duration = 0;
@@ -56,7 +60,8 @@ class _TimerState extends State<Timer> {
   }
 
   Reference get firebaseStorage => FirebaseStorage.instance.ref();
-
+  String twoDigitMinutes='';
+  String twoDigitSeconds='';
   Future<void> loadMusic() async {
     List<Music> urls = []; // Update the type to List<Music>
 
@@ -105,6 +110,49 @@ class _TimerState extends State<Timer> {
       _isPlaying=false;
     });
   }
+  void _onTimerTick(Timer timer) {
+    if (_stopwatch.isRunning) {
+      setState(() {
+        // Rebuild the widget tree to update the UI
+      });
+    }
+  }
+  late Stopwatch _stopwatch;
+  // @override
+  // void dispose() {
+  //   _timer.cancel();
+  //   super.dispose();
+  // }
+
+  void _startPauseTimer() {
+    setState(() {
+      if (_stopwatch.isRunning) {
+        _stopwatch.stop();
+        // _isRunning = false;
+      } else {
+        _stopwatch.start();
+        // _isRunning = true;
+      }
+      _isRunning = !_isRunning;
+      if (_isRunning) {
+        _controller.start();
+        _additionalController.start();
+        _startAdditionalTimer();
+      } else {
+        _storeCurrentTime();
+        _controller.pause();
+        _additionalController.pause();
+        _pauseAdditionalTimer();
+      }
+    });
+  }
+
+  void _resetTimer() {
+    setState(() {
+      _stopwatch.reset();
+      _isRunning = false;
+    });
+  }
 
   void handlePlaybackResult(int result) {
     if (result == 1) {
@@ -127,6 +175,9 @@ class _TimerState extends State<Timer> {
     loadMusic();
     _isRunning = false;
     _isPlaying = false;
+    _stopwatch = Stopwatch();
+    _timer = Timer.periodic(Duration(seconds: 1), _onTimerTick);
+
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _retrieveStoredTime(); // Retrieve stored time when the widget is loaded
     });
@@ -332,68 +383,74 @@ class _TimerState extends State<Timer> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top:100.0),
-              child:  Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
-                      child: ElevatedButton(
-                        child: Text(_isRunning ? 'Pause' : 'Start'),
-                        onPressed: () {
-                          setState(() {
-                            _isRunning = !_isRunning;
-                            if (_isRunning) {
-                              _controller.start();
-                            } else {
-                              _storeCurrentTime();
-                              _controller.pause();
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                    Countdown(
-                      controller: _controller,
-                      seconds: currentTime==0?_duration*60:currentTime,
-                      build: (_, double time) {
-                        currentTime =  time.toInt();
-                        return Text(
-                          time.toString(),
-                          style: TextStyle(
-                            fontSize: 100,
-                          ),
-                        );
-                      },
-                      interval: Duration(milliseconds: 100),
-
-                      onFinished: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Timer is done!'),
-                          ),
-                        );
-                        updateStrikeInFirestore();
-                        _storeCurrentTimeOnFinished();
-                        setState(() {
-                          _isRunning = false;
-                        });
-                      },
-                    ),
-                  ],
-                ),
+              padding: EdgeInsets.only(top:120,left: 10),
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  // Original Countdown Timer
+                  Countdown(
+                    controller: _controller,
+                    seconds: currentTime == 0 ? _duration * 60 : currentTime,
+                    build: (_, double time) {
+                      currentTime = time.toInt();
+                      return Text(
+                        time.floor().toString()+ ' sec',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                    interval: Duration(milliseconds: 100),
+                    onFinished: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Timer is done!'),
+                        ),
+                      );
+                      updateStrikeInFirestore();
+                      _storeCurrentTimeOnFinished();
+                      setState(() {
+                        _isRunning = false;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    _formatDuration(_stopwatch.elapsed),
+                    style: TextStyle(fontSize: 48.0),
+                  ),
+                  SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: _startPauseTimer,
+                    child: Text(_isRunning ? 'Pause' : 'Start'),
+                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //   child: ElevatedButton(
+                  //     child: Text(_isRunning ? 'Pause' : 'Start'),
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         _isRunning = !_isRunning;
+                  //         if (_isRunning) {
+                  //           _controller.start();
+                  //           _additionalController.start();
+                  //           _startAdditionalTimer();
+                  //         } else {
+                  //           _storeCurrentTime();
+                  //           _controller.pause();
+                  //           _additionalController.pause();
+                  //           _pauseAdditionalTimer();
+                  //         }
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
+                ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                _handleTimerButtonPressed();
-              },
-              child: Text(_isRunning ? 'Pause' : 'Start'),
-            ),
+
+
             // Align(
             //   alignment: Alignment.topLeft,
             //   child: Padding(
@@ -560,6 +617,18 @@ class _TimerState extends State<Timer> {
       ),
     );
   }
+  int? _additionalTimer;
+
+  void _startAdditionalTimer() {
+
+
+  }
+
+  void _pauseAdditionalTimer() {
+      setState(() {
+
+      });
+  }
 
   void _showPersistentMusicBottomSheet(BuildContext context) {
     double sheetTopPosition = 0.3; // Initial position (30% from the top)
@@ -714,16 +783,42 @@ class _TimerState extends State<Timer> {
   // }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Future<void> _storeCurrentTime() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    // Get the current elapsed time in minutes and seconds
+    int elapsedMinutes = _stopwatch.elapsed.inMinutes;
+    int elapsedSeconds = _stopwatch.elapsed.inSeconds % 60;
+
     try {
-      await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'currentTime':currentTime});
-      print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+      // Retrieve the stored time from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc(_auth.currentUser?.uid).get();
+
+      if (userDoc.exists) {
+        // Get the stored time values
+        int storedMinutes = userDoc.get('totalTimeMin') ?? 0;
+        int storedSeconds = userDoc.get('totalTimeSec') ?? 0;
+
+        // Calculate the difference between the current time and stored time
+        int updatedMinutes = storedMinutes + elapsedMinutes;
+        int updatedSeconds = storedSeconds + elapsedSeconds;
+
+        // Update the Firestore document with the new values
+        await _firestore.collection('users').doc(_auth.currentUser?.uid).update({
+          'currentTime': currentTime,
+          'totalTimeMin': updatedMinutes,
+          'totalTimeSec': updatedSeconds,
+        });
+
+        print('Data updated for user with ID: ${_auth.currentUser?.uid}');
+      }
     } catch (error) {
-      print('Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
-      // Handle the error (e.g., show an error message)
+      print('Error updating data for user with ID: ${_auth.currentUser?.uid} - $error');
     }
   }
+
   Future<void> _storeCurrentTimeOnFinished() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
@@ -736,8 +831,9 @@ class _TimerState extends State<Timer> {
   }
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+     twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+     twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    // log(twoDigitMinutes.toString()+twoDigitSeconds);
     return '$twoDigitMinutes:$twoDigitSeconds';
   }
 

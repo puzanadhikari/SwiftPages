@@ -16,6 +16,7 @@ import 'package:swiftpages/ui/spashScreen.dart';
 import 'package:swiftpages/ui/topNavigatorBar.dart';
 
 import '../signUpPage.dart';
+import 'chart/ui.dart';
 import 'community/myPosts.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -560,6 +561,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                       guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
                                     },
                                     child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                              ],
+                            ),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                              children: [
+                                Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: (){
+                                      guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>GraphPage()));
+                                    },
+                                    child: Text("Chart",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
 
