@@ -33,46 +33,38 @@ void main() async {
   Map<String, dynamic>? latestActivity;
   Map<String, dynamic>? latestMessage;
 
-  Stream<List<Map<String, dynamic>>> messagesStream =
-  FirebaseFirestore.instance
-      .collection('chats')
-      .doc('BXpxh6NOweMsS0lg2ZLfZzdThy32_iNwSiDjlklSGRHLu9HuvaS3qAAz2')
-      .snapshots()
-      .map((documentSnapshot) {
-    List<Map<String, dynamic>> messages = [];
-    if (documentSnapshot.exists) {
-      List<dynamic> rawMessages = documentSnapshot['messages'] ?? [];
+  // Variable to store the latest message
+  Stream<QuerySnapshot<Map<String, dynamic>>> chatStream =
+  FirebaseFirestore.instance.collection('chats').snapshots();
 
-      for (var rawMessage in rawMessages) {
-        messages.add(rawMessage as Map<String, dynamic>);
-      }
-    }
-    return messages;
-  });
+  chatStream.listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+      List<String> users = List.from(doc['users'] ?? []);
+      if (users.contains(currentUserId)) {
 
-  messagesStream.listen((List<Map<String, dynamic>> messages) {
-    if (messages.isNotEmpty) {
-      // Sort messages based on timestamp in descending order
-      messages.sort((a, b) =>
-          (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
+        List<Map<String, dynamic>> messages = List.from(doc['messages'] ?? []);
+        if (messages.isNotEmpty) {
 
-      // Get the latest message
-      Map<String, dynamic> newLatestMessage = messages.first;
+          messages.sort((a, b) =>
+              (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
 
-      // Check if the new message is different from the latest one
-      if (latestMessage == null || latestMessage != newLatestMessage) {
-        // Show the latest notification
-        showNotificationChat(
-          flutterLocalNotificationsPlugin,
-          newLatestMessage['sender'],
-          newLatestMessage['text'],
-        );
+          // Get the latest message
+          Map<String, dynamic> newLatestMessage = messages.last;
 
-        // Update the latest message
-        latestMessage = newLatestMessage;
+          // Show the latest notification
+          showNotificationChat(
+            flutterLocalNotificationsPlugin,
+            newLatestMessage['sender'],
+            newLatestMessage['text'],
+          );
+
+          // Update the latest message
+          latestMessage = newLatestMessage;
+        }
       }
     }
   });
+
 
 
 
