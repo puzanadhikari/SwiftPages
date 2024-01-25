@@ -56,9 +56,96 @@ class _ChatListState extends State<ChatList> {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(
-            child: Text('No chats available'),
-          );
+            return Column(
+              children: [
+                // _buildUserDropdown(),
+                // _buildUserSearch(),
+                SizedBox(height: 10,),
+                Container(
+                  height: 50,
+                  padding: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50.0),
+                    color: Colors.grey[200], // Change the color as needed
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search users...',
+                      prefixIcon: Icon(Icons.search),
+                      border: InputBorder.none, // Remove the default border
+                    ),
+                    onChanged: _onSearchChanged,
+                  ),
+                ),
+
+                Visibility(
+                  visible: _searchController.text.isEmpty?false:true,
+                  child: Expanded(
+                    child: StreamBuilder<List<Map<String, dynamic>>>(
+                      stream: _usersStream,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Text('No users available');
+                        }
+
+                        _users = snapshot.data!;
+
+                        return Visibility(
+                          visible: _searchController.text.isEmpty?false:true,
+                          child: Card(
+                            color: Colors.white,
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0), // Set the border radius
+                            ),
+                            child: ListView.builder(
+                              itemCount: _users.length,
+                              itemBuilder: (context, index) {
+                                var user = _users[index];
+                                var userId = user['userId'];
+                                var username = user['username'];
+                                var avatar = user['avatar'];
+
+                                return ListTile(
+                                  title: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(avatar),
+                                        radius: 20,
+                                        backgroundColor: Color(0xFF283E50),
+                                      ),
+                                      Text(username),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPage(
+                                          recipientUserId: userId,
+                                          recipientUsername: username,
+                                          recipientAvatar: avatar,
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {
+                                      _searchController.clear();
+                                    });
+                                    log('Selected User: $userId');
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+              ],
+            );
         }
 
         var chatDocs = snapshot.data!.docs;
@@ -93,9 +180,7 @@ class _ChatListState extends State<ChatList> {
                   stream: _usersStream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(
-                        child: Text('No users available'),
-                      );
+                      return Text('No users available');
                     }
 
                     _users = snapshot.data!;
