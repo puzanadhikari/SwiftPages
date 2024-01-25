@@ -31,6 +31,52 @@ void main() async {
 
   // Variable to store the latest activity
   Map<String, dynamic>? latestActivity;
+  Map<String, dynamic>? latestMessage;
+
+  Stream<List<Map<String, dynamic>>> messagesStream =
+  FirebaseFirestore.instance
+      .collection('chats')
+      .doc('BXpxh6NOweMsS0lg2ZLfZzdThy32_iNwSiDjlklSGRHLu9HuvaS3qAAz2')
+      .snapshots()
+      .map((documentSnapshot) {
+    List<Map<String, dynamic>> messages = [];
+    if (documentSnapshot.exists) {
+      List<dynamic> rawMessages = documentSnapshot['messages'] ?? [];
+
+      for (var rawMessage in rawMessages) {
+        messages.add(rawMessage as Map<String, dynamic>);
+      }
+    }
+    return messages;
+  });
+
+  messagesStream.listen((List<Map<String, dynamic>> messages) {
+    if (messages.isNotEmpty) {
+      // Sort messages based on timestamp in descending order
+      messages.sort((a, b) =>
+          (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
+
+      // Get the latest message
+      Map<String, dynamic> newLatestMessage = messages.first;
+
+      // Check if the new message is different from the latest one
+      if (latestMessage == null || latestMessage != newLatestMessage) {
+        // Show the latest notification
+        showNotificationChat(
+          flutterLocalNotificationsPlugin,
+          newLatestMessage['sender'],
+          newLatestMessage['text'],
+        );
+
+        // Update the latest message
+        latestMessage = newLatestMessage;
+      }
+    }
+  });
+
+
+
+
 
   // Flag to check if it's the initial data retrieval
   bool initialDataRetrieved = false;
@@ -127,5 +173,32 @@ Future<void> showNotification(
     'Tap to view',
     platformChannelSpecifics,
     payload: 'activity_notification',
+  );
+}
+Future<void> showNotificationChat(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+    String sender,
+    String text,
+    ) async {
+  log("New message from $sender: $text");
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    'notification_chat',
+    'Chat Notifications',
+    importance: Importance.max,
+    priority: Priority.high,
+    playSound: true,
+    showWhen: false,
+  );
+
+  var platformChannelSpecifics = NotificationDetails(
+    android: androidPlatformChannelSpecifics,
+  );
+
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    '$sender',
+    '$text',
+    platformChannelSpecifics,
+    payload: 'chat_notification',
   );
 }
