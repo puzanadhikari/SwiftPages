@@ -430,7 +430,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                guestLogin==true?Icon(Icons.person): CircleAvatar(
                                   radius: 40,
                                   backgroundImage: NetworkImage(photoURL ?? ''),
-                                  backgroundColor: Color(0xfffeead4),
+                                  backgroundColor: Color(0xFF283E50),
                                 ),
                               ],
                             ),

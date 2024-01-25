@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../firebase_auth.dart';
 
@@ -90,7 +91,13 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                     ),
                   ),
                   SizedBox(height: 50,),
-                  Expanded(
+                  avatarUrls.isEmpty
+                      ? LoadingAnimationWidget.discreteCircle(
+                        color: Color(0xFF283E50),
+                        size: 60,
+                        secondRingColor: Color(0xFFFF997A),
+                        thirdRingColor:Color(0xFF686868),
+                      ) : Expanded(
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
@@ -106,21 +113,23 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                             });
                           },
                           child: Container(
-                            width: 60.0,
-                            height: 60.0,
+                            width: 40.0,
+                            height: 40.0,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: selectedAvatar == avatarUrls[index]
-                                  ? Color(0xFF283E50)
-                                  : Colors.white,
+                              color: index % 2 == 0 ? Color(0xfffeead4) : Color(0xFF283E50),
+                              border: Border.all(
+                                color: selectedAvatar == avatarUrls[index] ? index % 2 == 0 ? Color(0xFF283E50) : Color(0xfffeead4) : Colors.transparent,
+                                width: 2.0,
+                              ),
                             ),
                             child: CachedNetworkImage(
                               imageUrl: avatarUrls[index],
                               fit: BoxFit.scaleDown,
-                              width: 100.0,
-                              height: 100.0,
+                              width: 40.0,
+                              height: 40.0,
                               useOldImageOnUrlChange: false,
-                              placeholder: (context, url) => CircularProgressIndicator(),
+                              placeholder: (context, url) => CircularProgressIndicator(color:Color(0xFF283E50)),
                               errorWidget: (context, url, error) => Icon(Icons.error),
                             ),
                           ),
@@ -128,42 +137,45 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                       },
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (selectedAvatar != null) {
-                        _showPersistentBottomSheet(context);
-                        log('Selected Avatar Path: $selectedAvatar');
-                      } else {
-                        // Show a message if no avatar is selected
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please select an avatar.'),
-                          ),
-                        );
-                      }
+                  SizedBox(height: 40),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 70.0),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (selectedAvatar != null) {
+                          _showPersistentBottomSheet(context);
+                          log('Selected Avatar Path: $selectedAvatar');
+                        } else {
+                          // Show a message if no avatar is selected
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please select an avatar.'),
+                            ),
+                          );
+                        }
 
 
 
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: selectedAvatar != null ? Color(0xFF283E50) : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: selectedAvatar != null ? Color(0xFF283E50) : Color(0xfffeead4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                    ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      height: 26,
-                      child: Center(
-                        child: Text(
-                          'Next',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'Abhaya Libre ExtraBold',
-                            fontWeight: FontWeight.w800,
-                            height: 0,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width /3,
+                        height: 60,
+                        child: Center(
+                          child: Text(
+                            'SAVE',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: selectedAvatar != null ? Color(0xfffeead4) : Color(0xFF283E50),
+                              fontSize: 25,
+                              fontFamily: 'Abhaya Libre ExtraBold',
+                              height: 0,
+                            ),
                           ),
                         ),
                       ),

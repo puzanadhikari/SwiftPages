@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:swiftpages/ui/chats/ui.dart';
 
 class ChatList extends StatefulWidget {
@@ -307,7 +308,13 @@ class ChatListItem extends StatelessWidget {
           .get(),
       builder: (context, userSnapshot) {
         if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-          return CircularProgressIndicator();
+          return Center(
+              child:   LoadingAnimationWidget.discreteCircle(
+                color: Color(0xFF283E50),
+                size: 60,
+                secondRingColor: Color(0xFFFF997A),
+                thirdRingColor:Color(0xFF686868),
+              ));
         }
 
         var userData = userSnapshot.data!.data();
@@ -321,7 +328,13 @@ class ChatListItem extends StatelessWidget {
               .get(),
           builder: (context, chatSnapshot) {
             if (!chatSnapshot.hasData || !chatSnapshot.data!.exists) {
-              return CircularProgressIndicator();
+              return Center(
+                  child:   LoadingAnimationWidget.discreteCircle(
+                    color: Color(0xFF283E50),
+                    size: 60,
+                    secondRingColor: Color(0xFFFF997A),
+                    thirdRingColor:Color(0xFF686868),
+                  ));
             }
 
             var lastMessage = chatSnapshot.data!['messages'].last;
