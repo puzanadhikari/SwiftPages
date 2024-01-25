@@ -30,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String userName = ' ';
   String photoURL = ' ';
   String _invitationCode = '';
+  int? _colorCode=0 ;
   TextEditingController _invitationCodeController = TextEditingController();
 
   TextEditingController _textFieldController = TextEditingController();
@@ -45,6 +46,21 @@ class _ProfilePageState extends State<ProfilePage> {
       userName = preferences.getString("userName")!;
       photoURL = preferences.getString("profilePicture")!;
     });
+  }
+  Future<void> _fetchColorCode() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      // Fetch the invitation code and timestamp from Firestore
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await _firestore.collection('users').doc(user.uid).get();
+
+      if (snapshot.exists) {
+        setState(() {
+          _colorCode = snapshot.data()?['avatarColor'] ?? '';
+        });
+
+      }
+    }
   }
   Future<void> _signOut() async {
     SharedPreferences prefs =await SharedPreferences.getInstance();
@@ -321,7 +337,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-
+    _fetchColorCode();
     fetchUserInfo();
   }
 
@@ -430,7 +446,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                guestLogin==true?Icon(Icons.person): CircleAvatar(
                                   radius: 40,
                                   backgroundImage: NetworkImage(photoURL ?? ''),
-                                  backgroundColor: Color(0xFF283E50),
+                                  backgroundColor: Color(_colorCode!),
                                 ),
                               ],
                             ),

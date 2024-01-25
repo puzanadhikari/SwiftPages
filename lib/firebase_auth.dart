@@ -35,7 +35,7 @@ class FirebaseAuthService {
   }
 
   Future<User?> SignUpWithEmailAndPassword(
-      BuildContext context, String email, String password, String username,String avatars,String dailyGoal) async {
+      BuildContext context, String email, String password, String username,String avatars,String dailyGoal,Color _avatarColor) async {
     try {
       UserCredential userCredential =
       await _auth.createUserWithEmailAndPassword(
@@ -44,6 +44,7 @@ class FirebaseAuthService {
       );
       await userCredential.user?.updateDisplayName(username);
       await userCredential.user?.updatePhotoURL(avatars);
+     await addUserData(email,username,password,avatars,dailyGoal,_avatarColor);
       Fluttertoast.showToast(
           msg: 'Signup successfully',
           backgroundColor: Colors.green,
@@ -51,7 +52,7 @@ class FirebaseAuthService {
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,
           fontSize: 16.0);
-      addUserData(email,username,password,avatars,dailyGoal);
+
       sendVerificationEmail(context);
 
       Navigator.push(
@@ -72,35 +73,33 @@ class FirebaseAuthService {
       return null;
     }
   }
-  void addUserData(String email,String username,String password,String avatar,String dailyGoal) async {
+  Future addUserData(String email,String username,String password,String avatar,String dailyGoal,Color _avatarColor) async {
     try {
-      // Get the current authenticated user
+
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // User is signed in, use the UID as the document ID
         String uid = user.uid;
 
         // Sample user data (customize based on your requirements)
         Map<String, dynamic> userData = {
-          "email":email,
-              "username":username,
-              "password":password,
-              "avatar":avatar,
-          'dailyGoal':dailyGoal,
-          'currentTime':0,
+          "email": email,
+          "username": username,
+          "password": password,
+          "avatar": avatar,
+          'dailyGoal': dailyGoal,
+          'currentTime': 0,
+          'avatarColor': _avatarColor.value,
+          'lastStrikeTimestamp': DateTime.april
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
 
         await userRef.set(userData);
 
-        print('User data stored successfully!');
-      } else {
-        print('No user is currently signed in.');
-      }
-    } catch (e) {
-      print('Error storing user data: $e');
+        log('User data stored successfully!');
+      }} catch (e) {
+      log('Error storing user data: $e'); // Add this line to print the error
     }
   }
   // Future addUserDetail(String email,String username,String password,String avatar)async{

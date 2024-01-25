@@ -236,7 +236,7 @@ class _BookCardState extends State<BookCard> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius:
-            BorderRadius.circular(20.0), // Adjust the radius as needed
+            BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)), // Adjust the radius as needed
       ),
       color: Color(0xFFFF997A),
       elevation: 8,

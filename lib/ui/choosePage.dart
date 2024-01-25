@@ -164,15 +164,18 @@ class _ChoosePageState extends State<ChoosePage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Taking a test drive?",style: TextStyle(fontSize: 30,   color: Color(0xFF686868),),),
+                    Text("Taking a test drive?",style: TextStyle(fontSize: 30,   color: Color(0xFF283E50),),),
                     SizedBox(height: 30,),
-                    Text("Discover more with a more personalized experience!! Unlock exclusive features and join our community for a richer experience!",style: TextStyle(
-                      color: Color(0xFF686868),
-                      fontSize: 14,
-                      fontFamily: 'Abhaya Libre',
-                      fontWeight: FontWeight.w700,
-                      height: 0,
-                    ),),
+                    Center(
+                      child: Text("Discover more with a more personalized experience!! Unlock exclusive features and join our community for a richer experience!",style: TextStyle(
+                        color: Color(0xFF686868),
+                        fontSize: 14,
+                        fontFamily: 'Abhaya Libre',
+                        fontWeight: FontWeight.w700,
+                        height: 0,
+
+                      ),),
+                    ),
                     SizedBox(height: 50,),
                     Text("Are you sure you wanna log in as a guest instead of signing up?",style: TextStyle(
                       color: Color(0xFF686868),

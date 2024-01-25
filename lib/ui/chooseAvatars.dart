@@ -21,6 +21,7 @@ class ChooseAvatars extends StatefulWidget {
 class _ChooseAvatarsState extends State<ChooseAvatars> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   late List<String> avatarUrls;
+  Color _avatarColor = Colors.white;
   TextEditingController _dailyGoal = TextEditingController();
   String? selectedAvatar;
   final storage = FirebaseStorage.instance;
@@ -65,7 +66,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
               left: 0,
               right: 0,
               child: Container(
-                height: 200, // Adjust the height as needed
+                height:MediaQuery.of(context).size.height/3,// Adjust the height as needed
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/EllipseAvatars.png'), // Replace with your image asset
@@ -80,17 +81,17 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
+                    padding: const EdgeInsets.only(top: 70.0),
                     child: Text(
                       "Choose Your Avatar!!",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF283E50),
                       ),
                     ),
                   ),
-                  SizedBox(height: 50,),
+                  SizedBox(height: 20,),
                   avatarUrls.isEmpty
                       ? LoadingAnimationWidget.discreteCircle(
                         color: Color(0xFF283E50),
@@ -98,48 +99,53 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                         secondRingColor: Color(0xFFFF997A),
                         thirdRingColor:Color(0xFF686868),
                       ) : Expanded(
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
-                      ),
-                      itemCount: avatarUrls.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 20.0,
+                          mainAxisSpacing: 20.0,
+                        ),
+                        itemCount: avatarUrls.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
                             setState(() {
-                              selectedAvatar = avatarUrls[index];
-                            });
-                          },
-                          child: Container(
-                            width: 40.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: index % 2 == 0 ? Color(0xfffeead4) : Color(0xFF283E50),
-                              border: Border.all(
-                                color: selectedAvatar == avatarUrls[index] ? index % 2 == 0 ? Color(0xFF283E50) : Color(0xfffeead4) : Colors.transparent,
-                                width: 2.0,
-                              ),
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl: avatarUrls[index],
-                              fit: BoxFit.scaleDown,
+                                selectedAvatar = avatarUrls[index];
+                                _avatarColor = selectedAvatar == avatarUrls[index] ? index % 2 == 0 ? Color(0xfffeead4): Color(0xFF283E50) : Colors.transparent;
+                                log(_avatarColor.toString());
+                              });
+                            },
+                            child: Container(
                               width: 40.0,
                               height: 40.0,
-                              useOldImageOnUrlChange: false,
-                              placeholder: (context, url) => CircularProgressIndicator(color:Color(0xFF283E50)),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: index % 2 == 0 ? Color(0xfffeead4) : Color(0xFF283E50),
+                                border: Border.all(
+                                  color: selectedAvatar == avatarUrls[index] ? index % 2 == 0 ? Color(0xFF283E50) : Color(0xfffeead4) : Colors.transparent,
+                                  width: 2.0,
+                                ),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: avatarUrls[index],
+                                fit: BoxFit.scaleDown,
+                                width: 40.0,
+                                height: 40.0,
+                                useOldImageOnUrlChange: false,
+                                placeholder: (context, url) => CircularProgressIndicator(color:Color(0xFF283E50)),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(height: 40),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 70.0),
+                    padding: const EdgeInsets.only(bottom: 50.0),
                     child: ElevatedButton(
                       onPressed: () async {
                         if (selectedAvatar != null) {
@@ -255,7 +261,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                           Navigator.pop(context);
                           Navigator.pop(context);
                           await _auth.SignUpWithEmailAndPassword(
-                              context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text);
+                              context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor);
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Color(0xFFFF997A),// Background color
