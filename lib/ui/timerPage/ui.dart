@@ -390,11 +390,11 @@ class _TimerPageState extends State<TimerPage> {
                   // Original Countdown Timer
                   Countdown(
                     controller: _controller,
-                    seconds: currentTime == 0 ? _duration * 60 : currentTime,
+                    seconds: _duration * 60 ,
                     build: (_, double time) {
                       currentTime = time.toInt();
                       return Text(
-                        time.floor().toString()+ ' sec',
+                       time.floor().toString()+ ' sec',
                         style: TextStyle(
                           fontSize: 24,
                           color: Colors.white,
@@ -403,17 +403,25 @@ class _TimerPageState extends State<TimerPage> {
                     },
                     interval: Duration(milliseconds: 100),
                     onFinished: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Timer is done!'),
-                        ),
-                      );
-                      updateStrikeInFirestore();
-                      _storeCurrentTimeOnFinished();
-                      setState(() {
-                        _isRunning = false;
-                      });
+                      print('Countdown finished!');
+                      try {
+                        // Your existing code here
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Timer is done!'),
+                          ),
+                        );
+                        updateStrikeInFirestore();
+                        _storeCurrentTimeOnFinished();
+                        setState(() {
+                          _isRunning = false;
+                        });
+                      } catch (e) {
+                        print('Error in onFinished callback: $e');
+                        log('Error in onFinished callback: $e');
+                      }
                     },
+
                   ),
                   SizedBox(height: 16),
                   Text(
