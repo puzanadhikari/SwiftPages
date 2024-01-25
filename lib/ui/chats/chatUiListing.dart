@@ -394,12 +394,7 @@ class ChatListItem extends StatelessWidget {
       builder: (context, userSnapshot) {
         if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
           return Center(
-              child:   LoadingAnimationWidget.discreteCircle(
-                color: Color(0xFF283E50),
-                size: 60,
-                secondRingColor: Color(0xFFFF997A),
-                thirdRingColor:Color(0xFF686868),
-              ));
+              child:   Text(""));
         }
 
         var userData = userSnapshot.data!.data();
@@ -413,13 +408,7 @@ class ChatListItem extends StatelessWidget {
               .get(),
           builder: (context, chatSnapshot) {
             if (!chatSnapshot.hasData || !chatSnapshot.data!.exists) {
-              return Center(
-                  child:   LoadingAnimationWidget.discreteCircle(
-                    color: Color(0xFF283E50),
-                    size: 60,
-                    secondRingColor: Color(0xFFFF997A),
-                    thirdRingColor:Color(0xFF686868),
-                  ));
+              return Text("");
             }
 
             var lastMessage = chatSnapshot.data!['messages'].last;

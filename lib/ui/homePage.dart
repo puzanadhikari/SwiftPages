@@ -27,7 +27,29 @@ class _HomePageState extends State<HomePage> {
   final String apiUrl =
       "https://book-finder1.p.rapidapi.com/api/search?page=2";
   int strikesCount = 0;
+  int totalTimeMin=0;
+  int totalTimeSec=0;
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> fetchData() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc(_auth.currentUser?.uid).get();
+
+      if (userDoc.exists) {
+
+
+        setState(() {
+          totalTimeMin = userDoc.get('totalTimeMin') ?? 0;
+          totalTimeSec = userDoc.get('totalTimeSec') ?? 0;
+        });
+      }
+    } catch (error) {
+      log('Error fetching data: $error');
+    }
+  }
 
   Future<void> fetchStrikes() async {
     try {
@@ -164,6 +186,7 @@ userName  = preferences.getString("userName")!;
   void initState() {
     super.initState();
     _retrieveStoredTime();
+    fetchData();
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -268,8 +291,8 @@ userName  = preferences.getString("userName")!;
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "Completed: 10 mins",
+                             Text(
+                              "Completed: ${(totalTimeMin * 60 + totalTimeSec.toDouble())/60} mins",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Color(0xFF686868),
