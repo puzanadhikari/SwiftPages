@@ -266,6 +266,20 @@ class _MyBooksState extends State<MyBooks> {
                                             ),
                                             ElevatedButton(
                                               onPressed: () {
+                                                _showRemoveBookDialog(books[index]);
+                                                 },
+                                              child: Text("Remove"),
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(15.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
                                                 _showAddNotesDialog(books[index]);
                                                  },
                                               child: Text("Share"),
@@ -376,6 +390,37 @@ class _MyBooksState extends State<MyBooks> {
                 }
               },
               child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showRemoveBookDialog(DetailBook book) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
+
+        return AlertDialog(
+          title: Text('Remove Book'),
+          content: Text("Are you sure wantt to remove the book from your read list?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  removeBook(book);
+
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Remove'),
             ),
           ],
         );
