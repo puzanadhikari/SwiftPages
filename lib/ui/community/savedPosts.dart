@@ -134,74 +134,68 @@ class _BookCardState extends State<BookCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor:  Color(0xFFFEEAD4),
-                        backgroundImage: NetworkImage(
-                          widget.bookData['avatarUrl'] ?? '',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(widget.bookData['postedBy'] ?? 'Anonymous'),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                    height: 150,
-                    width: 100,
-                    child: Image.network(
-                      widget.bookData['imageLink'] ?? '',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  SizedBox(height: 10,)
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-
-
-                    ],
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top:20.0),
-                    child: Container(
-                      height:120,
-                      width: 200,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Container(
-                        height: 150,
-                        width: 150,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            '${widget.bookData['note'] ?? ''}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Color(0xFF686868),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundColor:  Color(0xFFFEEAD4),
+                          backgroundImage: NetworkImage(
+                            widget.bookData['avatarUrl'] ?? '',
                           ),
                         ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.bookData['postedBy'] ?? 'Anonymous'),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Container(
+                      height: 150,
+                      width: 100,
+                      child: Image.network(
+                        widget.bookData['imageLink'] ?? '',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(height: 10,)
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.only(top:20.0),
+                  child: Container(
+                    height:120,
+                    width: 200,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Container(
+                      height: 150,
+                      width: 150,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Text(
+                          '${widget.bookData['note'] ?? ''}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: Color(0xFF686868),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
                   ),
-
-                ],
+                ),
               ),
               // ListTile(
               //   leading: CircleAvatar(

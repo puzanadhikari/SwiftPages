@@ -247,170 +247,176 @@ class _BookCardState extends State<BookCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: ()async{
-                    fetchUserDetailsById(widget.bookData['userId']);
-                  },
-                  child: Row(
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: ()async{
+                      fetchUserDetailsById(widget.bookData['userId']);
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Color(0xFFFEEAD4),
+                          backgroundImage: NetworkImage(
+                            widget.bookData['avatarUrl'] ?? '',
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.bookData['username'] ?? 'Anonymous'),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 150,
+                    width: 100,
+                    child: Image.network(
+                      widget.bookData['imageLink'] ?? '',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Color(0xFFFEEAD4),
-                        backgroundImage: NetworkImage(
-                          widget.bookData['avatarUrl'] ?? '',
+
+                      GestureDetector(
+                        onTap: (){
+                          _showConfirmationDialogToSave(context);
+                        },
+                        child: SvgPicture.asset(
+                          'assets/save.svg',
+                          height: 25,
                         ),
                       ),
                       SizedBox(
                         width: 10,
                       ),
-                      Text(widget.bookData['username'] ?? 'Anonymous'),
+                      Text(
+                        '${comments.length} ',
+                        style: TextStyle(
+                          color: Color(0xFF283E50),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CommentPage(
+                                        comments: comments,
+                                        docId: widget.documentId,
+                                        onPressed: () {
+                                          addComment(comment);
+                                          saveActivity(
+                                              context,
+                                              widget.bookData['imageLink'],
+                                              currentUsername ,
+                                              widget.bookData['avatarUrl'],
+                                              'Comment',
+                                              widget.bookData['userId'],
+                                              currentUserAvatar,
+                                            DateTime.now()
+
+                                          );
+                                        },
+                                        commentCount: comments.length, bookData: widget.bookData,
+
+                                      )));
+                        },
+                        child: SvgPicture.asset(
+                          'assets/comment.svg',
+                          height: 30,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          updateLikes(_isLiked ? likes - 1 : likes + 1,
+                              widget.index, username);
+                          log(currentUsername+widget.bookData['username']);
+                         currentUsername==widget.bookData['username']?'': saveActivity(
+                              context,
+                              widget.bookData['imageLink'],
+                              currentUsername,
+                              widget.bookData['avatarUrl'],
+                              _isLiked ? 'Unliked' : 'Liked',
+                              widget.bookData['userId'],currentUserAvatar, DateTime.now());
+                        },
+                        child: SvgPicture.asset(
+                          'assets/like.svg',
+                          height: 25,
+                          color: _isLiked ? Colors.red : Color(0xFFFEEAD4),
+                        ),
+                      ),
+                      Text(
+                        ' ${likes}',
+                        style: TextStyle(
+                          color: Color(0xFF283E50),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 150,
-                  width: 100,
-                  child: Image.network(
-                    widget.bookData['imageLink'] ?? '',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
 
-                    GestureDetector(
-                      onTap: (){
-                        _showConfirmationDialogToSave(context);
-                      },
-                      child: SvgPicture.asset(
-                        'assets/save.svg',
-                        height: 25,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      '${comments.length} ',
-                      style: TextStyle(
-                        color: Color(0xFF283E50),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CommentPage(
-                                      comments: comments,
-                                      docId: widget.documentId,
-                                      onPressed: () {
-                                        addComment(comment);
-                                        saveActivity(
-                                            context,
-                                            widget.bookData['imageLink'],
-                                            currentUsername ,
-                                            widget.bookData['avatarUrl'],
-                                            'Comment',
-                                            widget.bookData['userId'],
-                                            currentUserAvatar,
-                                          DateTime.now()
-
-                                        );
-                                      },
-                                      commentCount: comments.length, bookData: widget.bookData,
-
-                                    )));
-                      },
-                      child: SvgPicture.asset(
-                        'assets/comment.svg',
-                        height: 30,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        updateLikes(_isLiked ? likes - 1 : likes + 1,
-                            widget.index, username);
-                        log(currentUsername+widget.bookData['username']);
-                       currentUsername==widget.bookData['username']?'': saveActivity(
-                            context,
-                            widget.bookData['imageLink'],
-                            currentUsername,
-                            widget.bookData['avatarUrl'],
-                            _isLiked ? 'Unliked' : 'Liked',
-                            widget.bookData['userId'],currentUserAvatar, DateTime.now());
-                      },
-                      child: SvgPicture.asset(
-                        'assets/like.svg',
-                        height: 25,
-                        color: _isLiked ? Colors.red : Color(0xFFFEEAD4),
-                      ),
-                    ),
-                    Text(
-                      ' ${likes}',
-                      style: TextStyle(
-                        color: Color(0xFF283E50),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-
-                      Container(
-                        height: 120,
-                        width: 200,
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD9D9D9),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Container(
-                          height: 150,
-                          width: 150,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(
-                              '${widget.bookData['notes'] ?? ''}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Color(0xFF686868),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500),
+                        Container(
+                          height: 120,
+                          width: 200,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD9D9D9),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Container(
+                            height: 150,
+                            width: 150,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                '${widget.bookData['notes'] ?? ''}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: Color(0xFF686868),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 10,),
-                      // GestureDetector(
-                      //     onTap: (){
-                      //       _showConfirmationDialogToSave(context);
-                      //     },
-                      //     child: Icon(Icons.download))
-                    ],
+                        SizedBox(height: 10,),
+                        // GestureDetector(
+                        //     onTap: (){
+                        //       _showConfirmationDialogToSave(context);
+                        //     },
+                        //     child: Icon(Icons.download))
+                      ],
+                    ),
                   ),
-                ),
 
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -1370,17 +1376,14 @@ class CommentWidget extends StatelessWidget {
                       children: [
                         Text( username.toUpperCase(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                         Container(
-                            width: 250,
+                            width: 210,
                             child: Text(comment,style: TextStyle(fontSize: 14),)),
                       ],
                     ),
                   ],
                 ),
-
               ],
             ),
-
-
           ],
         ),
       ),
@@ -1433,6 +1436,7 @@ class _CommentPageState extends State<CommentPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Stack(
           children: [
             Positioned(
@@ -1475,8 +1479,9 @@ class _CommentPageState extends State<CommentPage> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: const EdgeInsets.only(top: 80.0),
               child: Card(
+
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                       20.0), // Adjust the radius as needed
@@ -1552,100 +1557,105 @@ class _CommentPageState extends State<CommentPage> {
                           children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        Column(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 15,
-                                  backgroundColor: Color(0xFFFEEAD4),
-                                  backgroundImage: NetworkImage(
-                                    widget.bookData['avatarUrl'] ?? '',
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: Color(0xFFFEEAD4),
+                                      backgroundImage: NetworkImage(
+                                        widget.bookData['avatarUrl'] ?? '',
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(widget.bookData['username'] ?? 'Anonymous'),
+                                  ],
+                                ),
+                                Container(
+                                  height: 150,
+                                  width: 100,
+                                  child: Image.network(
+                                    widget.bookData['imageLink'] ?? '',
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 10,
-                                ),
-                                Text(widget.bookData['username'] ?? 'Anonymous'),
+                                  height: 10,
+                                )
                               ],
                             ),
-                            Container(
-                              height: 150,
-                              width: 100,
-                              child: Image.network(
-                                widget.bookData['imageLink'] ?? '',
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
+                            Column(
+                              children: [
 
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
 
-                                  Container(
-                                    height: 120,
-                                    width: 200,
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: Container(
-                                      height: 150,
-                                      width: 150,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 5.0),
-                                        child: Text(
-                                          '${widget.bookData['notes'] ?? ''}',
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: Color(0xFF686868),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
+                                      Container(
+                                        height: 120,
+                                        width: 200,
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFD9D9D9),
+                                          borderRadius: BorderRadius.circular(20.0),
+                                        ),
+                                        child: Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 5.0),
+                                            child: Text(
+                                              '${widget.bookData['notes'] ?? ''}',
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Color(0xFF686868),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      SizedBox(height: 10,),
+                                      // GestureDetector(
+                                      //     onTap: (){
+                                      //       _showConfirmationDialogToSave(context);
+                                      //     },
+                                      //     child: Icon(Icons.download))
+                                    ],
                                   ),
-                                  SizedBox(height: 10,),
-                                  // GestureDetector(
-                                  //     onTap: (){
-                                  //       _showConfirmationDialogToSave(context);
-                                  //     },
-                                  //     child: Icon(Icons.download))
-                                ],
-                              ),
-                            ),
+                                ),
 
+                              ],
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          color: Color(0xff686868),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Comments ${widget.commentCount}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
+                            Text('${widget.bookData['likes'] } Likes',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
                     ),
                   ),
-                            Divider(
-                              color: Color(0xff686868),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Comments ${widget.commentCount}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
-                                Text('${widget.bookData['likes'] } Likes',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold)),
-                              ],
-                            ),
+
                             SizedBox(height: 5,),
                             Expanded(
                               child: ListView(children: [

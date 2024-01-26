@@ -289,6 +289,7 @@ class _ChatPageState extends State<ChatPage> {
         'text': messageText,
         'sender': currentUserUsername,
         'timestamp': DateTime.now(),
+        'unread': true,
       };
 
       // Get the chat document

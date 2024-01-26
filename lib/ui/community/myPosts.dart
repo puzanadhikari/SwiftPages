@@ -112,110 +112,116 @@ class _BookCardState extends State<BookCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor:  Color(0xFFFEEAD4),
-                        backgroundImage: NetworkImage(
-                          widget.bookData['avatarUrl'] ?? '',
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundColor:  Color(0xFFFEEAD4),
+                          backgroundImage: NetworkImage(
+                            widget.bookData['avatarUrl'] ?? '',
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(widget.bookData['username'] ?? 'Anonymous'),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Container(
-                    height: 150,
-                    width: 100,
-                    child: Image.network(
-                      widget.bookData['imageLink'] ?? '',
-                      fit: BoxFit.contain,
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.bookData['username'] ?? 'Anonymous'),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 10,)
-                ],
+                    SizedBox(height: 10,),
+                    Container(
+                      height: 150,
+                      width: 100,
+                      child: Image.network(
+                        widget.bookData['imageLink'] ?? '',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(height: 10,)
+                  ],
+                ),
               ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Text("Review",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('${comments.length} ',style: TextStyle(color: Color(0xFF283E50),),),
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CommentPage(
-                                    comments: comments,
-                                    docId: widget.documentId,
-                                    onPressed: (){
-                                      addComment(comment);
-                                    },
-                                    commentCount: comments.length,
-                                  )));
-                        },
-                        child: SvgPicture.asset(
-                          'assets/comment.svg',
-                          height: 30,
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text("Review",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                        SizedBox(
+                          width: 10,
                         ),
-                      ),
-                      SizedBox(width: 10,),
-                      GestureDetector(
-                        onTap: (){
-                          updateLikes(
-                              _isLiked ? likes - 1 : likes + 1, widget.index,username);
-                        },
-                        child: SvgPicture.asset(
-                          'assets/like.svg',
-                          height: 25,
-                          color: _isLiked ? Colors.red: Color(0xFFFEEAD4),
+                        Text('${comments.length} ',style: TextStyle(color: Color(0xFF283E50),),),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CommentPage(
+                                      comments: comments,
+                                      docId: widget.documentId,
+                                      onPressed: (){
+                                        addComment(comment);
+                                      },
+                                      commentCount: comments.length,
+                                    )));
+                          },
+                          child: SvgPicture.asset(
+                            'assets/comment.svg',
+                            height: 30,
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 10,),
+                        GestureDetector(
+                          onTap: (){
+                            updateLikes(
+                                _isLiked ? likes - 1 : likes + 1, widget.index,username);
+                          },
+                          child: SvgPicture.asset(
+                            'assets/like.svg',
+                            height: 25,
+                            color: _isLiked ? Colors.red: Color(0xFFFEEAD4),
+                          ),
+                        ),
 
-                      Text(' ${likes}',style: TextStyle(color: Color(0xFF283E50),),),
-                    ],
-                  ),
+                        Text(' ${likes}',style: TextStyle(color: Color(0xFF283E50),),),
+                      ],
+                    ),
 
-                  Padding(
-                    padding: const EdgeInsets.only(top:20.0),
-                    child: Container(
-                      height:120,
-                      width: 200,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(top:20.0),
                       child: Container(
-                        height: 150,
-                        width: 150,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            '${widget.bookData['notes'] ?? ''}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Color(0xFF686868),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
+                        height:120,
+                        width: 200,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Container(
+                          height: 150,
+                          width: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              '${widget.bookData['notes'] ?? ''}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Color(0xFF686868),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
 
-                ],
+                  ],
+                ),
               ),
               // ListTile(
               //   leading: CircleAvatar(
