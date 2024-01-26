@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../chats/ui.dart';
 import '../notificationPage.dart';
@@ -832,6 +833,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
               children: [
                 GestureDetector(
                   onTap: ()async{
+
                     fetchUserDetailsById(widget.bookData['userId']);
                   },
                   child: Row(
@@ -998,6 +1000,12 @@ class _BookCardSheetState extends State<BookCardSheet> {
     );
   }
   Future<Map<String, dynamic>> fetchUserDetailsById(String userId) async {
+    LoadingAnimationWidget.discreteCircle(
+      color: Color(0xFF283E50),
+      size: 100,
+      secondRingColor: Color(0xFFFF997A),
+      thirdRingColor:Color(0xFF686868),
+    );
     log(userId.toString());
     try {
 
@@ -1481,7 +1489,6 @@ class _CommentPageState extends State<CommentPage> {
             Padding(
               padding: const EdgeInsets.only(top: 80.0),
               child: Card(
-
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                       20.0), // Adjust the radius as needed
