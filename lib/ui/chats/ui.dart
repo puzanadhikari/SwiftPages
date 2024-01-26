@@ -163,16 +163,7 @@ class _ChatPageState extends State<ChatPage> {
                                 itemBuilder: (context, index) {
                                   var message = messages[index];
                                   bool isCurrentUser = message['sender'] == _auth.currentUser?.displayName;
-                                  if (isCurrentUser && message['unread'] == true) {
-                                    _firestore.collection('chats').doc(roomId).update({
-                                      'messages': FieldValue.arrayRemove([
-                                        {'text': message['text'], 'sender': message['sender'], 'timestamp': message['timestamp'], 'unread': true}
-                                      ]),
-                                      'messages': FieldValue.arrayUnion([
-                                        {'text': message['text'], 'sender': message['sender'], 'timestamp': message['timestamp'], 'unread': false}
-                                      ]),
-                                    });
-                                  }
+
                                   return Align(
                                     alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
                                     child: Container(
@@ -180,50 +171,52 @@ class _ChatPageState extends State<ChatPage> {
                                       padding: EdgeInsets.all(12.0),
                                       decoration: BoxDecoration(
                                         color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderRadius: BorderRadius.circular(20.0),
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                      child: Stack(
                                         children: [
-                                          // if (!isCurrentUser)
-                                          //   CircleAvatar(
-                                          //     radius: 15,
-                                          //     backgroundColor: Colors.white, // Customize as needed
-                                          //     backgroundImage: NetworkImage(widget.recipientAvatar),
-                                          //   ),
-                                          // if (isCurrentUser)
-                                          //   CircleAvatar(
-                                          //     radius: 15,
-                                          //     backgroundColor: Colors.white, // Customize as needed
-                                          //     // Use the current user's avatar here
-                                          //     backgroundImage: NetworkImage(currentUserAvatar!),
-                                          //   ),
-                                          Text(
-                                            message['text'],
-                                            style: TextStyle(
-                                              color: isCurrentUser ? Colors.white : Colors.black,
-                                              fontSize: 14.0,
-                                            ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                message['text'],
+                                                style: TextStyle(
+                                                  color: isCurrentUser ? Colors.white : Colors.black,
+                                                  fontSize: 14.0,
+                                                ),
+                                              ),
+                                              SizedBox(height: 5,),
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    _formatTimestamp(message['timestamp']),
+                                                    style: TextStyle(
+                                                      color: isCurrentUser ? Colors.white : Colors.black,
+                                                      fontSize: 8.0,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 5,),
+                                                  // if (isCurrentUser)
+                                                  //   SvgPicture.asset(
+                                                  //     'assets/tick.svg', // Replace with the correct path to your tick.svg image
+                                                  //     height: 8,
+                                                  //     width: 8,
+                                                  //     color:message['unread']==true?Colors.white:Color(0xFFFEEAD4), // Customize the color as needed
+                                                  //   ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                          // SizedBox(height: 5,),
-                                          Text(
-                                            _formatTimestamp(message['timestamp']),
-                                            style: TextStyle(
-                                              color: isCurrentUser ? Colors.white : Colors.black,
-                                              fontSize: 10.0,
-                                            ),
-                                          ),
-
-
-                                          // Display the avatars
-
                                         ],
                                       ),
                                     ),
-
                                   );
                                 },
                               )
+
 
 
                             );

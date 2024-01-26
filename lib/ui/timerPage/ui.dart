@@ -661,8 +661,8 @@ class _TimerPageState extends State<TimerPage> {
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                  note,
-                                  style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                                  '-'+note,
+                                  style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
                                 ),
                               );
                             }).toList(),
@@ -776,8 +776,8 @@ class _TimerPageState extends State<TimerPage> {
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                  quotes,
-                                  style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                                  '-'+quotes,
+                                  style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
                                 ),
                               );
                             }).toList(),
