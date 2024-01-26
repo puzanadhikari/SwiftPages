@@ -22,6 +22,7 @@ class _ChatListState extends State<ChatList> {
   late Stream<List<Map<String, dynamic>>> _usersStream;
   List<Map<String, dynamic>> _users = [];
   String avatar='';
+  Map<String, int> unreadCounts = {};
 
   @override
   void initState() {
@@ -31,9 +32,9 @@ class _ChatListState extends State<ChatList> {
         .collection('users')
         .snapshots()
         .map((querySnapshot) {
-
       return querySnapshot.docs
-          .map((doc) => {
+          .map((doc) =>
+      {
 
         'userId': doc.id,
         'username': doc['username'] ?? 'Unknown User',
@@ -44,6 +45,37 @@ class _ChatListState extends State<ChatList> {
     });
 
     currentUserId = _auth.currentUser?.uid ?? '';
+    _firestore
+        .collection('chats')
+        .where('users', arrayContains: currentUserId)
+        .snapshots()
+        .listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
+      // Update unread counts whenever the chat data changes
+      Map<String, int> counts = {};
+
+      for (var doc in snapshot.docs) {
+        List<dynamic> users = doc['users'];
+        users.remove(currentUserId);
+
+        int unreadCount = 0;
+
+        if (doc['messages'] != null) {
+          for (var message in doc['messages']) {
+            if ( message['unread'] == true) {
+              unreadCount++;
+            }
+          }
+        }
+
+        log(users[0]);
+        counts[users[0]] = unreadCount;
+      }
+
+      setState(() {
+        unreadCounts = counts;
+        log(unreadCounts.toString());
+      });
+    });
 
   }
 
@@ -245,6 +277,7 @@ class _ChatListState extends State<ChatList> {
                 itemBuilder: (context, index) {
                   var chatDoc = chatDocs[index];
                   var participants = chatDoc['users'] as List<dynamic>;
+                  // log(participants[0].toString());
 
                   // Exclude the current user from the participants
                   participants.remove(currentUserId);
@@ -252,6 +285,7 @@ class _ChatListState extends State<ChatList> {
                   return ChatListItem(
                     participantId: participants[0],
                     currentUserId: currentUserId,
+                    unreadCount: unreadCounts[participants[0]] ?? 0,
                   );
                 },
               ),
@@ -381,8 +415,9 @@ class _ChatListState extends State<ChatList> {
 class ChatListItem extends StatelessWidget {
   final String participantId;
   final String currentUserId;
+  final int unreadCount;
 
-  ChatListItem({required this.participantId, required this.currentUserId});
+  ChatListItem({required this.participantId, required this.currentUserId,required this.unreadCount});
 
   @override
   Widget build(BuildContext context) {
@@ -464,6 +499,21 @@ class ChatListItem extends StatelessWidget {
                                 _formatTimestamp(lastMessageTimestamp),
                                 style: TextStyle( fontSize: 12),
                               ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
+                                ),
+                                child: Text(
+                                  unreadCount > 0 ? unreadCount.toString() : '',
+                                  style: TextStyle(fontSize: 12, color: Colors.white),
+                                ),
+                              ),
+
                             ],
                           ),
 

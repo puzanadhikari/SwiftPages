@@ -24,13 +24,14 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
    String? currentUserAvatar ;
   late String roomId; // Add this line
-
+  late int unreadMessagesCount;
   @override
   void initState() {
     super.initState();
     currentUserAvatar = _auth.currentUser!.photoURL;
     log(widget.recipientUserId+widget.recipientAvatar);
     roomId = _getRoomId(_auth.currentUser?.uid, widget.recipientUserId);
+    _markMessagesAsRead();
   }
 
   String _getRoomId(String? userId1, String? userId2) {
@@ -41,6 +42,29 @@ class _ChatPageState extends State<ChatPage> {
     DateTime dateTime = timestamp.toDate();
     return DateFormat('HH:mm').format(dateTime); // Format the timestamp as per your requirement
   }
+
+  void _markMessagesAsRead() async {
+    // Get the chat document
+    DocumentSnapshot<Map<String, dynamic>> chatDocument =
+    await _firestore.collection('chats').doc(roomId).get();
+
+    // Check if the chat document exists
+    if (chatDocument.exists) {
+      // Update unread messages to false
+      List<dynamic> messages = chatDocument['messages'] ?? [];
+
+      List<Map<String, dynamic>> updatedMessages = (messages as List<dynamic>)
+          .map((message) => Map<String, dynamic>.from(message)
+        ..['unread'] = false)
+          .toList();
+
+      await _firestore.collection('chats').doc(roomId).update({
+        'messages': updatedMessages,
+      });
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +133,17 @@ class _ChatPageState extends State<ChatPage> {
             ),
             child: Column(
                     children: [
-
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      //   child: Text(
+                      //     'Unread Messages: $unreadMessagesCount',
+                      //     style: TextStyle(
+                      //       fontSize: 16.0,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Colors.black,
+                      //     ),
+                      //   ),
+                      // ),
                       Expanded(
                         child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                           stream: _firestore.collection('chats').doc(roomId).snapshots(),
@@ -129,7 +163,16 @@ class _ChatPageState extends State<ChatPage> {
                                 itemBuilder: (context, index) {
                                   var message = messages[index];
                                   bool isCurrentUser = message['sender'] == _auth.currentUser?.displayName;
-
+                                  if (isCurrentUser && message['unread'] == true) {
+                                    _firestore.collection('chats').doc(roomId).update({
+                                      'messages': FieldValue.arrayRemove([
+                                        {'text': message['text'], 'sender': message['sender'], 'timestamp': message['timestamp'], 'unread': true}
+                                      ]),
+                                      'messages': FieldValue.arrayUnion([
+                                        {'text': message['text'], 'sender': message['sender'], 'timestamp': message['timestamp'], 'unread': false}
+                                      ]),
+                                    });
+                                  }
                                   return Align(
                                     alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
                                     child: Container(
