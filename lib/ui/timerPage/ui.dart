@@ -229,7 +229,8 @@ class _TimerPageState extends State<TimerPage> {
             children: [
               Positioned(
                 top: 0,
-                left: 0,
+                left: -30,
+
                 child: Image.asset(
                   'assets/Ellipse.png', // Replace with the correct image path
                   fit: BoxFit.contain,
@@ -440,7 +441,7 @@ class _TimerPageState extends State<TimerPage> {
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
-                      padding: EdgeInsets.only(top:120,left: 10),
+                      padding: EdgeInsets.only(top:120),
                       child: Column(
                         // crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -448,6 +449,7 @@ class _TimerPageState extends State<TimerPage> {
                           SizedBox(
                             width: 200,
                             child: Text(widget.book.author,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Color(0xff686868),
