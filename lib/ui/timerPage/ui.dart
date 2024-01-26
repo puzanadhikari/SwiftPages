@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:async';
 // import 'package:circular_countdown_timer/circular_countdown_timer.dart';
@@ -41,6 +42,8 @@ class _TimerPageState extends State<TimerPage> {
   }
   final CountdownController _controller = CountdownController(autoStart: false);
   final CountdownController _additionalController = CountdownController(autoStart: false);
+  TextEditingController _quoteContoller = TextEditingController();
+  TextEditingController _noteContoller = TextEditingController();
   int totalTimeMin=0;
   int totalTimeSec=0;
   String dailyGoal='';
@@ -650,21 +653,101 @@ class _TimerPageState extends State<TimerPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 5.0),
-                            child: Text(
-                              widget.book.description,
-                              textAlign: TextAlign.center,
-                              maxLines: 12, // Adjust the number of lines as needed
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Color(0xFF686868),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: widget.book!.notes.map((note) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                  note,
+                                  style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          // Padding(
+                          //   padding:
+                          //       const EdgeInsets.only(top: 5.0),
+                          //   child: Text(
+                          //     widget.book.description,
+                          //     textAlign: TextAlign.center,
+                          //     maxLines: 12, // Adjust the number of lines as needed
+                          //     overflow: TextOverflow.ellipsis,
+                          //     style: const TextStyle(
+                          //       color: Color(0xFF686868),
+                          //       fontSize: 12,
+                          //       fontWeight: FontWeight.w500,
+                          //     ),
+                          //   )
+                          //
+                          // ),
+                          SizedBox(height: 5,),
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color:Colors.grey[100],
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
                               ),
-                            )
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0),
+                                    child: TextField(
+                                      controller: _noteContoller,
+                                      onChanged: (value) {
 
+                                      },
+                                      cursorColor: Color(0xFF283E50),
+                                      decoration: InputDecoration(
+                                        hintText: 'Type your note...',
+                                        hintStyle: TextStyle(color: Colors.grey),
+                                        border: InputBorder.none,
+
+                                      ),
+
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF283E50),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+
+                                      ),
+
+                                    ),
+                                    child: TextButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          String newNote = _noteContoller.text.trim();
+                                          if (newNote.isNotEmpty) {
+                                            addNote(widget.book, newNote);
+                                            _noteContoller.clear();
+                                            Fluttertoast.showToast(
+                                              msg: "Note added successfully!",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: Color(0xFF283E50),
+                                              textColor: Colors.white,
+                                            );
+                                          }
+                                        });
+                                      },
+                                      child: Text(
+                                        'Post',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -680,20 +763,91 @@ class _TimerPageState extends State<TimerPage> {
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200],
+                        color: Color(0xFFD9D9D9),
                       ),
                       padding: EdgeInsets.all(12),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: widget.book!.notes.map((note) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              note,
-                              style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: widget.book!.quotes.map((quotes) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                  quotes,
+                                  style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
                             ),
-                          );
-                        }).toList(),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0),
+                                    child: TextField(
+                                      controller: _quoteContoller,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // comment = value;
+                                        });
+                                      },
+                                      cursorColor: Color(0xFF283E50),
+                                      decoration: InputDecoration(
+                                          hintText: 'Type your quote...',
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                        border: InputBorder.none,
+
+                                      ),
+
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF283E50),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+
+                                      ),
+
+                                    ),
+                                    child: TextButton(
+                                      onPressed: (){
+                                        String newQuote = _quoteContoller.text.trim();
+                                        if (newQuote.isNotEmpty) {
+                                          addQuote(widget.book, newQuote);
+                                          _quoteContoller.clear();
+                                          Fluttertoast.showToast(
+                                            msg: "Quote added successfully!",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: Color(0xFF283E50),
+                                            textColor: Colors.white,
+                                          );
+                                        }
+                                      },
+                                      child: Text(
+                                        'Post',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -1077,6 +1231,60 @@ class _TimerPageState extends State<TimerPage> {
     } catch (error) {
       print('Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
       // Handle the error (e.g., show an error message)
+    }
+  }
+  void addNote(DetailBook book, String newNote) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Update the notes in the Firestore document
+        await myBooksRef.doc(book.documentId).update({
+          'notes': FieldValue.arrayUnion([newNote]),
+        });
+
+        // Update the local state with the new notes
+        setState(() {
+          book.notes.add(newNote);
+        });
+
+        print('Note added successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error adding note: $e');
+    }
+  }
+  void addQuote(DetailBook book, String newQuote) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Update the notes in the Firestore document
+        await myBooksRef.doc(book.documentId).update({
+          'quotes': FieldValue.arrayUnion([newQuote]),
+        });
+
+        // Update the local state with the new notes
+        setState(() {
+          book.quotes.add(newQuote);
+        });
+
+        print('Quotes added successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error adding note: $e');
     }
   }
   String _formatDuration(Duration duration) {

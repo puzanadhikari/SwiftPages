@@ -394,6 +394,7 @@ class DetailBook {
   int currentPage; // Add this field
   int totalPage; // Add this field
   List<String> notes; // Add this field
+  List<String> quotes; // Add this field
 
   DetailBook({
     required this.author,
@@ -403,6 +404,7 @@ class DetailBook {
     this.currentPage = 0, // Set the default value to 0
     this.totalPage = 0, // Set the default value to 0
     this.notes = const [], // Initialize notes as an empty list
+    this.quotes = const [], // Initialize notes as an empty list
   });
 
   factory DetailBook.fromMap(String documentId, Map<String, dynamic>? map) {
@@ -423,6 +425,7 @@ class DetailBook {
       currentPage: map['currentPage'] ?? 0, // Set the currentPage value
       totalPage: map['totalPageCount'] ?? 0, // Set the currentPage value
       notes: List<String>.from(map['notes'] ?? []), // Set the notes value
+      quotes: List<String>.from(map['quotes'] ?? []), // Set the notes value
     );
   }
 }
