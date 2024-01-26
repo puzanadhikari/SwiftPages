@@ -166,51 +166,56 @@ class _ChatPageState extends State<ChatPage> {
 
                                   return Align(
                                     alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                      padding: EdgeInsets.all(12.0),
-                                      decoration: BoxDecoration(
-                                        color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(20.0),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                message['text'],
-                                                style: TextStyle(
-                                                  color: isCurrentUser ? Colors.white : Colors.black,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(height: 5,),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                    _formatTimestamp(message['timestamp']),
-                                                    style: TextStyle(
-                                                      color: isCurrentUser ? Colors.white : Colors.black,
-                                                      fontSize: 8.0,
-                                                    ),
+                                    child: GestureDetector(
+                                      onLongPress: (){
+                                        // _showDeleteMessageDialog(index); // Pass messageId or any identifier
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                        padding: EdgeInsets.all(12.0),
+                                        decoration: BoxDecoration(
+                                          color: isCurrentUser ? Color(0xFF283E50) : Colors.grey[300],
+                                          borderRadius: BorderRadius.circular(20.0),
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  message['text'],
+                                                  style: TextStyle(
+                                                    color: isCurrentUser ? Colors.white : Colors.black,
+                                                    fontSize: 14.0,
                                                   ),
-                                                  SizedBox(width: 5,),
-                                                  // if (isCurrentUser)
-                                                  //   SvgPicture.asset(
-                                                  //     'assets/tick.svg', // Replace with the correct path to your tick.svg image
-                                                  //     height: 8,
-                                                  //     width: 8,
-                                                  //     color:message['unread']==true?Colors.white:Color(0xFFFEEAD4), // Customize the color as needed
-                                                  //   ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                                ),
+                                                SizedBox(height: 5,),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      _formatTimestamp(message['timestamp']),
+                                                      style: TextStyle(
+                                                        color: isCurrentUser ? Colors.white : Colors.black,
+                                                        fontSize: 8.0,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 5,),
+                                                    // if (isCurrentUser)
+                                                    //   SvgPicture.asset(
+                                                    //     'assets/tick.svg', // Replace with the correct path to your tick.svg image
+                                                    //     height: 8,
+                                                    //     width: 8,
+                                                    //     color:message['unread']==true?Colors.white:Color(0xFFFEEAD4), // Customize the color as needed
+                                                    //   ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
@@ -312,6 +317,57 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+  // void _showDeleteMessageDialog(int index) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Delete Message'),
+  //         content: Text("Are you sure you want to delete this message?"),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context); // Close the dialog
+  //             },
+  //             child: Text('Cancel'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               setState(() {
+  //                 deleteMessage(index);
+  //               });
+  //               Navigator.pop(context);
+  //             },
+  //             child: Text('Delete'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+  // void deleteMessage(int index) {
+  //   DocumentReference<Map<String, dynamic>> roomDocument =
+  //   _firestore.collection('chats').doc(roomId);
+  //
+  //   roomDocument.get().then((documentSnapshot) {
+  //     if (documentSnapshot.exists) {
+  //       Map<String, dynamic>? roomData = documentSnapshot.data();
+  //
+  //       if (roomData != null) {
+  //         List<dynamic> messages = roomData['messages'] ?? [];
+  //
+  //         if (index >= 0 && index < messages.length) {
+  //           messages.removeAt(index);
+  //
+  //           // Update the 'messages' field with the modified array
+  //           roomDocument.update({'messages': messages});
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+
+
 
 
   void _sendMessage(String currentUserId) async {

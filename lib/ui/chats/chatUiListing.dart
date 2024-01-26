@@ -214,9 +214,7 @@ class _ChatListState extends State<ChatList> {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Text('No users available');
                     }
-
                     _users = snapshot.data!;
-
                     return Visibility(
                       visible: _searchController.text.isEmpty?false:true,
                       child: Card(
@@ -295,6 +293,8 @@ class _ChatListState extends State<ChatList> {
       },
     );
   }
+
+
 
   Widget _buildUserSearch() {
     return  Column(
@@ -431,6 +431,7 @@ class ChatListItem extends StatelessWidget {
           return Center(
               child:   Text(""));
         }
+        FirebaseAuth _auth = FirebaseAuth.instance;
 
         var userData = userSnapshot.data!.data();
         var participantUsername = userData?['username'] ?? 'Unknown User';
@@ -447,93 +448,132 @@ class ChatListItem extends StatelessWidget {
             }
 
             var lastMessage = chatSnapshot.data!['messages'].last;
+            var sender = chatSnapshot.data!['messages'].first;
             var lastMessageText = lastMessage['text'] ?? 'No messages yet';
             var lastMessageTimestamp = lastMessage['timestamp'];
 
             return Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Card(
-
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      20.0), // Adjust the radius as needed
-                ),
-                color: Color(0xFFFF997A),
-                child: ListTile(
-                  title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(participantAvatar),
-                        radius: 20,
-                        backgroundColor: Color(0xFF283E50),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            participantUsername,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+              child: GestureDetector(
+                onLongPress: (){
+                      log(sender['sender']);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Delete Message'),
+                        content: Text("Are you sure you want to delete this message and the entire chat?"),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close the dialog
+                            },
+                            child: Text('Cancel'),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                lastMessageText.length > 20
-                                    ? '${lastMessageText.substring(0, 20)}...'
-                                    : lastMessageText,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.0,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
+                          TextButton(
+                            onPressed: () async {
+                              FirebaseFirestore _firestore = FirebaseFirestore.instance;
+                              log(currentUserId+'_'+participantId);
 
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                _formatTimestamp(lastMessageTimestamp),
-                                style: TextStyle( fontSize: 12),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
-                                ),
-                                child: Text(
-                                  unreadCount > 0 ? unreadCount.toString() : '',
-                                  style: TextStyle(fontSize: 12, color: Colors.white),
-                                ),
-                              ),
-
-                            ],
+                              Navigator.pop(context);
+                              await _firestore.collection('chats').doc('${currentUserId+'_'+participantId}').delete();
+                              await _firestore.collection('chats').doc('${participantId+'_'+currentUserId}').delete();
+                            },
+                            child: Text('Delete'),
                           ),
-
                         ],
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                          recipientUserId: participantId,
-                          recipientUsername: participantUsername,
-                          recipientAvatar: participantAvatar,
+                      );
+                    },
+                  );
 
+
+
+
+                },
+                child: Card(
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        20.0), // Adjust the radius as needed
+                  ),
+                  color: Color(0xFFFF997A),
+                  child: ListTile(
+                    title: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(participantAvatar),
+                          radius: 20,
+                          backgroundColor: Color(0xFF283E50),
                         ),
-                      ),
-                    );
-                  },
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              participantUsername,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  lastMessageText.length > 20
+                                      ? '${lastMessageText.substring(0, 20)}...'
+                                      : lastMessageText,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16.0,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  _formatTimestamp(lastMessageTimestamp),
+                                  style: TextStyle( fontSize: 12),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
+                                  ),
+                                  child: Text(
+                                    unreadCount > 0 ? unreadCount.toString() : '',
+                                    style: TextStyle(fontSize: 12, color: Colors.white),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+
+                          ],
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            recipientUserId: participantId,
+                            recipientUsername: participantUsername,
+                            recipientAvatar: participantAvatar,
+
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             );
@@ -543,8 +583,10 @@ class ChatListItem extends StatelessWidget {
     );
   }
 
+
   String getChatId() {
     List<String?> sortedIds = [currentUserId, participantId]..sort();
+
     return "${sortedIds[0]}_${sortedIds[1]}";
   }
 
