@@ -166,6 +166,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   void initState() {
     super.initState();
     selectedPageNumber = widget.book!.currentPage;
+    log(widget.book!.totalPage.toString());
   }
 
   @override
