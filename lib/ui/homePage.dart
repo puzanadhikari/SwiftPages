@@ -29,7 +29,31 @@ class _HomePageState extends State<HomePage> {
   int strikesCount = 0;
   int totalTimeMin=0;
   int totalTimeSec=0;
+  Future<void> fetchBooksFromGoogle() async {
+    final String apiKey = "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0";
+    final String apiUrl =
+        "https://www.googleapis.com/books/v1/volumes?q=novels&maxResults=5";
 
+    final response = await http.get(Uri.parse(apiUrl + "&key=$apiKey"));
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      // Process the data as needed
+      log(data.toString());
+      if (data.containsKey("items")) {
+        final List<dynamic> items = data["items"];
+        setState(() {
+          books = items.map((item) => Book.fromMap(item)).toList();
+
+        });
+      }
+    } else {
+      // Handle errors
+      print("Error: ${response.statusCode}");
+    }
+  }
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> fetchData() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -77,7 +101,7 @@ class _HomePageState extends State<HomePage> {
       print('Error fetching strikes: $e');
     }
   }
-  void saveMyBook(String author, String image) async {
+  void saveMyBook(String author, String image,String description) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -101,6 +125,7 @@ class _HomePageState extends State<HomePage> {
           Map<String, dynamic> bookData = {
             'image': image,
             'author': author,
+            'description':description
             // Add other book details as needed
           };
 
@@ -146,34 +171,34 @@ class _HomePageState extends State<HomePage> {
       print('Error retrieving stored time: $error');
     }
   }
-  Future<void> fetchBooks() async {
-    final response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {
-        "X-RapidAPI-Key": apiKey,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      if (data.containsKey("results")) {
-        final List<dynamic> results = data["results"];
-
-        // Fetch only the first 5 books
-        List<dynamic> firstFiveBooks = results.take(5).toList();
-
-        setState(() {
-          books = firstFiveBooks.map((result) => Book.fromMap(result)).toList();
-        });
-      } else {
-        print("Error: 'results' key not found in the response");
-      }
-    } else {
-      // Handle errors
-      print("Error: ${response.statusCode}");
-    }
-  }
+  // Future<void> fetchBooks() async {
+  //   final response = await http.get(
+  //     Uri.parse(apiUrl),
+  //     headers: {
+  //       "X-RapidAPI-Key": apiKey,
+  //     },
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     final Map<String, dynamic> data = json.decode(response.body);
+  //
+  //     if (data.containsKey("results")) {
+  //       final List<dynamic> results = data["results"];
+  //       log(results.toString());
+  //       // Fetch only the first 5 books
+  //       List<dynamic> firstFiveBooks = results.take(5).toList();
+  //
+  //       setState(() {
+  //         books = firstFiveBooks.map((result) => Book.fromMap(result)).toList();
+  //       });
+  //     } else {
+  //       print("Error: 'results' key not found in the response");
+  //     }
+  //   } else {
+  //     // Handle errors
+  //     print("Error: ${response.statusCode}");
+  //   }
+  // }
 
   Future<void> fetchUserInfo() async {
 SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -195,7 +220,7 @@ userName  = preferences.getString("userName")!;
           FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
       fetchStrikes();
     }
-      fetchBooks();
+      fetchBooksFromGoogle();
     fetchUserInfo();
 
   }
@@ -381,16 +406,17 @@ userName  = preferences.getString("userName")!;
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  books[index].author,
+                                                  books[index].title,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: Colors.black,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                                 SizedBox(height: 10),
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].author, books[index].imageLink);
+                                                    guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
                                                   },
                                                   child: Text("Read"),
                                                   style: ButtonStyle(
@@ -456,7 +482,7 @@ userName  = preferences.getString("userName")!;
       ),
     );
   }
-  void _showConfirmationDialog(String author,String image) {
+  void _showConfirmationDialog(String author,String image,String description) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -478,7 +504,7 @@ userName  = preferences.getString("userName")!;
             ),
             TextButton(
               onPressed: () {
-                    saveMyBook( author,image);
+                    saveMyBook( author,image,description);
                   Navigator.pop(context); // Close the dialog
               },
               child: Text(
@@ -614,16 +640,43 @@ userName  = preferences.getString("userName")!;
 }
 
 
+// class Book {
+//   final String author;
+//   final String imageLink;
+//
+//   Book({required this.author, required this.imageLink});
+//
+//   factory Book.fromMap(Map<String, dynamic> map) {
+//     return Book(
+//       author: map['title'] ?? 'No Author',
+//       imageLink: map['published_works'][0]['cover_art_url'] ?? 'No Image',
+//     );
+//   }
+// }
 class Book {
-  final String author;
+  final String title;
   final String imageLink;
+  final String description;
+  final double rating;
+  final int pageCount;
 
-  Book({required this.author, required this.imageLink});
+  Book({
+    required this.title,
+    required this.imageLink,
+    required this.description,
+    required this.rating,
+    required this.pageCount,
+
+  });
 
   factory Book.fromMap(Map<String, dynamic> map) {
+    final volumeInfo = map['volumeInfo'];
     return Book(
-      author: map['title'] ?? 'No Author',
-      imageLink: map['published_works'][0]['cover_art_url'] ?? 'No Image',
+      description: volumeInfo['description'] ?? 'No Description',
+      title: volumeInfo['title'] ?? 'No Title',
+      imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
+      rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
+      pageCount: volumeInfo['pageCount'] ?? 0,
     );
   }
 }

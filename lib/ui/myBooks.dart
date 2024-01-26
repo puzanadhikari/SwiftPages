@@ -24,12 +24,8 @@ class _MyBooksState extends State<MyBooks> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         String uid = user.uid;
-
-        // Reference to the 'communityBooks' collection
         CollectionReference communityBooksRef =
         FirebaseFirestore.instance.collection('communityBooks');
-
-        // Add the book details to the community collection
         await communityBooksRef.add({
           'author': book.author,
           'imageLink': book.imageLink,
@@ -394,6 +390,7 @@ class DetailBook {
   final String author;
   final String imageLink;
   final String documentId;
+  final String description;
   int currentPage; // Add this field
   int totalPage; // Add this field
   List<String> notes; // Add this field
@@ -402,6 +399,7 @@ class DetailBook {
     required this.author,
     required this.imageLink,
     required this.documentId,
+    required this.description,
     this.currentPage = 0, // Set the default value to 0
     this.totalPage = 0, // Set the default value to 0
     this.notes = const [], // Initialize notes as an empty list
@@ -413,6 +411,7 @@ class DetailBook {
         author: 'No Author',
         imageLink: 'No Image',
         documentId: documentId,
+          description: 'description',
         totalPage: 100
       );
     }
@@ -420,6 +419,7 @@ class DetailBook {
       author: map['author'] ?? 'No Author',
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,
+      description: map['description']??'Description',
       currentPage: map['currentPage'] ?? 0, // Set the currentPage value
       totalPage: map['totalPageCount'] ?? 0, // Set the currentPage value
       notes: List<String>.from(map['notes'] ?? []), // Set the notes value

@@ -41,7 +41,8 @@ class _TimerPageState extends State<TimerPage> {
   }
   final CountdownController _controller = CountdownController(autoStart: false);
   final CountdownController _additionalController = CountdownController(autoStart: false);
-
+  int totalTimeMin=0;
+  int totalTimeSec=0;
   String dailyGoal='';
    int _duration = 0;
    int currentTime=0;
@@ -49,7 +50,25 @@ class _TimerPageState extends State<TimerPage> {
   late bool _isRunning;
   late bool _isPlaying;
   int totalPages = 0;
+  Future<void> fetchData() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc(_auth.currentUser?.uid).get();
+
+      if (userDoc.exists) {
+
+
+        setState(() {
+          totalTimeMin = userDoc.get('totalTimeMin') ?? 0;
+          totalTimeSec = userDoc.get('totalTimeSec') ?? 0;
+        });
+      }
+    } catch (error) {
+      log('Error fetching data: $error');
+    }
+  }
   final AudioPlayer audioPlayer = AudioPlayer();
 
   double calculatePercentage() {
@@ -174,6 +193,7 @@ class _TimerPageState extends State<TimerPage> {
     super.initState();
     fetchUserInfo();
     loadMusic();
+    fetchData();
     totalPages = widget.book.totalPage==0?200:widget.book.totalPage;
     _isRunning = false;
     _isPlaying = false;
@@ -200,458 +220,210 @@ class _TimerPageState extends State<TimerPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFFEEAD4),
-        body: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Image.asset(
-                'assets/Ellipse.png', // Replace with the correct image path
-                fit: BoxFit.contain,
-              ),
-            ),
-            Positioned(
-              top: -20,
-              left: -10,
-              child: Image.asset(
-                "assets/logo.png",
-                height: 120,
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Image.asset(
-                "assets/search.png",
-                height: 50,
-              ),
-            ),
-            Positioned(
-              top: 20,
-              left: MediaQuery.of(context).size.width / 3,
-              child: Text(
-                "Reading",
-                style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xfffeead4),
-                  height: 29 / 22,
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Image.asset(
+                  'assets/Ellipse.png', // Replace with the correct image path
+                  fit: BoxFit.contain,
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 100.0),
-                child: Container(
-                  width: 200,
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Stack(
-                    alignment: Alignment.topLeft,
-                    children: [
-                      // Positioned(
-                      //   top: 0,
-                      //   left: 30,
-                      //   child: Container(
-                      //     height: 250,
-                      //     width: 250,
-                      //     padding: const EdgeInsets.all(8),
-                      //     decoration: BoxDecoration(
-                      //       color: const Color(0xFFD9D9D9),
-                      //       borderRadius: BorderRadius.circular(20.0),
-                      //     ),
-                      //     child: Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       children: [
-                      //         const SizedBox(height: 8),
-                      //         Container(
-                      //           height: 150,
-                      //           // Set a fixed height for description
-                      //           child: Column(
-                      //             crossAxisAlignment: CrossAxisAlignment.start,
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.only(top: 10.0),
-                      //                 child: Text(
-                      //                   "Currently Reading",
-                      //                   textAlign: TextAlign.center,
-                      //                   style: const TextStyle(
-                      //                       color: Color(0xFF283E50),
-                      //                       fontWeight: FontWeight.bold,
-                      //                       fontSize: 14),
-                      //                 ),
-                      //               ),
-                      //               SingleChildScrollView(
-                      //                 child: Padding(
-                      //                   padding:
-                      //                       const EdgeInsets.only(top: 5.0),
-                      //                   child: Text(
-                      //                     widget.book.author,
-                      //                     textAlign: TextAlign.center,
-                      //                     style: const TextStyle(
-                      //                         color: Color(0xFF686868),
-                      //                         fontSize: 12,
-                      //                         fontWeight: FontWeight.w500),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // Positioned(
-                      //   top: 105,
-                      //   right: 10,
-                      //   child: Column(
-                      //     children: [
-                      //       Stack(
-                      //         children: [
-                      //           CircularProgressIndicator(
-                      //             value: calculatePercentage() / 100,
-                      //             strokeWidth: 5.0,
-                      //             backgroundColor: Colors.black12,
-                      //             // Adjust the stroke width as needed
-                      //             valueColor: AlwaysStoppedAnimation<Color>(
-                      //               Color(0xFF283E50),
-                      //             ), // Adjust the color as needed
-                      //           ),
-                      //           Positioned(
-                      //             top: 10,
-                      //             left: 5,
-                      //             child: Text(
-                      //               "${calculatePercentage().toStringAsFixed(1)}%",
-                      //               style: TextStyle(
-                      //                   color: Color(0xFF283E50),
-                      //                   fontWeight: FontWeight.bold,
-                      //                   fontSize: 11),
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       SizedBox(
-                      //         height: 10,
-                      //       ),
-                      //       Text(
-                      //         "Progress",
-                      //         style: TextStyle(
-                      //             color: Color(0xFF686868), fontSize: 14),
-                      //       ),
-                      //       SizedBox(
-                      //         height: 20,
-                      //       ),
-                      //
-                      //     ],
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.only(top:30.0),
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(30.0),
-                              child: Image.network(
-                                widget.book.imageLink,
-                                height: 200,
-                                width: 150,
-                                loadingBuilder: (BuildContext context, Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    // Image is fully loaded, display the actual image
-                                    return child;
-                                  } else {
-                                    // Image is still loading, display a placeholder or loading indicator
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress.expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                (loadingProgress
-                                                        .expectedTotalBytes ??
-                                                    1)
-                                            : null,
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            Container(
-                              height: 40,
-                              width: 100,
-                              child: ElevatedButton(
-                                onPressed: _startPauseTimer,
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xff283E50), // Set your desired button color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                                  child: Text(
-                                    _isRunning ? 'Pause' : 'Start',
-                                    style: TextStyle(fontSize: 16.0),
-                                  ),
-                                ),
-                              ),
-                            )
-
-                          ],
-                        ),
-                      ),
-                    ],
+              Positioned(
+                top: -20,
+                left: -10,
+                child: Image.asset(
+                  "assets/logo.png",
+                  height: 120,
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: Image.asset(
+                  "assets/search.png",
+                  height: 50,
+                ),
+              ),
+              Positioned(
+                top: 20,
+                left: MediaQuery.of(context).size.width / 3,
+                child: Text(
+                  "Reading",
+                  style: const TextStyle(
+                    fontFamily: "Abhaya Libre ExtraBold",
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xfffeead4),
+                    height: 29 / 22,
                   ),
                 ),
               ),
-            ),
-            Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(top:120,left: 10),
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-
-                        Padding(
-                          padding: const EdgeInsets.only(top:20.0),
-                          child: Text(widget.book.author,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xff686868),
-                              fontWeight: FontWeight.bold
-                          ),),
-                        ),
-                        SizedBox(height: 16,),
-                        // Original Countdown Timer
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                20.0), // Adjust the radius as needed
-                          ),
-                          color: Color(0xFFFF997A),
-
-                          child: Container(
-                            width: 200,
-                            height: 50,
-                            child: Countdown(
-                              controller: _controller,
-                              seconds: _duration * 60 ,
-                              build: (_, double time) {
-                                currentTime = time.toInt();
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Daily Goal: ',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff283E50),
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      Text(
-                                       time.floor().toString()+ ' sec',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff686868),
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              interval: Duration(milliseconds: 100),
-                              onFinished: () {
-                                print('Countdown finished!');
-                                try {
-                                  // Your existing code here
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Timer is done!'),
-                                    ),
-                                  );
-                                  updateStrikeInFirestore();
-                                  _storeCurrentTimeOnFinished();
-                                  setState(() {
-                                    _isRunning = false;
-                                  });
-                                } catch (e) {
-                                  print('Error in onFinished callback: $e');
-                                  log('Error in onFinished callback: $e');
-                                }
-                              },
-
-                            ),
-                          ),
-                        ),
-                        // SizedBox(height: 16),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                20.0), // Adjust the radius as needed
-                          ),
-                          color: Color(0xFFFF997A),
-
-                          child: Container(
-                            width: 200,
-                            height: 50,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Total Read: ',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xff283E50),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    Text(
-                                      _formatDuration(_stopwatch.elapsed),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xff686868),
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                20.0), // Adjust the radius as needed
-                          ),
-                          color: Color(0xFFFF997A),
-
-                          child: Container(
-                            width: 200,
-                            height: 50,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Pages Read: ',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff283E50),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    Text(
-                                      widget.book.currentPage.toString()+'/'+totalPages.toString(),
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff686868),
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-
-                        // Container(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 16),
-                        //   child: ElevatedButton(
-                        //     child: Text(_isRunning ? 'Pause' : 'Start'),
-                        //     onPressed: () {
-                        //       setState(() {
-                        //         _isRunning = !_isRunning;
-                        //         if (_isRunning) {
-                        //           _controller.start();
-                        //           _additionalController.start();
-                        //           _startAdditionalTimer();
-                        //         } else {
-                        //           _storeCurrentTime();
-                        //           _controller.pause();
-                        //           _additionalController.pause();
-                        //           _pauseAdditionalTimer();
-                        //         }
-                        //       });
-                        //     },
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 100.0),
+                  child: Container(
+                    width: 200,
+                    margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Stack(
+                      alignment: Alignment.topLeft,
+                      children: [
+                        // Positioned(
+                        //   top: 0,
+                        //   left: 30,
+                        //   child: Container(
+                        //     height: 250,
+                        //     width: 250,
+                        //     padding: const EdgeInsets.all(8),
+                        //     decoration: BoxDecoration(
+                        //       color: const Color(0xFFD9D9D9),
+                        //       borderRadius: BorderRadius.circular(20.0),
+                        //     ),
+                        //     child: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: [
+                        //         const SizedBox(height: 8),
+                        //         Container(
+                        //           height: 150,
+                        //           // Set a fixed height for description
+                        //           child: Column(
+                        //             crossAxisAlignment: CrossAxisAlignment.start,
+                        //             children: [
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(top: 10.0),
+                        //                 child: Text(
+                        //                   "Currently Reading",
+                        //                   textAlign: TextAlign.center,
+                        //                   style: const TextStyle(
+                        //                       color: Color(0xFF283E50),
+                        //                       fontWeight: FontWeight.bold,
+                        //                       fontSize: 14),
+                        //                 ),
+                        //               ),
+                        //               SingleChildScrollView(
+                        //                 child: Padding(
+                        //                   padding:
+                        //                       const EdgeInsets.only(top: 5.0),
+                        //                   child: Text(
+                        //                     widget.book.author,
+                        //                     textAlign: TextAlign.center,
+                        //                     style: const TextStyle(
+                        //                         color: Color(0xFF686868),
+                        //                         fontSize: 12,
+                        //                         fontWeight: FontWeight.w500),
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
                         //   ),
                         // ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10,),
-                Divider(
-                  endIndent: 10,
-                  indent: 10,
-                  thickness: 1,
-                  color: Color(0xff283E50)
-                ),
-                Text("Notes",  style: const TextStyle(
-                    color: Color(0xFF283E50),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),),
-                Positioned(
-                  top: 0,
-                  left: 30,
-                  child: Container(
-                    height: 250,
-                    width: 250,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 150,
-                          // Set a fixed height for description
+                        // Positioned(
+                        //   top: 105,
+                        //   right: 10,
+                        //   child: Column(
+                        //     children: [
+                        //       Stack(
+                        //         children: [
+                        //           CircularProgressIndicator(
+                        //             value: calculatePercentage() / 100,
+                        //             strokeWidth: 5.0,
+                        //             backgroundColor: Colors.black12,
+                        //             // Adjust the stroke width as needed
+                        //             valueColor: AlwaysStoppedAnimation<Color>(
+                        //               Color(0xFF283E50),
+                        //             ), // Adjust the color as needed
+                        //           ),
+                        //           Positioned(
+                        //             top: 10,
+                        //             left: 5,
+                        //             child: Text(
+                        //               "${calculatePercentage().toStringAsFixed(1)}%",
+                        //               style: TextStyle(
+                        //                   color: Color(0xFF283E50),
+                        //                   fontWeight: FontWeight.bold,
+                        //                   fontSize: 11),
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       SizedBox(
+                        //         height: 10,
+                        //       ),
+                        //       Text(
+                        //         "Progress",
+                        //         style: TextStyle(
+                        //             color: Color(0xFF686868), fontSize: 14),
+                        //       ),
+                        //       SizedBox(
+                        //         height: 20,
+                        //       ),
+                        //
+                        //     ],
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(top:30.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: Text(
-                                  "Currently Reading",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Color(0xFF283E50),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30.0),
+                                child: Image.network(
+                                  widget.book.imageLink,
+                                  height: 200,
+                                  width: 150,
+                                  loadingBuilder: (BuildContext context, Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      // Image is fully loaded, display the actual image
+                                      return child;
+                                    } else {
+                                      // Image is still loading, display a placeholder or loading indicator
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
-                              SingleChildScrollView(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5.0),
-                                  child: Text(
-                                    widget.book.author,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color: Color(0xFF686868),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
+                              SizedBox(height: 10,),
+                              Container(
+                                height: 40,
+                                width: 100,
+                                child: ElevatedButton(
+                                  onPressed: _startPauseTimer,
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xff283E50), // Set your desired button color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
+                                    child: Text(
+                                      _isRunning ? 'Pause' : 'Start',
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              )
+
                             ],
                           ),
                         ),
@@ -659,178 +431,436 @@ class _TimerPageState extends State<TimerPage> {
                     ),
                   ),
                 ),
+              ),
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(top:120,left: 10),
+                      child: Column(
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
 
-                Text(
-                  '',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xff686868),
-                      fontWeight: FontWeight.bold
+                          SizedBox(
+                            width: 200,
+                            child: Text(widget.book.author,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xff686868),
+                                fontWeight: FontWeight.bold
+                            ),),
+                          ),
+                          SizedBox(height: 16,),
+                          // Original Countdown Timer
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20.0), // Adjust the radius as needed
+                            ),
+                            color: Color(0xFFFF997A),
+
+                            child: Container(
+                              width: 200,
+                              height: 50,
+                              child: Countdown(
+                                controller: _controller,
+                                seconds: _duration * 60 ,
+                                build: (_, double time) {
+                                  currentTime = time.toInt();
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Daily Goal: ',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xff283E50),
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        Text(
+                                         time.floor().toString()+ ' sec',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xff686868),
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                interval: Duration(milliseconds: 100),
+                                onFinished: () {
+                                  print('Countdown finished!');
+                                  try {
+                                    // Your existing code here
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Timer is done!'),
+                                      ),
+                                    );
+                                    updateStrikeInFirestore();
+                                    _storeCurrentTimeOnFinished();
+                                    setState(() {
+                                      _isRunning = false;
+                                    });
+                                  } catch (e) {
+                                    print('Error in onFinished callback: $e');
+                                    log('Error in onFinished callback: $e');
+                                  }
+                                },
+
+                              ),
+                            ),
+                          ),
+                          // SizedBox(height: 16),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20.0), // Adjust the radius as needed
+                            ),
+                            color: Color(0xFFFF997A),
+
+                            child: Container(
+                              width: 200,
+                              height: 50,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Total Read: ',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Color(0xff283E50),
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      Text(
+                                        _formatDuration(_stopwatch.elapsed),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Color(0xff686868),
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20.0), // Adjust the radius as needed
+                            ),
+                            color: Color(0xFFFF997A),
+
+                            child: Container(
+                              width: 200,
+                              height: 50,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Pages Read: ',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xff283E50),
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.book.currentPage.toString()+'/'+totalPages.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xff686868),
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+
+                          // Container(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                          //   child: ElevatedButton(
+                          //     child: Text(_isRunning ? 'Pause' : 'Start'),
+                          //     onPressed: () {
+                          //       setState(() {
+                          //         _isRunning = !_isRunning;
+                          //         if (_isRunning) {
+                          //           _controller.start();
+                          //           _additionalController.start();
+                          //           _startAdditionalTimer();
+                          //         } else {
+                          //           _storeCurrentTime();
+                          //           _controller.pause();
+                          //           _additionalController.pause();
+                          //           _pauseAdditionalTimer();
+                          //         }
+                          //       });
+                          //     },
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(height: 30,),
+                  Divider(
+                    endIndent: 10,
+                    indent: 10,
+                    thickness: 1,
+                    color: Color(0xff283E50)
+                  ),
+                  Container(
+                    child: Column(
+                      children: [
+                        
+                      ],
+                    ),
+                  ),
+                  
+                  Text("Notes",  style: const TextStyle(
+                      color: Color(0xFF283E50),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      // height: 250,
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              widget.book.description,
+                              textAlign: TextAlign.center,
+                              maxLines: 12, // Adjust the number of lines as needed
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color(0xFF686868),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
 
-            // Align(
-            //   alignment: Alignment.topLeft,
-            //   child: Padding(
-            //     padding: const EdgeInsets.only(top: 10.0),
-            //     child: Column(
-            //       children: [
-            //         Padding(
-            //           padding: const EdgeInsets.all(15.0),
-            //           child: CircularCountDownTimer(
-            //             duration: (_duration*60),
-            //             controller: _controller,
-            //             width: MediaQuery.of(context).size.width / 3,
-            //             height: MediaQuery.of(context).size.height / 3,
-            //             ringColor: Colors.grey[300]!,
-            //             fillColor: Color(0xFF283E50)!,
-            //             backgroundColor: Color(0xFFFEEAD4),
-            //             strokeWidth: 15.0,
-            //             strokeCap: StrokeCap.round,
-            //             textStyle: const TextStyle(
-            //               fontSize: 33.0,
-            //               color: Color(0xFF283E50),
-            //               fontWeight: FontWeight.bold,
-            //             ),
-            //             isReverse: false,
-            //             isReverseAnimation: false,
-            //             isTimerTextShown: true,
-            //             autoStart: false,
-            //
-            //             onStart: () {
-            //               debugPrint('Countdown Started');
-            //             },
-            //             onComplete: () {
-            //               log('Countdown Ended');
-            //               setState(() {
-            //                 _isRunning = false;
-            //               });
-            //               updateStrikeInFirestore();
-            //               _controller.restart(duration: (_duration * 60));
-            //             },
-            //             onChange: (String timeStamp) {
-            //               debugPrint('Countdown Changed $timeStamp');
-            //              setState(() {
-            //
-            //              });
-            //
-            //             },
-            //             timeFormatterFunction:
-            //                 (defaultFormatterFunction, duration) {
-            //               if (duration.inSeconds == 0) {
-            //                 return "Start";
-            //               } else {
-            //                 return Function.apply(
-            //                     defaultFormatterFunction, [duration]);
-            //
-            //               }
-            //             },
-            //           ),
-            //         ),
-            //         Text("Remaining Goal\n${(_duration*60)-currentTime} seconds"),
-            //         ElevatedButton(
-            //           onPressed: _handleTimerButtonPressed,
-            //           child: Text(_isRunning ? 'Pause' : 'Start'),
-            //           style: ElevatedButton.styleFrom(
-            //             primary: Color(0xFF283E50), // Background color
-            //             shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(
-            //                   8), // Adjust the border radius as needed
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // DraggableScrollableSheet(
-            //     initialChildSize: 0.3,
-            //     minChildSize: 0.3,
-            //     maxChildSize: 1,
-            //     snapSizes: [0.5, 1],
-            //     snap: true,
-            //     builder: (BuildContext context, scrollSheetController) {
-            //       return Container(
-            //         decoration: BoxDecoration(
-            //           color: Colors.white,
-            //           borderRadius: BorderRadius.only(
-            //             topLeft: Radius.circular(20.0),
-            //             topRight: Radius.circular(20.0),
-            //           ),
-            //         ),
-            //         child: Column(
-            //           children: [
-            //             ListTile(
-            //               // leading: Image.asset('assets/logo.png', height: 50),
-            //               title: Row(
-            //                 children: [
-            //                   Expanded(
-            //                     child: Divider(
-            //                       color: Color(0xFF283E50),
-            //                       endIndent: 18,
-            //                       thickness: 2,
-            //                     ),
-            //                   ),
-            //                   Text(
-            //                     'MUSIC',
-            //                     style: TextStyle(
-            //                         color: Color(0xFF283E50),
-            //                         fontSize: 22,
-            //                         fontWeight: FontWeight.bold),
-            //                   ),
-            //                   Icon(
-            //                     Icons.music_note,
-            //                     color: Color(0xFF283E50),
-            //                   ),
-            //                   Expanded(
-            //                     child: Divider(
-            //                       color: Color(0xFF283E50),
-            //                       indent: 14,
-            //                       thickness: 2,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //
-            //               // trailing: IconButton(
-            //               //       icon: Icon(Icons.play_arrow),
-            //               //       onPressed: () {
-            //               //         // Handle play button action
-            //               //       },
-            //               //     ),
-            //             ),
-            //
-            //             Expanded(
-            //               child: ListView.builder(
-            //                 controller: scrollSheetController,
-            //                 itemCount: musicUrls.length,
-            //                 itemBuilder: (context, index) {
-            //                   return musicUrls.isEmpty?CircularProgressIndicator():ListTile(
-            //                     title: Row(
-            //                       mainAxisAlignment:
-            //                           MainAxisAlignment.spaceBetween,
-            //                       crossAxisAlignment: CrossAxisAlignment.start,
-            //                       children: [
-            //                         Text(musicUrls[index].title),
-            //                         GestureDetector(
-            //                             onTap: () {
-            //                               _isPlaying==true?pauseMusic():playMusic(musicUrls[index].path);
-            //                             },
-            //                             child: _isPlaying==true?Icon(Icons.pause):Icon(Icons.play_arrow))
-            //                       ],
-            //                     ),
-            //                     onTap: () {},
-            //                   );
-            //                 },
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       );
-            //     }),
-          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Text("Quotes",  style: const TextStyle(
+                      color: Color(0xFF283E50),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[200],
+                      ),
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: widget.book!.notes.map((note) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              note,
+                              style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Align(
+              //   alignment: Alignment.topLeft,
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(top: 10.0),
+              //     child: Column(
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.all(15.0),
+              //           child: CircularCountDownTimer(
+              //             duration: (_duration*60),
+              //             controller: _controller,
+              //             width: MediaQuery.of(context).size.width / 3,
+              //             height: MediaQuery.of(context).size.height / 3,
+              //             ringColor: Colors.grey[300]!,
+              //             fillColor: Color(0xFF283E50)!,
+              //             backgroundColor: Color(0xFFFEEAD4),
+              //             strokeWidth: 15.0,
+              //             strokeCap: StrokeCap.round,
+              //             textStyle: const TextStyle(
+              //               fontSize: 33.0,
+              //               color: Color(0xFF283E50),
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //             isReverse: false,
+              //             isReverseAnimation: false,
+              //             isTimerTextShown: true,
+              //             autoStart: false,
+              //
+              //             onStart: () {
+              //               debugPrint('Countdown Started');
+              //             },
+              //             onComplete: () {
+              //               log('Countdown Ended');
+              //               setState(() {
+              //                 _isRunning = false;
+              //               });
+              //               updateStrikeInFirestore();
+              //               _controller.restart(duration: (_duration * 60));
+              //             },
+              //             onChange: (String timeStamp) {
+              //               debugPrint('Countdown Changed $timeStamp');
+              //              setState(() {
+              //
+              //              });
+              //
+              //             },
+              //             timeFormatterFunction:
+              //                 (defaultFormatterFunction, duration) {
+              //               if (duration.inSeconds == 0) {
+              //                 return "Start";
+              //               } else {
+              //                 return Function.apply(
+              //                     defaultFormatterFunction, [duration]);
+              //
+              //               }
+              //             },
+              //           ),
+              //         ),
+              //         Text("Remaining Goal\n${(_duration*60)-currentTime} seconds"),
+              //         ElevatedButton(
+              //           onPressed: _handleTimerButtonPressed,
+              //           child: Text(_isRunning ? 'Pause' : 'Start'),
+              //           style: ElevatedButton.styleFrom(
+              //             primary: Color(0xFF283E50), // Background color
+              //             shape: RoundedRectangleBorder(
+              //               borderRadius: BorderRadius.circular(
+              //                   8), // Adjust the border radius as needed
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // DraggableScrollableSheet(
+              //     initialChildSize: 0.3,
+              //     minChildSize: 0.3,
+              //     maxChildSize: 1,
+              //     snapSizes: [0.5, 1],
+              //     snap: true,
+              //     builder: (BuildContext context, scrollSheetController) {
+              //       return Container(
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           borderRadius: BorderRadius.only(
+              //             topLeft: Radius.circular(20.0),
+              //             topRight: Radius.circular(20.0),
+              //           ),
+              //         ),
+              //         child: Column(
+              //           children: [
+              //             ListTile(
+              //               // leading: Image.asset('assets/logo.png', height: 50),
+              //               title: Row(
+              //                 children: [
+              //                   Expanded(
+              //                     child: Divider(
+              //                       color: Color(0xFF283E50),
+              //                       endIndent: 18,
+              //                       thickness: 2,
+              //                     ),
+              //                   ),
+              //                   Text(
+              //                     'MUSIC',
+              //                     style: TextStyle(
+              //                         color: Color(0xFF283E50),
+              //                         fontSize: 22,
+              //                         fontWeight: FontWeight.bold),
+              //                   ),
+              //                   Icon(
+              //                     Icons.music_note,
+              //                     color: Color(0xFF283E50),
+              //                   ),
+              //                   Expanded(
+              //                     child: Divider(
+              //                       color: Color(0xFF283E50),
+              //                       indent: 14,
+              //                       thickness: 2,
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //
+              //               // trailing: IconButton(
+              //               //       icon: Icon(Icons.play_arrow),
+              //               //       onPressed: () {
+              //               //         // Handle play button action
+              //               //       },
+              //               //     ),
+              //             ),
+              //
+              //             Expanded(
+              //               child: ListView.builder(
+              //                 controller: scrollSheetController,
+              //                 itemCount: musicUrls.length,
+              //                 itemBuilder: (context, index) {
+              //                   return musicUrls.isEmpty?CircularProgressIndicator():ListTile(
+              //                     title: Row(
+              //                       mainAxisAlignment:
+              //                           MainAxisAlignment.spaceBetween,
+              //                       crossAxisAlignment: CrossAxisAlignment.start,
+              //                       children: [
+              //                         Text(musicUrls[index].title),
+              //                         GestureDetector(
+              //                             onTap: () {
+              //                               _isPlaying==true?pauseMusic():playMusic(musicUrls[index].path);
+              //                             },
+              //                             child: _isPlaying==true?Icon(Icons.pause):Icon(Icons.play_arrow))
+              //                       ],
+              //                     ),
+              //                     onTap: () {},
+              //                   );
+              //                 },
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       );
+              //     }),
+            ],
+          ),
         ),
         extendBody: true,
       
