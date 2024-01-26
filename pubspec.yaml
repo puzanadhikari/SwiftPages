@@ -51,6 +51,7 @@ dependencies:
   timer_count_down:
   flutter_local_notifications:
   timer_builder:
+  firebase_messaging:
   circular_countdown_timer: ^0.2.3
   flutter:
     sdk: flutter

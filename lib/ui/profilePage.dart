@@ -555,7 +555,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>TopNavigation()));
+                                      guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>TopNavigation(false)));
                                     },
                                     child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],

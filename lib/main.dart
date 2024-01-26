@@ -34,6 +34,7 @@ void main() async {
   Map<String, dynamic>? latestMessage;
 
   // Variable to store the latest message
+  // Variable to store the latest message
   Stream<QuerySnapshot<Map<String, dynamic>>> chatStream =
   FirebaseFirestore.instance.collection('chats').snapshots();
 
@@ -41,29 +42,25 @@ void main() async {
     for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
       List<String> users = List.from(doc['users'] ?? []);
       if (users.contains(currentUserId)) {
-
         List<Map<String, dynamic>> messages = List.from(doc['messages'] ?? []);
         if (messages.isNotEmpty) {
-
           messages.sort((a, b) =>
               (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
 
           // Get the latest message
-          Map<String, dynamic> newLatestMessage = messages.last;
-
-          // Show the latest notification
+          Map<String, dynamic> newLatestMessage = messages.first;
           showNotificationChat(
             flutterLocalNotificationsPlugin,
             newLatestMessage['sender'],
             newLatestMessage['text'],
           );
 
-
           latestMessage = newLatestMessage;
         }
       }
     }
   });
+
 
 
 
@@ -170,7 +167,7 @@ Future<void> showNotificationChat(
     String sender,
     String text,
     ) async {
-  log("New message from $sender: $text");
+  log("New message Received");
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     'notification_chat',
     'Chat Notifications',
@@ -178,6 +175,7 @@ Future<void> showNotificationChat(
     priority: Priority.high,
     playSound: true,
     showWhen: false,
+
   );
 
   var platformChannelSpecifics = NotificationDetails(
@@ -186,8 +184,8 @@ Future<void> showNotificationChat(
 
   await flutterLocalNotificationsPlugin.show(
     0,
-    '$sender',
-    '$text',
+    'Message',
+    'You have new message!',
     platformChannelSpecifics,
     payload: 'chat_notification',
   );

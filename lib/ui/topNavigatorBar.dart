@@ -11,6 +11,8 @@ import 'community/ui.dart';
 import 'notificationPage.dart';
 
 class TopNavigation extends StatefulWidget {
+  bool isNotification ;
+  TopNavigation(this.isNotification);
   @override
   State<TopNavigation> createState() => _TopNavigationState();
 }
@@ -76,7 +78,7 @@ class _TopNavigationState extends State<TopNavigation> {
               bottom: 0,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: TopNavigationBar(),
+                child: TopNavigationBar(widget.isNotification),
               ),
             ),
             Positioned(
@@ -130,10 +132,14 @@ class _TopNavigationState extends State<TopNavigation> {
 }
 
 class TopNavigationBar extends StatelessWidget {
+  bool isNotification;
+
+  TopNavigationBar(this.isNotification);
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
+      initialIndex:isNotification==true?3:0,
       child: Scaffold(
         backgroundColor: Colors.transparent,
 
