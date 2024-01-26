@@ -58,7 +58,7 @@ void main() async {
             newLatestMessage['text'],
           );
 
-          // Update the latest message
+
           latestMessage = newLatestMessage;
         }
       }
@@ -90,11 +90,9 @@ void main() async {
 
   activitiesStream.listen((List<Map<String, dynamic>> activities) {
     if (activities.isNotEmpty) {
-      // Sort activities based on timestamp in descending order
       activities.sort((a, b) =>
           (b['time'] as Timestamp).compareTo(a['time'] as Timestamp));
 
-      // Get the latest activity
       Map<String, dynamic> newLatestActivity = activities.first;
 
       // Check if it's the initial data retrieval

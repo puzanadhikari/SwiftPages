@@ -433,7 +433,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Color(0xFF686868),
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                         decoration: TextDecoration.underline,
                                       ),
@@ -444,7 +444,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ),
                                guestLogin==true?Icon(Icons.person): CircleAvatar(
-                                  radius: 40,
+                                  radius: 30,
                                   backgroundImage: NetworkImage(photoURL ?? ''),
                                   backgroundColor: Color(_colorCode!),
                                 ),

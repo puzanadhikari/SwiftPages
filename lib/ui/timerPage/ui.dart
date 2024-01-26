@@ -457,8 +457,6 @@ class _TimerPageState extends State<TimerPage> {
                 ],
               ),
             ),
-
-
             // Align(
             //   alignment: Alignment.topLeft,
             //   child: Padding(
