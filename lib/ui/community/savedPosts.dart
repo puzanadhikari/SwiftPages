@@ -78,8 +78,9 @@ class _SavedPostsState extends State<SavedPosts> {
                       itemBuilder: (context, index) {
                         var savedPostData =
                         savedPosts[index].data() as Map<String, dynamic>;
+                        String savedId = savedPosts[index].id;
 
-                        return BookCard(bookData: savedPostData);
+                        return BookCard(bookData: savedPostData, savedId:savedId);
                       },
                     );
                   }
@@ -96,11 +97,13 @@ class _SavedPostsState extends State<SavedPosts> {
 
 class BookCard extends StatefulWidget {
   final Map<String, dynamic> bookData;
+  String savedId;
 
 
   BookCard(
       {Key? key,
         required this.bookData,
+        required this.savedId,
         })
       : super(key: key);
 
@@ -152,6 +155,7 @@ class _BookCardState extends State<BookCard> {
                           width: 10,
                         ),
                         Text(widget.bookData['postedBy'] ?? 'Anonymous'),
+
                       ],
                     ),
                     SizedBox(height: 10,),
@@ -171,32 +175,51 @@ class _BookCardState extends State<BookCard> {
                 flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.only(top:20.0),
-                  child: Container(
-                    height:120,
-                    width: 200,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Container(
-                      height: 150,
-                      width: 150,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Text(
-                          '${widget.bookData['note'] ?? ''}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Color(0xFF686868),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
+                  child: Column(
+                    children: [
+                      Container(
+                        height:120,
+                        width: 200,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Container(
+                          height: 150,
+                          width: 150,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              '${widget.bookData['note'] ?? ''}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Color(0xFF686868),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _showDeletePostDialog(widget.savedId);
+                        },
+                        child: Text("Delete"),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+
               // ListTile(
               //   leading: CircleAvatar(
               //     backgroundImage: NetworkImage(widget.bookData['avatarUrl'] ?? ''),
@@ -271,11 +294,71 @@ class _BookCardState extends State<BookCard> {
               // ),
             ],
           ),
+
         ),
       ),
     );
   }
+  void _showDeletePostDialog(String docId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
 
+        return AlertDialog(
+          title: Text('Delete Post'),
+          content: Text("Are you sure wantt to delete the Post?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  deletePost(docId);
+
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void deletePost(String docId) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to remove the book
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myPostRed =
+        FirebaseFirestore.instance.collection('users').doc(uid).collection('savedPosts');
+
+
+        await myPostRed.doc(docId).delete();
+
+
+        setState(() {
+
+        });
+
+        print('Post removed successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error removing book: $e');
+    }
+  }
 
 }
 
