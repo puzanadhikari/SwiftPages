@@ -407,6 +407,21 @@ class _BookCardState extends State<BookCard> {
                           ),
                         ),
                         SizedBox(height: 10,),
+                        if (widget.bookData['userId'] == FirebaseAuth.instance.currentUser?.uid)
+                          ElevatedButton(
+                            onPressed: () {
+                              _showDeletePostDialog(widget.documentId);
+                            },
+                            child: Text("Delete"),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                          ),
                         // GestureDetector(
                         //     onTap: (){
                         //       _showConfirmationDialogToSave(context);
@@ -423,6 +438,66 @@ class _BookCardState extends State<BookCard> {
         ),
       ),
     );
+  }
+  void _showDeletePostDialog(String docId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
+
+        return AlertDialog(
+          title: Text('Delete Post'),
+          content: Text("Are you sure wantt to delete the Post?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  deletePost(docId);
+
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void deletePost(String docId) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to remove the book
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myPostRed =
+        FirebaseFirestore.instance.collection('communityBooks');
+
+
+        await myPostRed.doc(docId).delete();
+
+
+        setState(() {
+
+        });
+
+        print('Post removed successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error removing book: $e');
+    }
   }
   Future<Map<String, dynamic>> fetchUserDetailsById(String userId) async {
     log(userId.toString());
@@ -855,6 +930,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                 SizedBox(
                   height: 10,
                 ),
+
                 Container(
                   height: 100,
                   width: 100,
@@ -982,15 +1058,14 @@ class _BookCardSheetState extends State<BookCardSheet> {
                           ),
                         ),
                       ),
+
                       SizedBox(height: 10,),
-                      // GestureDetector(
-                      //     onTap: (){
-                      //       _showConfirmationDialogToSave(context);
-                      //     },
-                      //     child: Icon(Icons.download))
+
+
                     ],
                   ),
                 ),
+
 
               ],
             ),
