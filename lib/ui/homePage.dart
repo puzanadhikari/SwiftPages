@@ -292,7 +292,7 @@ userName  = preferences.getString("userName")!;
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                              Text(
-                              "Completed: ${(totalTimeMin * 60 + totalTimeSec.toDouble())/60} mins",
+                              "Completed: ${((totalTimeMin * 60 + totalTimeSec)/60).toStringAsFixed(2)} mins",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Color(0xFF686868),
