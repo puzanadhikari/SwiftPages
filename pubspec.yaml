@@ -50,6 +50,7 @@ dependencies:
   flutter_countdown_timer:
   timer_count_down:
   carousel_slider:
+  tutorial_coach_mark: ^1.2.11
   flutter_local_notifications:
   timer_builder:
   circular_countdown_timer: ^0.2.3

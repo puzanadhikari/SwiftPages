@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/ui/choosePage.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../signUpPage.dart';
 import 'books/allBooks.dart';
@@ -25,6 +26,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Stream<DocumentSnapshot<Map<String, dynamic>>> _userStream;
   late Stream<List<String>> textDataStream;
+  final GlobalKey timeKey = GlobalKey();
+  final GlobalKey readKey = GlobalKey();
+  final GlobalKey moreKey = GlobalKey();
+  final GlobalKey streakRowKey = GlobalKey();
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets= [];
   final String apiKey =
       "30fe2ae32emsh0b5a48e1d0ed53dp17a064jsn7a2f3e3aca01";
   final String apiUrl =
@@ -221,10 +228,210 @@ userName  = preferences.getString("userName")!;
           FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
       fetchStrikes();
     }
-      fetchBooksFromGoogle();
+    fetchBooksFromGoogle();
     fetchUserInfo();
+    Future.delayed(Duration(seconds: 1), ()async{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.getBool('firstTime')==false?
+      '':_showTutorialCoachMark();
+    });
 
   }
+void _showTutorialCoachMark()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("firstTime", false);
+    _initTarget();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+
+    )..show(context: context);
+}
+  void _initTarget() {
+    targets = [
+      TargetFocus(
+        identify: 'streaks',
+        keyTarget: streakRowKey,
+        contents: [
+          TargetContent(
+            builder: (context, controller) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [SizedBox(height: 20,),
+                  Container(
+                      height: 150,
+                      width: 200,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment:CrossAxisAlignment.end,
+                        children: [
+                          Text("Here you can find the streaks , \n The streak counts increases as per you complete \n your daily goal of reading."),
+                          ElevatedButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            child: Text("Next"),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
+                ],
+              );
+            },
+            align: ContentAlign.bottom,
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'time',
+        keyTarget: timeKey,
+        contents: [
+          TargetContent(
+            builder: (context, controller) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [SizedBox(height: 20,),
+                  Container(
+                      height: 150,
+                      width: 200,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment:CrossAxisAlignment.end,
+                        children: [
+                          Text("Here you can find the times of your daily goal, \n and the total time you have spent reading."),
+                          ElevatedButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            child: Text("Next"),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
+                ],
+              );
+            },
+            align: ContentAlign.bottom,
+          ),
+        ],
+      ),
+      // TargetFocus(
+      //   identify: 'read',
+      //   keyTarget: readKey,
+      //   contents: [
+      //     TargetContent(
+      //       builder: (context, controller) {
+      //         return Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [SizedBox(height: 20,),
+      //             Container(
+      //                 height: 150,
+      //                 width: 200,
+      //                 padding: EdgeInsets.all(8),
+      //                 decoration: BoxDecoration(
+      //                   color: Color(0xFFD9D9D9),
+      //                   borderRadius: BorderRadius.circular(20.0),
+      //                 ),
+      //                 child: Column(
+      //                   crossAxisAlignment:CrossAxisAlignment.end,
+      //                   children: [
+      //                     Text("Here you can find the latest books and can \n add them into your reading list."),
+      //                     ElevatedButton(
+      //                       onPressed: () {
+      //                         controller.next();
+      //                       },
+      //                       child: Text("Next"),
+      //                       style: ButtonStyle(
+      //                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+      //                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      //                           RoundedRectangleBorder(
+      //                             borderRadius: BorderRadius.circular(15.0),
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ],
+      //                 )),
+      //
+      //           ],
+      //         );
+      //       },
+      //       align: ContentAlign.bottom,
+      //     ),
+      //   ],
+      // ),
+      TargetFocus(
+        identify: 'more',
+        keyTarget: moreKey,
+        contents: [
+          TargetContent(
+            builder: (context, controller) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [SizedBox(height: 20,),
+                  Container(
+                      height: 150,
+                      width: 200,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment:CrossAxisAlignment.end,
+                        children: [
+                          Text("Here you can find the all the books and can \n add them into your reading list."),
+                          ElevatedButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            child: Text("Next"),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+
+                ],
+              );
+            },
+            align: ContentAlign.bottom,
+          ),
+        ],
+      ),
+    ];
+  }
+
+
   Stream<List<String>> getQuoteDataStream() {
     return FirebaseFirestore.instance
         .collection('app_quotes')
@@ -302,10 +509,11 @@ userName  = preferences.getString("userName")!;
                     padding:
                     const EdgeInsets.all( 10.0),
                     child: Column(
+                      key: timeKey,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 5,),
-                        const Text(
+                         Text(
                         "Today's Goal",
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -313,6 +521,7 @@ userName  = preferences.getString("userName")!;
                             fontSize: 16,
                             fontWeight: FontWeight.bold
                           ),
+
                         ),
                         const SizedBox(height: 5,),
                          Text(
@@ -356,6 +565,7 @@ userName  = preferences.getString("userName")!;
               top: 20,
               left: MediaQuery.of(context).size.width / 2.5,
               child: Row(
+                key: streakRowKey,
                 children: [
                   const Text(
                     "Home",
@@ -370,6 +580,7 @@ userName  = preferences.getString("userName")!;
                   Image.asset(
                     "assets/strick.png",
                     height: 50,
+                      // key: streakKey,
                   ),
                   Text("${strikesCount}", style: TextStyle(
                     fontSize: 14,
@@ -422,6 +633,7 @@ userName  = preferences.getString("userName")!;
             Padding(
               padding: const EdgeInsets.only(top: 300.0),
               child: Column(
+
                 children: [
                   Expanded(
                     child: ListView.builder(
@@ -467,6 +679,7 @@ userName  = preferences.getString("userName")!;
                                                 ),
                                                 SizedBox(height: 10),
                                                 ElevatedButton(
+                                                  // key: readKey,
                                                   onPressed: () {
                                                     guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
                                                   },
@@ -519,6 +732,7 @@ userName  = preferences.getString("userName")!;
                             color: Colors.black,
                             decoration: TextDecoration.underline
                           ),
+                          key: moreKey,
                         ),
                       ),
                     ),
