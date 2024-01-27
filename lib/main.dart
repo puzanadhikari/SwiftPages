@@ -35,31 +35,31 @@ void main() async {
 
   // Variable to store the latest message
   // Variable to store the latest message
-  Stream<QuerySnapshot<Map<String, dynamic>>> chatStream =
-  FirebaseFirestore.instance.collection('chats').snapshots();
-
-  chatStream.listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-      List<String> users = List.from(doc['users'] ?? []);
-      if (users.contains(currentUserId)) {
-        List<Map<String, dynamic>> messages = List.from(doc['messages'] ?? []);
-        if (messages.isNotEmpty) {
-          messages.sort((a, b) =>
-              (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
-
-          // Get the latest message
-          Map<String, dynamic> newLatestMessage = messages.first;
-          showNotificationChat(
-            flutterLocalNotificationsPlugin,
-            newLatestMessage['sender'],
-            newLatestMessage['text'],
-          );
-
-          latestMessage = newLatestMessage;
-        }
-      }
-    }
-  });
+  // Stream<QuerySnapshot<Map<String, dynamic>>> chatStream =
+  // FirebaseFirestore.instance.collection('chats').snapshots();
+  //
+  // chatStream.listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
+  //   for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+  //     List<String> users = List.from(doc['users'] ?? []);
+  //     if (users.contains(currentUserId)) {
+  //       List<Map<String, dynamic>> messages = List.from(doc['messages'] ?? []);
+  //       if (messages.isNotEmpty) {
+  //         messages.sort((a, b) =>
+  //             (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
+  //
+  //         // Get the latest message
+  //         Map<String, dynamic> newLatestMessage = messages.first;
+  //         showNotificationChat(
+  //           flutterLocalNotificationsPlugin,
+  //           newLatestMessage['sender'],
+  //           newLatestMessage['text'],
+  //         );
+  //
+  //         latestMessage = newLatestMessage;
+  //       }
+  //     }
+  //   }
+  // });
 
 
 
@@ -162,31 +162,31 @@ Future<void> showNotification(
     payload: 'activity_notification',
   );
 }
-Future<void> showNotificationChat(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    String sender,
-    String text,
-    ) async {
-  log("New message Received");
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    'notification_chat',
-    'Chat Notifications',
-    importance: Importance.max,
-    priority: Priority.high,
-    playSound: true,
-    showWhen: false,
-
-  );
-
-  var platformChannelSpecifics = NotificationDetails(
-    android: androidPlatformChannelSpecifics,
-  );
-
-  await flutterLocalNotificationsPlugin.show(
-    0,
-    'Message',
-    'You have new message!',
-    platformChannelSpecifics,
-    payload: 'chat_notification',
-  );
-}
+// Future<void> showNotificationChat(
+//     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+//     String sender,
+//     String text,
+//     ) async {
+//   log("New message Received");
+//   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+//     'notification_chat',
+//     'Chat Notifications',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//     playSound: true,
+//     showWhen: false,
+//
+//   );
+//
+//   var platformChannelSpecifics = NotificationDetails(
+//     android: androidPlatformChannelSpecifics,
+//   );
+//
+//   await flutterLocalNotificationsPlugin.show(
+//     0,
+//     'Message',
+//     'You have new message!',
+//     platformChannelSpecifics,
+//     payload: 'chat_notification',
+//   );
+// }

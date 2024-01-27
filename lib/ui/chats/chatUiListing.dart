@@ -386,13 +386,10 @@ class _ChatListState extends State<ChatList> {
           height: 20,
           child: DropdownButton<String>(
             hint: Text('Select a user'),
-            // value: selectedUserId,
             onChanged: (String? userId) {
               setState(() {
                 selectedUserId = userId ?? '';
               });
-
-
             },
             items: users.map<DropdownMenuItem<String>>((user) {
               var userData = user.data();
@@ -485,10 +482,6 @@ class ChatListItem extends StatelessWidget {
                       );
                     },
                   );
-
-
-
-
                 },
                 child: Card(
 
