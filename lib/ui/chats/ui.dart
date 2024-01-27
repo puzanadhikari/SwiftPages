@@ -379,7 +379,7 @@ class _ChatPageState extends State<ChatPage> {
       // Create a new message map
       Map<String, dynamic> message = {
         'text': messageText,
-        'sender': currentUserUsername,
+        'sender': _auth.currentUser?.displayName,
         'timestamp': DateTime.now(),
         'unread': true,
       };

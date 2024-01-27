@@ -446,6 +446,7 @@ class ChatListItem extends StatelessWidget {
 
             var lastMessage = chatSnapshot.data!['messages'].last;
             var sender = chatSnapshot.data!['messages'].first;
+            var lastSenderName = chatSnapshot.data!['messages'].last;
             var lastMessageText = lastMessage['text'] ?? 'No messages yet';
             var lastMessageTimestamp = lastMessage['timestamp'];
 
@@ -533,7 +534,9 @@ class ChatListItem extends StatelessWidget {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Container(
+                                if (lastSenderName['sender'] != _auth.currentUser?.displayName)
+
+                                  Container(
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
