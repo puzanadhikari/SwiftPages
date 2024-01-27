@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Stream<DocumentSnapshot<Map<String, dynamic>>> _userStream;
+  late Stream<List<String>> textDataStream;
   final String apiKey =
       "30fe2ae32emsh0b5a48e1d0ed53dp17a064jsn7a2f3e3aca01";
   final String apiUrl =
@@ -39,9 +42,6 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       // Parse the JSON response
       final Map<String, dynamic> data = json.decode(response.body);
-
-      // Process the data as needed
-      log(data.toString());
       if (data.containsKey("items")) {
         final List<dynamic> items = data["items"];
         setState(() {
@@ -211,6 +211,7 @@ userName  = preferences.getString("userName")!;
   void initState() {
     super.initState();
     _retrieveStoredTime();
+    textDataStream = getQuoteDataStream();
     fetchData();
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -223,6 +224,17 @@ userName  = preferences.getString("userName")!;
       fetchBooksFromGoogle();
     fetchUserInfo();
 
+  }
+  Stream<List<String>> getQuoteDataStream() {
+    return FirebaseFirestore.instance
+        .collection('app_quotes')
+        .snapshots()
+        .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
+      return snapshot.docs
+          .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
+      doc['quotes'] as String)
+          .toList();
+    });
   }
 
   @override
@@ -339,6 +351,7 @@ userName  = preferences.getString("userName")!;
                 ),
               ),
             ),
+
             Positioned(
               top: 20,
               left: MediaQuery.of(context).size.width / 2.5,
@@ -366,9 +379,48 @@ userName  = preferences.getString("userName")!;
                 ],
               ),
             ),
+            Positioned(
+              top: 260,
+
+              child:StreamBuilder<List<String>>(
+                stream: getQuoteDataStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(); // Show loading indicator while fetching data
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No quotes available');
+                  } else {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 100,
+                      child: CarouselSlider(
+                        items: snapshot.data!.map((quote) {
+                          return Text(
+                            '"$quote"',
+                            style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
+                          );
+                        }).toList(),
+                        options: CarouselOptions(
+                          height: 200.0,
+                          enableInfiniteScroll: true,
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 3),
+                          autoPlayAnimationDuration: Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          pauseAutoPlayOnTouch: true,
+                          enlargeCenterPage: true,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              )
+            ),
 
             Padding(
-              padding: const EdgeInsets.only(top: 260.0),
+              padding: const EdgeInsets.only(top: 300.0),
               child: Column(
                 children: [
                   Expanded(
@@ -456,7 +508,7 @@ userName  = preferences.getString("userName")!;
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 150.0),
+                      padding: const EdgeInsets.only(bottom: 100.0),
                       child: GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
