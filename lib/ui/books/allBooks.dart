@@ -176,8 +176,9 @@ String searchQuery='novels';
           Map<String, dynamic> bookData = {
             'image': image,
             'author': author,
-            'totalPageCount': totalPage,
-            // Add other book details as needed
+            'totalPageCount': totalPage==0?150:totalPage,
+            'status':'TO READ',
+            'currentPage':0
           };
 
           // Add the book data to the 'myBooks' collection
