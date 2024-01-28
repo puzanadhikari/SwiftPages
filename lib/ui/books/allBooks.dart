@@ -33,7 +33,6 @@ String searchQuery='novels';
         final List<dynamic> items = data["items"];
         setState(() {
           books = items.map((item) => Book.fromMap(item)).toList();
-
         });
       }
     } else {

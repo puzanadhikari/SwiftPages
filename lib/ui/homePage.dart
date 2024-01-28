@@ -5,16 +5,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/ui/choosePage.dart';
+import 'package:swiftpages/ui/myBooks/detailPage.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../signUpPage.dart';
 import 'books/allBooks.dart';
+import 'myBooks.dart';
 int currentTimeCount = 0;
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -59,6 +62,42 @@ class _HomePageState extends State<HomePage> {
     } else {
       // Handle errors
       print("Error: ${response.statusCode}");
+    }
+  }
+  void fetchBooks() async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to fetch books
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Fetch all books from the 'books' subcollection
+        QuerySnapshot querySnapshot = await myBooksRef.get();
+
+        // Access the documents in the query snapshot
+        List<DocumentSnapshot> bookDocuments = querySnapshot.docs;
+        setState(() {
+          myBooks = bookDocuments
+              .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
+              .toList();  print('Books: $myBooks'); // Check the console for the list of books
+        });
+        // Process each book document
+        for (DocumentSnapshot doc in bookDocuments) {
+          Map<String, dynamic> bookData = doc.data() as Map<String, dynamic>;
+
+          // Print or use the fetched book data
+          log('Book: $bookData');
+        }
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error fetching books: $e');
     }
   }
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -147,6 +186,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Book> books = [];
+
+  List<DetailBook> myBooks = [];
+
   String email = ' ';
   String userName = ' ';
   String dailyGoal = ' ';
@@ -213,6 +255,7 @@ userName  = preferences.getString("userName")!;
   void initState() {
     super.initState();
     _retrieveStoredTime();
+    fetchBooks();
     textDataStream = getQuoteDataStream();
     fetchData();
     User? user = FirebaseAuth.instance.currentUser;
@@ -426,7 +469,6 @@ void _showTutorialCoachMark()async{
     ];
   }
 
-
   Stream<List<String>> getQuoteDataStream() {
     return FirebaseFirestore.instance
         .collection('app_quotes')
@@ -585,6 +627,143 @@ void _showTutorialCoachMark()async{
                 ],
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 100.0),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Expanded(
+            //         child: ListView.builder(
+            //           scrollDirection: Axis.horizontal,
+            //           itemCount: myBooks.length,
+            //           itemBuilder: (context, index) {
+            //             return GestureDetector(
+            //               onTap: (){
+            //                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooks[index],)));
+            //
+            //               },
+            //               child: Container(
+            //                 width: 250,
+            //                 margin: EdgeInsets.symmetric(horizontal: 16.0),
+            //                 child: Stack(
+            //                   alignment: Alignment.topCenter,
+            //                   children: [
+            //                     Positioned(
+            //                       top: 180,
+            //                       child: Container(
+            //                         // height: 300,
+            //                         width: 250,
+            //                         padding: EdgeInsets.all(8),
+            //                         decoration: BoxDecoration(
+            //                           color: Color(0xFFD9D9D9),
+            //                           borderRadius: BorderRadius.circular(20.0),
+            //                         ),
+            //                         child: Column(
+            //                           children: [
+            //                             SizedBox(height: 30,),
+            //                             RatingBar.builder(
+            //                               initialRating: 2.5,
+            //                               minRating: 1,
+            //                               direction: Axis.horizontal,
+            //                               allowHalfRating: true,
+            //                               itemCount: 5,
+            //                               itemSize: 20,
+            //                               itemBuilder: (context, _) => Icon(
+            //                                 Icons.star,
+            //                                 color: Colors.amber,
+            //                               ),
+            //                               onRatingUpdate: (rating) {
+            //                                 // You can update the rating if needed
+            //                               },
+            //                             ),
+            //                             SizedBox(height: 8),
+            //                             Container(
+            //                               height: 70,
+            //                               child: SingleChildScrollView(
+            //                                 child: Padding(
+            //                                   padding: const EdgeInsets.only(top: 10.0),
+            //                                   child: Text(
+            //                                     myBooks[index].author,
+            //                                     textAlign: TextAlign.center,
+            //                                     style: TextStyle(
+            //                                       color: Colors.black,
+            //                                     ),
+            //                                   ),
+            //                                 ),
+            //                               ),
+            //                             ),
+            //                             Row(
+            //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                               children: [
+            //                                 ElevatedButton(
+            //                                   onPressed: () {
+            //                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooks[index],)));
+            //                                   },
+            //                                   child: Text("Read"),
+            //                                   style: ButtonStyle(
+            //                                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+            //                                     minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
+            //                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            //                                       RoundedRectangleBorder(
+            //                                         borderRadius: BorderRadius.circular(15.0),
+            //                                       ),
+            //                                     ),
+            //                                   ),
+            //                                 ),
+            //                                 ElevatedButton(
+            //                                   onPressed: () {
+            //                                     _showRemoveBookDialog(myBooks[index]);
+            //                                   },
+            //                                   child: Text("Remove"),
+            //                                   style: ButtonStyle(
+            //                                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+            //                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            //                                       RoundedRectangleBorder(
+            //                                         borderRadius: BorderRadius.circular(15.0),
+            //                                       ),
+            //                                     ),
+            //                                   ),
+            //                                 ),
+            //                                 ElevatedButton(
+            //                                   onPressed: () {
+            //                                     _showAddNotesDialog(myBooks[index]);
+            //                                   },
+            //                                   child: Text("Share"),
+            //                                   style: ButtonStyle(
+            //                                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+            //                                     // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+            //                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            //                                       RoundedRectangleBorder(
+            //                                         borderRadius: BorderRadius.circular(15.0),
+            //                                       ),
+            //                                     ),
+            //                                   ),
+            //                                 ),
+            //
+            //                               ],
+            //                             ),
+            //                           ],
+            //                         ),
+            //                       ),
+            //                     ),
+            //                     Padding(
+            //                       padding: const EdgeInsets.all(8.0),
+            //                       child: Image.network(
+            //                         myBooks[index].imageLink,
+            //                         height: 200,
+            //                         width: 200,
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Positioned(
               top: 260,
 
@@ -627,115 +806,260 @@ void _showTutorialCoachMark()async{
 
             Padding(
               padding: const EdgeInsets.only(top: 300.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height:MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                        Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: myBooks.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooks[index],)));
 
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: books.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 250,
-                          margin: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Positioned(
-                                top: 120,
+                                },
                                 child: Container(
-                                  height: 150,
                                   width: 250,
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFD9D9D9),
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Column(
+                                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Stack(
+                                    alignment: Alignment.topCenter,
                                     children: [
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      SizedBox(height: 8),
-                                      Container(
-                                        child: SingleChildScrollView(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 10.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  books[index].title,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                ElevatedButton(
-                                                  // key: readKey,
-                                                  onPressed: () {
-                                                    guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
-                                                  },
-                                                  child: Text("Read"),
-                                                  style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                                                    minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
-                                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(15.0),
+                                      Positioned(
+                                        top: 120,
+                                        child: Container(
+                                          // height: 300,
+                                          width: 250,
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFD9D9D9),
+                                            borderRadius: BorderRadius.circular(20.0),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              // SizedBox(height: 30,),
+                                              // RatingBar.builder(
+                                              //   initialRating: 2.5,
+                                              //   minRating: 1,
+                                              //   direction: Axis.horizontal,
+                                              //   allowHalfRating: true,
+                                              //   itemCount: 5,
+                                              //   itemSize: 20,
+                                              //   itemBuilder: (context, _) => Icon(
+                                              //     Icons.star,
+                                              //     color: Colors.amber,
+                                              //   ),
+                                              //   onRatingUpdate: (rating) {
+                                              //     // You can update the rating if needed
+                                              //   },
+                                              // ),
+                                              SizedBox(height: 8),
+                                              Container(
+                                                height: 70,
+                                                child: SingleChildScrollView(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 30.0),
+                                                    child: Text(
+                                                      myBooks[index].author,
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                              SizedBox(height: 20,),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooks[index],)));
+                                                    },
+                                                    child: Text("Read"),
+                                                    style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                      minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
+                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      _showRemoveBookDialog(myBooks[index]);
+                                                    },
+                                                    child: Text("Remove"),
+                                                    style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      _showAddNotesDialog(myBooks[index]);
+                                                    },
+                                                    child: Text("Share"),
+                                                    style: ButtonStyle(
+                                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                      // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(15.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.network(
+                                          myBooks[index].imageLink,
+                                          height: 150,
+                                          width: 150,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.network(
-                                  books[index].imageLink,
-                                  height: 150,
-                                  width: 150,
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 100.0),
-                      child: GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
-                        },
-                        child: Text(
-                          "More books>>", // Add your additional text here
-                          style: TextStyle(
-                            color: Colors.black,
-                            decoration: TextDecoration.underline
-                          ),
-                          key: moreKey,
                         ),
-                      ),
+                        SizedBox(height: 20,),
+                        Text("Explore",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+
+                        Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: books.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: 250,
+                                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Stack(
+                                  alignment: Alignment.topCenter,
+                                  children: [
+                                    Positioned(
+                                      top: 120,
+                                      child: Container(
+                                        height: 150,
+                                        width: 250,
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFD9D9D9),
+                                          borderRadius: BorderRadius.circular(20.0),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 30,
+                                            ),
+                                            SizedBox(height: 8),
+                                            Container(
+                                              child: SingleChildScrollView(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 10.0),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        books[index].title,
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      ElevatedButton(
+                                                        // key: readKey,
+                                                        onPressed: () {
+                                                          guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
+                                                        },
+                                                        child: Text("Read"),
+                                                        style: ButtonStyle(
+                                                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                                          minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+                                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(15.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.network(
+                                        books[index].imageLink,
+                                        height: 150,
+                                        width: 150,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 200.0),
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                              },
+                              child: Text(
+                                "More books>>", // Add your additional text here
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline
+                                ),
+                                key: moreKey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              )
-
+                ),
+              ),
             ),
+          
+
+
+
 
           ],
         ),
@@ -743,6 +1067,142 @@ void _showTutorialCoachMark()async{
       ),
     );
   }
+  void _showAddNotesDialog(DetailBook book) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
+
+        return AlertDialog(
+          title: Text('Add Notes'),
+          content: TextField(
+            controller: notesController,
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration(
+              hintText: 'Write your notes here...',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                String newNote = notesController.text.trim();
+                if (newNote.isNotEmpty) {
+                  shareBookDetails(book,notesController.text);
+                  Navigator.pop(context); // Close the dialog
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Note added successfully!'),
+                    ),
+                  );
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void shareBookDetails(DetailBook book,String note) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+        CollectionReference communityBooksRef =
+        FirebaseFirestore.instance.collection('communityBooks');
+        await communityBooksRef.add({
+          'author': book.author,
+          'imageLink': book.imageLink,
+          'currentPage': book.currentPage,
+          'notes': note,
+          'username': user.displayName ?? 'Anonymous',
+          'avatarUrl': user.photoURL ?? '',
+          'userId':uid
+          // Add other fields as needed
+        });
+
+        // Display a notification or feedback to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Book shared successfully!'),
+          ),
+        );
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error sharing book: $e');
+    }
+  }
+
+  void _showRemoveBookDialog(DetailBook book) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
+
+        return AlertDialog(
+          title: Text('Remove Book'),
+          content: Text("Are you sure wantt to remove the book from your read list?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  removeBook(book);
+
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Remove'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void removeBook(DetailBook book) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to remove the book
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Remove the book document from Firestore using its document ID
+        await myBooksRef.doc(book.documentId).delete();
+
+        // Remove the book from the state
+        setState(() {
+          books.remove(book);
+        });
+
+        print('Book removed successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error removing book: $e');
+    }
+  }
+
   void _showConfirmationDialog(String author,String image,String description) {
     showDialog(
       context: context,
@@ -898,9 +1358,52 @@ void _showTutorialCoachMark()async{
       },
     );
   }
+
 }
 
-
+// class DetailBook {
+//   final String author;
+//   final String imageLink;
+//   final String documentId;
+//   final String description;
+//   int currentPage; // Add this field
+//   int totalPage; // Add this field
+//   List<String> notes; // Add this field
+//   List<String> quotes; // Add this field
+//
+//   DetailBook({
+//     required this.author,
+//     required this.imageLink,
+//     required this.documentId,
+//     required this.description,
+//     this.currentPage = 0, // Set the default value to 0
+//     this.totalPage = 0, // Set the default value to 0
+//     this.notes = const [], // Initialize notes as an empty list
+//     this.quotes = const [], // Initialize notes as an empty list
+//   });
+//
+//   factory DetailBook.fromMap(String documentId, Map<String, dynamic>? map) {
+//     if (map == null) {
+//       return DetailBook(
+//           author: 'No Author',
+//           imageLink: 'No Image',
+//           documentId: documentId,
+//           description: 'description',
+//           totalPage: 100
+//       );
+//     }
+//     return DetailBook(
+//       author: map['author'] ?? 'No Author',
+//       imageLink: map['image'] ?? 'No Image',
+//       documentId: documentId,
+//       description: map['description']??'Description',
+//       currentPage: map['currentPage'] ?? 0, // Set the currentPage value
+//       totalPage: map['totalPageCount'] ?? 0, // Set the currentPage value
+//       notes: List<String>.from(map['notes'] ?? []), // Set the notes value
+//       quotes: List<String>.from(map['quotes'] ?? []), // Set the notes value
+//     );
+//   }
+// }
 // class Book {
 //   final String author;
 //   final String imageLink;
