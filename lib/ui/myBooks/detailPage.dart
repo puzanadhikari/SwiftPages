@@ -24,6 +24,7 @@ class MyBooksDetailPage extends StatefulWidget {
 class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   TextEditingController _textFieldController = TextEditingController();
   int? selectedPageNumber;
+  String dropdownValue = 'Reading';
   // int totalPages = widget.book.totalPage;
 
   void removeBook(DetailBook book) async {
@@ -394,7 +395,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                               if (newValue != null) {
                                 setState(() {
                                   selectedPageNumber = newValue;
-                                  selectedPageNumber==widget.book!.totalPage?updateStatusOfBook(widget.book!.documentId):
+                                  // selectedPageNumber==widget.book!.totalPage?updateStatusOfBook(widget.book!.documentId):
                                   updatePageNumber(widget.book!, selectedPageNumber!);
                                 });
                               }
@@ -407,6 +408,31 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                             },
                             child: Icon(Icons.delete)
                           ),
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                        updateStatusOfBook(widget.book!.documentId);
+                      });
+
+                    },
+                    items: <String>['Reading', 'Completed', 'To Read']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )
                         ],
                       ),
                       TextField(
@@ -485,9 +511,8 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
       print('Current Status: ${bookData['status']}');
 
       // Update the status to 'CURRENTLY READING'
-      await myBooksRef.doc(bookIdToUpdate).update({'status': 'COMPLETED'});
+      await myBooksRef.doc(bookIdToUpdate).update({'status': dropdownValue=='Completed'?'COMPLETED':dropdownValue=='Reading'?'CURRENTLY READING':'TO BE READ'});
 
-      // Print a message indicating successful status update
       print('Status updated successfully');
     } else {
       // Handle the case where the specified book does not exist
