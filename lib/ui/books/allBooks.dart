@@ -177,7 +177,7 @@ String searchQuery='novels';
             'image': image,
             'author': author,
             'totalPageCount': totalPage==0?150:totalPage,
-            'status':'TO READ',
+            'status':'TO BE READ',
             'currentPage':0
           };
 
