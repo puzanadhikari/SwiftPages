@@ -43,6 +43,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   fluttertoast:
   flutter_rating_bar:
+  dots_indicator:
   just_audio:
   floating_bottom_navigation_bar: ^1.5.2
   cloud_firestore:

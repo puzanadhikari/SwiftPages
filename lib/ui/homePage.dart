@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   int strikesCount = 0;
   int totalTimeMin=0;
   int totalTimeSec=0;
+  int _currentIndex = 0;
   Future<void> fetchBooksFromGoogle() async {
     final String apiKey = "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0";
     final String apiUrl =
@@ -169,7 +171,7 @@ class _HomePageState extends State<HomePage> {
             'description':description
             // Add other book details as needed
           };
-
+          fetchBooks();
           // Add the book data to the 'myBooks' collection
           await myBooksRef.add(bookData);
 
@@ -780,24 +782,46 @@ void _showTutorialCoachMark()async{
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       height: 100,
-                      child: CarouselSlider(
-                        items: snapshot.data!.map((quote) {
-                          return Text(
-                            '"$quote"',
-                            style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
-                          );
-                        }).toList(),
-                        options: CarouselOptions(
-                          height: 200.0,
-                          enableInfiniteScroll: true,
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 3),
-                          autoPlayAnimationDuration: Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          pauseAutoPlayOnTouch: true,
-                          enlargeCenterPage: true,
-                        ),
+                      child: Column(
+                        children: [
+                          CarouselSlider(
+                            items: snapshot.data!.map((quote) {
+                              return Text(
+                                '"$quote"',
+                                style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
+                              );
+                            }).toList(),
+                            options: CarouselOptions(
+                              height: 20.0,
+                              enableInfiniteScroll: true,
+                              autoPlay: true,
+                              autoPlayInterval: Duration(seconds: 3),
+                              autoPlayAnimationDuration: Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              pauseAutoPlayOnTouch: true,
+                              enlargeCenterPage: true,
+                              onPageChanged: (index, reason) {
+                                _currentIndex = index;
+                                // log(_currentIndex.toString());
+
+                              },
+                            ),
+
+                          ),
+                          // DotsIndicator(
+                          //   dotsCount: snapshot.data!.length,
+                          //   position: _currentIndex,
+                          //   // decorator: DotsDecorator(
+                          //   //   size: const Size.square(8.0),
+                          //   //   activeSize: const Size(20.0, 8.0),
+                          //   //   activeShape: RoundedRectangleBorder(
+                          //   //     borderRadius: BorderRadius.circular(5.0),
+                          //   //   ),
+                          //   // ),
+                          // ),
+                        ],
                       ),
+
                     );
                   }
                 },
@@ -817,16 +841,36 @@ void _showTutorialCoachMark()async{
                       children: [
                         Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                         Expanded(
-                          child: ListView.builder(
+                          child: myBooks.isEmpty?
+                          Container(
+                              height: 100,
+                              child: Center(child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Image.asset('assets/self.png'),
+                                      Image.asset('assets/self.png'),
+                                      Image.asset('assets/self.png'),
+                                      Image.asset('assets/self.png'),
+                                      Image.asset('assets/self.png'),
+                                    ],
+                                  )
+                                ],
+                              )))
+                              : ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: myBooks.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooks[index],)));
-
                                 },
-                                child: Container(
+                                child:Container(
                                   width: 250,
                                   margin: EdgeInsets.symmetric(horizontal: 16.0),
                                   child: Stack(
@@ -996,7 +1040,7 @@ void _showTutorialCoachMark()async{
                                                         onPressed: () {
                                                           guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
                                                         },
-                                                        child: Text("Read"),
+                                                        child: Text("Add to list"),
                                                         style: ButtonStyle(
                                                           backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                                                           minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
@@ -1056,7 +1100,7 @@ void _showTutorialCoachMark()async{
                 ),
               ),
             ),
-          
+
 
 
 
@@ -1189,11 +1233,10 @@ void _showTutorialCoachMark()async{
         // Remove the book document from Firestore using its document ID
         await myBooksRef.doc(book.documentId).delete();
 
-        // Remove the book from the state
         setState(() {
           books.remove(book);
         });
-
+        fetchBooks();
         print('Book removed successfully!');
       } else {
         print('No user is currently signed in.');
@@ -1209,7 +1252,7 @@ void _showTutorialCoachMark()async{
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Edit User Name",
+            "Add the book",
             style: TextStyle(color: Colors.blue), // Set title text color
           ),
           content: Text("Are you sure want to add this book in your list?"),
