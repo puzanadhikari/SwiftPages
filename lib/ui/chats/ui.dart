@@ -368,8 +368,6 @@ class _ChatPageState extends State<ChatPage> {
   // }
 
 
-
-
   void _sendMessage(String currentUserId) async {
     String messageText = _messageController.text.trim();
 

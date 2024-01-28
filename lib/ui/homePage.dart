@@ -100,8 +100,6 @@ class _HomePageState extends State<HomePage> {
             ? userDoc.get('currentTime')
             : 0;
         log(currentTimeCount.toString());
-
-        // Update the UI with the new strikes count
         setState(() {});
       }
     } catch (e) {
@@ -110,18 +108,15 @@ class _HomePageState extends State<HomePage> {
   }
   void saveMyBook(String author, String image,String description) async {
     try {
-      // Get the current authenticated user
+
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         // User is signed in, use the UID to associate books with the user
         String uid = user.uid;
-
-        // Reference to the 'myBooks' collection with the UID as the document ID
         CollectionReference myBooksRef =
         FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
-        // Check if the book with the same author and image already exists
         QuerySnapshot existingBooks = await myBooksRef
             .where('author', isEqualTo: author)
             .where('image', isEqualTo: image)
