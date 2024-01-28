@@ -258,7 +258,7 @@ userName  = preferences.getString("userName")!;
     super.initState();
     _retrieveStoredTime();
     fetchBooks();
-    textDataStream = getQuoteDataStream();
+    // textDataStream = getQuoteDataStream();
     fetchData();
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -470,18 +470,18 @@ void _showTutorialCoachMark()async{
       ),
     ];
   }
-
-  Stream<List<String>> getQuoteDataStream() {
-    return FirebaseFirestore.instance
-        .collection('app_quotes')
-        .snapshots()
-        .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-      return snapshot.docs
-          .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-      doc['quotes'] as String)
-          .toList();
-    });
-  }
+///quotes
+  // Stream<List<String>> getQuoteDataStream() {
+  //   return FirebaseFirestore.instance
+  //       .collection('app_quotes')
+  //       .snapshots()
+  //       .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
+  //     return snapshot.docs
+  //         .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
+  //     doc['quotes'] as String)
+  //         .toList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -629,204 +629,8 @@ void _showTutorialCoachMark()async{
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 100.0),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Expanded(
-            //         child: ListView.builder(
-            //           scrollDirection: Axis.horizontal,
-            //           itemCount: myBooks.length,
-            //           itemBuilder: (context, index) {
-            //             return GestureDetector(
-            //               onTap: (){
-            //                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooks[index],)));
-            //
-            //               },
-            //               child: Container(
-            //                 width: 250,
-            //                 margin: EdgeInsets.symmetric(horizontal: 16.0),
-            //                 child: Stack(
-            //                   alignment: Alignment.topCenter,
-            //                   children: [
-            //                     Positioned(
-            //                       top: 180,
-            //                       child: Container(
-            //                         // height: 300,
-            //                         width: 250,
-            //                         padding: EdgeInsets.all(8),
-            //                         decoration: BoxDecoration(
-            //                           color: Color(0xFFD9D9D9),
-            //                           borderRadius: BorderRadius.circular(20.0),
-            //                         ),
-            //                         child: Column(
-            //                           children: [
-            //                             SizedBox(height: 30,),
-            //                             RatingBar.builder(
-            //                               initialRating: 2.5,
-            //                               minRating: 1,
-            //                               direction: Axis.horizontal,
-            //                               allowHalfRating: true,
-            //                               itemCount: 5,
-            //                               itemSize: 20,
-            //                               itemBuilder: (context, _) => Icon(
-            //                                 Icons.star,
-            //                                 color: Colors.amber,
-            //                               ),
-            //                               onRatingUpdate: (rating) {
-            //                                 // You can update the rating if needed
-            //                               },
-            //                             ),
-            //                             SizedBox(height: 8),
-            //                             Container(
-            //                               height: 70,
-            //                               child: SingleChildScrollView(
-            //                                 child: Padding(
-            //                                   padding: const EdgeInsets.only(top: 10.0),
-            //                                   child: Text(
-            //                                     myBooks[index].author,
-            //                                     textAlign: TextAlign.center,
-            //                                     style: TextStyle(
-            //                                       color: Colors.black,
-            //                                     ),
-            //                                   ),
-            //                                 ),
-            //                               ),
-            //                             ),
-            //                             Row(
-            //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                               children: [
-            //                                 ElevatedButton(
-            //                                   onPressed: () {
-            //                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooks[index],)));
-            //                                   },
-            //                                   child: Text("Read"),
-            //                                   style: ButtonStyle(
-            //                                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-            //                                     minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
-            //                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            //                                       RoundedRectangleBorder(
-            //                                         borderRadius: BorderRadius.circular(15.0),
-            //                                       ),
-            //                                     ),
-            //                                   ),
-            //                                 ),
-            //                                 ElevatedButton(
-            //                                   onPressed: () {
-            //                                     _showRemoveBookDialog(myBooks[index]);
-            //                                   },
-            //                                   child: Text("Remove"),
-            //                                   style: ButtonStyle(
-            //                                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-            //                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            //                                       RoundedRectangleBorder(
-            //                                         borderRadius: BorderRadius.circular(15.0),
-            //                                       ),
-            //                                     ),
-            //                                   ),
-            //                                 ),
-            //                                 ElevatedButton(
-            //                                   onPressed: () {
-            //                                     _showAddNotesDialog(myBooks[index]);
-            //                                   },
-            //                                   child: Text("Share"),
-            //                                   style: ButtonStyle(
-            //                                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-            //                                     // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
-            //                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            //                                       RoundedRectangleBorder(
-            //                                         borderRadius: BorderRadius.circular(15.0),
-            //                                       ),
-            //                                     ),
-            //                                   ),
-            //                                 ),
-            //
-            //                               ],
-            //                             ),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Padding(
-            //                       padding: const EdgeInsets.all(8.0),
-            //                       child: Image.network(
-            //                         myBooks[index].imageLink,
-            //                         height: 200,
-            //                         width: 200,
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             );
-            //           },
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Positioned(
-              top: 260,
 
-              child:StreamBuilder<List<String>>(
-                stream: getQuoteDataStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(); // Show loading indicator while fetching data
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No quotes available');
-                  } else {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 100,
-                      child: Column(
-                        children: [
-                          CarouselSlider(
-                            items: snapshot.data!.map((quote) {
-                              return Text(
-                                '"$quote"',
-                                style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
-                              );
-                            }).toList(),
-                            options: CarouselOptions(
-                              height: 20.0,
-                              enableInfiniteScroll: true,
-                              autoPlay: true,
-                              autoPlayInterval: Duration(seconds: 3),
-                              autoPlayAnimationDuration: Duration(milliseconds: 800),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              pauseAutoPlayOnTouch: true,
-                              enlargeCenterPage: true,
-                              onPageChanged: (index, reason) {
-                                _currentIndex = index;
-                                // log(_currentIndex.toString());
 
-                              },
-                            ),
-
-                          ),
-                          // DotsIndicator(
-                          //   dotsCount: snapshot.data!.length,
-                          //   position: _currentIndex,
-                          //   // decorator: DotsDecorator(
-                          //   //   size: const Size.square(8.0),
-                          //   //   activeSize: const Size(20.0, 8.0),
-                          //   //   activeShape: RoundedRectangleBorder(
-                          //   //     borderRadius: BorderRadius.circular(5.0),
-                          //   //   ),
-                          //   // ),
-                          // ),
-                        ],
-                      ),
-
-                    );
-                  }
-                },
-              )
-            ),
 
             Padding(
               padding: const EdgeInsets.only(top: 300.0),
