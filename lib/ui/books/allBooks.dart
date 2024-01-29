@@ -170,7 +170,7 @@ class _AllBooksState extends State<AllBooks> {
   Widget buildBookItem(Book book) {
     return GestureDetector(
         onTap: (){
-          log(book.title.toUpperCase());
+          log(book.imageLink.toUpperCase());
           _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
         },
       child: SingleChildScrollView(
@@ -183,7 +183,17 @@ class _AllBooksState extends State<AllBooks> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+            book.imageLink=="No Image"?Container(
+          width: 116,
+            height: 100,
+            decoration: ShapeDecoration(
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9),
+              ),
+            ),
+              child: Center(child: Text("No Image")),
+          ):  Container(
                 width: 116,
                 height: 100,
                 decoration: ShapeDecoration(
