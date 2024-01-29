@@ -141,6 +141,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                      padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
                      child: ElevatedButton(
                        onPressed: () {
+                         _showInvitationCodePopup(); // Example values, replace with your data
+
                        },
                        child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
                        style: ButtonStyle(
@@ -164,4 +166,119 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
       ),
     );
   }
+  void _showInvitationCodePopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Color(0xffD9D9D9),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Add To Self ?',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF283E50),
+                  ),
+                ),
+                Divider(
+                  color: Color(0xFF283E50),
+                  thickness: 1,
+                ),
+                SizedBox(height: 16.0),
+                Row(crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    ElevatedButton(
+                      onPressed: () {
+                        _showInvitationCodePopup(); // Example values, replace with your data
+
+                      },
+                      child: Container(
+                          width: 70,
+                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 14),))),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _showInvitationCodePopup(); // Example values, replace with your data
+
+                      },
+                      child: Container(
+                          width: 70,
+                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 14),))),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _showInvitationCodePopup(); // Example values, replace with your data
+
+                  },
+                  child: Container(
+                        width: 120,
+                      child: Center(child: Text("To Be Read",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+
+
+                  },
+                  child: Container(
+                      child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
