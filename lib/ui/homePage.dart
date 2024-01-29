@@ -556,7 +556,7 @@ void _showTutorialCoachMark()async{
               right: 10,
               child: GestureDetector(
                 onTap: (){
-                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>Timer()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
                 },
                 child: Image.asset(
                   "assets/search.png",
@@ -1183,26 +1183,7 @@ void _showTutorialCoachMark()async{
                         //     },
                         //   ),
                         // ),
-                        SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 200.0),
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
-                              },
-                              child: Text(
-                                "More books>>", // Add your additional text here
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    decoration: TextDecoration.underline
-                                ),
-                                key: moreKey,
-                              ),
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),
