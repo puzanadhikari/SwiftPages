@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg instead of flutter_svg/svg.dart
+import 'package:fluttertoast/fluttertoast.dart';
 import 'allBooks.dart';
 
 class AllBookDetailPage extends StatefulWidget {
@@ -12,6 +15,51 @@ class AllBookDetailPage extends StatefulWidget {
 }
 
 class _AllBookDetailPageState extends State<AllBookDetailPage> {
+
+  void saveMyBook(String author, String image,int totalPage,String status) async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to associate books with the user
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Check if the book with the same author and image already exists
+        QuerySnapshot existingBooks = await myBooksRef
+            .where('author', isEqualTo: author)
+            .where('image', isEqualTo: image)
+            .where('totalPageCount', isEqualTo: totalPage)
+            .get();
+
+        if (existingBooks.docs.isEmpty) {
+          // Book does not exist, add it to the collection
+          Map<String, dynamic> bookData = {
+            'image': image,
+            'author': author,
+            'totalPageCount': totalPage==0?150:totalPage,
+            'status':status,
+            'currentPage':0
+          };
+
+          // Add the book data to the 'myBooks' collection
+          await myBooksRef.add(bookData);
+
+          Fluttertoast.showToast(msg: "Book saved successfully!");
+        } else {
+          Fluttertoast.showToast(msg: "Book already exists!");
+        }
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error saving book: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -202,7 +250,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
 
                     ElevatedButton(
                       onPressed: () {
-                        _showInvitationCodePopup(); // Example values, replace with your data
+                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING'); // Example values, replace with your data
 
                       },
                       child: Container(
@@ -219,7 +267,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _showInvitationCodePopup(); // Example values, replace with your data
+                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED');  // Example values, replace with your data
 
                       },
                       child: Container(
@@ -234,13 +282,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                         ),
                       ),
                     ),
-
-
                   ],
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _showInvitationCodePopup(); // Example values, replace with your data
+                    saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'TO BE READ');  // Example values, replace with your data
 
                   },
                   child: Container(
