@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
+import 'detailPage.dart';
+
 class AllBooks extends StatefulWidget {
   @override
   State<AllBooks> createState() => _AllBooksState();
@@ -171,7 +173,8 @@ class _AllBooksState extends State<AllBooks> {
     return GestureDetector(
         onTap: (){
           log(book.imageLink.toUpperCase());
-          _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
+          // _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPage(book: book,)));
         },
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -268,6 +271,7 @@ class Book {
   final String description;
   final double rating;
   final int pageCount;
+  final String publishedDate;
 
   Book({
     required this.title,
@@ -275,6 +279,7 @@ class Book {
     required this.description,
     required this.rating,
     required this.pageCount,
+    required this.publishedDate,
 
   });
 
@@ -286,6 +291,8 @@ class Book {
       imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
       rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
       pageCount: volumeInfo['pageCount'] ?? 0,
+      publishedDate: volumeInfo['publishedDate'] ?? 'Unknown', // Extract and set the publication date
+
     );
   }
 }
