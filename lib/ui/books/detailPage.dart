@@ -71,6 +71,16 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
           height: MediaQuery.of(context).size.height,
           child:Stack(
             children: [
+              Positioned(
+                top: 20,
+                left: 30,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back,),
+                ),
+              ),
               SvgPicture.asset('assets/background.svg',
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height,
