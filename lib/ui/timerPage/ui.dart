@@ -155,6 +155,7 @@ class _TimerPageState extends State<TimerPage> {
         // _isRunning = false;
       } else {
         _stopwatch.start();
+
         // _isRunning = true;
       }
       _isRunning = !_isRunning;
@@ -422,14 +423,13 @@ class _TimerPageState extends State<TimerPage> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                                    child: Text(
+                                    child:Text(
                                       _isRunning ? 'Pause' : 'Start',
                                       style: TextStyle(fontSize: 16.0),
                                     ),
                                   ),
                                 ),
                               )
-
                             ],
                           ),
                         ),
@@ -513,14 +513,13 @@ class _TimerPageState extends State<TimerPage> {
                                     _storeCurrentTimeOnFinished();
                                     _controller.pause();
                                     setState(() {
-                                      _isRunning = false;
+                                      // _isRunning = false;
                                     });
                                   } catch (e) {
                                     print('Error in onFinished callback: $e');
                                     log('Error in onFinished callback: $e');
                                   }
                                 },
-
                               ),
                             ),
                           ),
