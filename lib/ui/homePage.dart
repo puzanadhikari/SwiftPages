@@ -850,15 +850,20 @@ void _showTutorialCoachMark()async{
                                 children: [
                                   Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                    ],
+                                  GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                      ],
+                                    ),
                                   )
                                 ],
                               )))
