@@ -723,31 +723,15 @@ void _showTutorialCoachMark()async{
                                         Positioned(
                                           top: 120,
                                           child: Container(
-                                            // height: 300,
+                                            height: 300,
                                             width: 250,
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(
                                               color: Color(0xFFD9D9D9),
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius: BorderRadius.circular(20.0),
                                             ),
                                             child: Column(
                                               children: [
-                                                // SizedBox(height: 30,),
-                                                // RatingBar.builder(
-                                                //   initialRating: 2.5,
-                                                //   minRating: 1,
-                                                //   direction: Axis.horizontal,
-                                                //   allowHalfRating: true,
-                                                //   itemCount: 5,
-                                                //   itemSize: 20,
-                                                //   itemBuilder: (context, _) => Icon(
-                                                //     Icons.star,
-                                                //     color: Colors.amber,
-                                                //   ),
-                                                //   onRatingUpdate: (rating) {
-                                                //     // You can update the rating if needed
-                                                //   },
-                                                // ),
                                                 SizedBox(height: 8),
                                                 Container(
                                                   height: 70,
@@ -786,88 +770,7 @@ void _showTutorialCoachMark()async{
                             },
                           ),
                         ),
-                        // Expanded(
-                        //   child: ListView.builder(
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: books.length,
-                        //     itemBuilder: (context, index) {
-                        //       return Container(
-                        //         width: 250,
-                        //         margin: EdgeInsets.symmetric(horizontal: 16.0),
-                        //         child: Stack(
-                        //           alignment: Alignment.topCenter,
-                        //           children: [
-                        //             Positioned(
-                        //               top: 120,
-                        //               child: Container(
-                        //                 height: 150,
-                        //                 width: 250,
-                        //                 padding: EdgeInsets.all(8),
-                        //                 decoration: BoxDecoration(
-                        //                   color: Color(0xFFD9D9D9),
-                        //                   borderRadius: BorderRadius.circular(20.0),
-                        //                 ),
-                        //                 child: Column(
-                        //                   children: [
-                        //                     SizedBox(
-                        //                       height: 30,
-                        //                     ),
-                        //                     SizedBox(height: 8),
-                        //                     Container(
-                        //                       child: SingleChildScrollView(
-                        //                         child: Padding(
-                        //                           padding: const EdgeInsets.only(top: 10.0),
-                        //                           child: Column(
-                        //                             crossAxisAlignment: CrossAxisAlignment.center,
-                        //                             children: [
-                        //                               Text(
-                        //                                 books[index].title,
-                        //                                 textAlign: TextAlign.center,
-                        //                                 style: TextStyle(
-                        //                                   color: Colors.black,
-                        //                                   overflow: TextOverflow.ellipsis,
-                        //                                 ),
-                        //                               ),
-                        //                               SizedBox(height: 10),
-                        //                               ElevatedButton(
-                        //                                 // key: readKey,
-                        //                                 onPressed: () {
-                        //                                   guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
-                        //                                 },
-                        //                                 child: Text("Add to list"),
-                        //                                 style: ButtonStyle(
-                        //                                   backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                        //                                   minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
-                        //                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        //                                     RoundedRectangleBorder(
-                        //                                       borderRadius: BorderRadius.circular(15.0),
-                        //                                     ),
-                        //                                   ),
-                        //                                 ),
-                        //                               ),
-                        //                             ],
-                        //                           ),
-                        //                         ),
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //             Padding(
-                        //               padding: const EdgeInsets.all(8.0),
-                        //               child: Image.network(
-                        //                 books[index].imageLink,
-                        //                 height: 150,
-                        //                 width: 150,
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
+
                         SizedBox(height: 10),
                         Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                         myBooks.isEmpty?

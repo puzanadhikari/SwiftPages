@@ -61,6 +61,34 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
       print('Error saving book: $e');
     }
   }
+  void removeBook() async {
+    try {
+      // Get the current authenticated user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is signed in, use the UID to remove the book
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Remove the book document from Firestore using its document ID
+        await myBooksRef.doc(widget.book.documentId).delete();
+
+        setState(() {
+
+        });
+
+        Fluttertoast.showToast(msg:'Book removed successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error removing book: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -185,24 +213,49 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                         ),
                       ),
                     ),
-                    Center(
-                      child: Padding(
-                        padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _showInvitationCodePopup(); // Example values, replace with your data
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0,right: 40),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showInvitationCodePopup(); // Example values, replace with your data
 
-                          },
-                          child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
+                              },
+                              child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showInvitationCodePopupToRemove(); // Example values, replace with your data
+
+                              },
+                              child: Text("Remove",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -320,6 +373,83 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                 //     ),
                 //   ),
                 // ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  void _showInvitationCodePopupToRemove() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Color(0xffD9D9D9),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Are you Sure want to remove the book from Self?',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF283E50),
+                  ),
+                ),
+                Divider(
+                  color: Color(0xFF283E50),
+                  thickness: 1,
+                ),
+                SizedBox(height: 16.0),
+                Row(crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        // width: 70,
+                          child: Center(child: Text("No",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        removeBook();
+                         Navigator.pop(context);
+                      },
+                      child: Container(
+                        // width: 70,
+                          child: Center(child: Text("Yes",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
               ],
             ),
           ),
