@@ -136,6 +136,16 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                 ),
                 Stack(
                   children: [
+                    Positioned(
+                      top: 20,
+                      left: 30,
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.arrow_back,),
+                      ),
+                    ),
 
                     Padding(
                       padding: const EdgeInsets.only(top:200.0,left: 20,right: 20),

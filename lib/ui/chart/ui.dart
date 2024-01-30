@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class GraphPage extends StatefulWidget {
   @override
@@ -14,13 +15,18 @@ class _GraphPageState extends State<GraphPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<PieChartSectionData> pieChartItems = [];
-
+  Timestamp? lastStrikeTime ;
+  DateTime? dateTime;
+  String? lastStreak;
   @override
   void initState() {
     super.initState();
     fetchData();
   }
-
+  String _formatTimestamp(Timestamp timestamp) {
+     dateTime = timestamp.toDate();
+    return DateFormat('HH:mm').format(dateTime!); // Format the timestamp as per your requirement
+  }
   Future<void> fetchData() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -33,7 +39,11 @@ class _GraphPageState extends State<GraphPage> {
         int currentTime = userDoc.get('currentTime') ?? 0;
         int totalTimeMin = userDoc.get('totalTimeMin') ?? 0;
         int totalTimeSec = userDoc.get('totalTimeSec') ?? 0;
-
+      setState(() {
+        lastStrikeTime = userDoc.get('lastStrikeTimestamp') ?? 0;
+        lastStreak =  userDoc.get("lastStrike")??0;
+      });
+        _formatTimestamp(lastStrikeTime!);
         setState(() {
           pieChartItems = [
             PieChartSectionData(
@@ -93,7 +103,7 @@ class _GraphPageState extends State<GraphPage> {
                   .size
                   .width / 2.5,
               child: const Text(
-                "Stats",
+                "My Stats",
                 style: TextStyle(
                   fontFamily: "Abhaya Libre ExtraBold",
                   fontSize: 20,
@@ -111,19 +121,75 @@ class _GraphPageState extends State<GraphPage> {
                 height: 120,
               ),
             ),
-        Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: PieChart(
-          PieChartData(
-            sectionsSpace: 0,
-            centerSpaceRadius: 80,
-            sections: pieChartItems,
-            borderData: FlBorderData(
-              show: false,
+            Positioned(
+              top: 130,
+              left: 40,
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width/1.2,
+
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD9D9D9),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.all( 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 5,),
+                        Text(
+                          "Last Streak History",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color(0xff283E50),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+
+                        ),
+                        const SizedBox(height: 5,),
+                        Row(
+                          children: [
+                            Image.asset(
+                              "assets/strick.png",
+                              height: 50,
+                              color: Color(0xff283E50),
+                              // key: streakKey,
+                            ),
+                            Text(
+                              dateTime.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(0xff283E50),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
+      //   Padding(
+      //   padding: const EdgeInsets.all(16.0),
+      //   child: PieChart(
+      //     PieChartData(
+      //       sectionsSpace: 0,
+      //       centerSpaceRadius: 80,
+      //       sections: pieChartItems,
+      //       borderData: FlBorderData(
+      //         show: false,
+      //       ),
+      //     ),
+      //   ),
+      // ),
           ],
         ),
       ),
