@@ -89,10 +89,42 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
       print('Error removing book: $e');
     }
   }
+  void updateStatusOfBook(String status)async{
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+
+// Reference to the 'myBooks' collection with the UID as the document ID
+    CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+// Specify the ID of the book you want to update
+    String bookIdToUpdate = widget.book.documentId; // Replace with the actual ID
+
+// Fetch the specific book document
+    DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
+
+    if (bookSnapshot.exists) {
+      // Access the document data
+      Map<String, dynamic> bookData = bookSnapshot.data() as Map<String, dynamic>;
+
+      // Print the current status for reference
+      print('Current Status: ${bookData['status']}');
+
+      // Update the status to 'CURRENTLY READING'
+      await myBooksRef.doc(bookIdToUpdate).update({'status': status});
+
+      print('Status updated successfully');
+    } else {
+      // Handle the case where the specified book does not exist
+      print('Book with ID $bookIdToUpdate does not exist.');
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffFEEAD4),
         body: Container(
             height: MediaQuery.of(context).size.height,
             child:Stack(
@@ -305,7 +337,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                     ElevatedButton(
                       onPressed: () {
 
-                        saveMyBook( widget.book.author,widget.book.imageLink,widget.book.totalPage,'CURRENTLY READING'); // Example values, replace with your data
+                        updateStatusOfBook( 'CURRENTLY READING'); // Example values, replace with your data
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -322,7 +354,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        saveMyBook( widget.book.author,widget.book.imageLink,widget.book.totalPage,'COMPLETED');  // Example values, replace with your data
+                        updateStatusOfBook( 'COMPLETED');  // Example values, replace with your data
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -341,7 +373,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    saveMyBook( widget.book.author,widget.book.imageLink,widget.book.totalPage,'TO BE READ');  // Example values, replace with your data
+                    updateStatusOfBook('TO BE READ');  // Example values, replace with your data
                     Navigator.pop(context);
                   },
                   child: Container(

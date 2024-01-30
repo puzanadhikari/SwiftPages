@@ -956,7 +956,7 @@ void _showTutorialCoachMark()async{
                                   padding: const EdgeInsets.only(top:10.0),
                                   child: Container(
                                     width: 250,
-                                    height: 200,
+                                    height: 300,
 
                                     margin: EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Stack(
@@ -965,7 +965,7 @@ void _showTutorialCoachMark()async{
                                         Positioned(
                                           top: 120,
                                           child: Container(
-                                            // height: 300,
+                                            height: 300,
                                             width: 250,
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(
@@ -975,7 +975,7 @@ void _showTutorialCoachMark()async{
                                             child: Column(
                                               children: [
                                                 Container(
-                                                  height: 70,
+                                                  height: 200,
                                                   child: SingleChildScrollView(
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(top: 30.0),

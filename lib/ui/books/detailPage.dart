@@ -66,6 +66,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffFEEAD4),
         body: Container(
           height: MediaQuery.of(context).size.height,
           child:Stack(
