@@ -36,7 +36,7 @@ class _AllBooksState extends State<AllBooks> {
   Future<void> fetchBooks(String search) async {
     final String apiKey = "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0";
     final String apiUrl =
-        "https://www.googleapis.com/books/v1/volumes?q=${search}+q=novel&maxResults=40";
+        "https://www.googleapis.com/books/v1/volumes?q=${search}&maxResults=40";
 
     final response = await http.get(Uri.parse(apiUrl + "&key=$apiKey"));
 

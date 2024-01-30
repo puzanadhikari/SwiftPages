@@ -99,61 +99,64 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                          color: Color(0xFF283E50),
                        ),
                        child: Padding(
-                         padding: const EdgeInsets.only(top:120.0,left: 5,right: 5),
+                         padding: const EdgeInsets.all(8.0),
                          child: Column(
                            children: [
-                             Row(
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                               children: [
-                                 Column(
-                                   children: [
-                                     Container(
-                                       height:50,
-                                       width:100,
-                                       decoration: BoxDecoration(
-                                         color: Color(0xffFF997A),
-                                         borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                             Padding(
+                               padding: const EdgeInsets.only(top:120.0,left: 40,right: 40),
+                               child: Row(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                   Column(
+                                     children: [
+                                       Container(
+                                         height:40,
+                                         width:70,
+                                         decoration: BoxDecoration(
+                                           color: Color(0xffFF997A),
+                                           borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                         ),
+                                         child: Center(child: Text(widget.book.publishedDate.substring(0,4).toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+
                                        ),
-                                       child: Center(child: Text(widget.book.publishedDate.substring(0,4).toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                       Text("Date",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+                                     ],
+                                   ),
+                                   Column(
+                                     children: [
+                                       Container(
+                                         height:40,
+                                         width:70,
+                                         decoration: BoxDecoration(
+                                           color: Color(0xffFF997A),
+                                           borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                         ),
+                                         child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
-                                     ),
-                                     Text("Date",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                   ],
-                                 ),
-                                 Column(
-                                   children: [
-                                     Container(
-                                       height:50,
-                                       width:100,
-                                       decoration: BoxDecoration(
-                                         color: Color(0xffFF997A),
-                                         borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                        ),
-                                       child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                       Text("Rating",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+                                     ],
+                                   ),
+                                   Column(
+                                     children: [
+                                       Container(
+                                         height:40,
+                                         width:70,
+                                         decoration: BoxDecoration(
+                                           color: Color(0xffFF997A),
+                                           borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                         ),
+                                         child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
-                                     ),
-                                     Text("Rating",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                   ],
-                                 ),
-                                 Column(
-                                   children: [
-                                     Container(
-                                       height:50,
-                                       width:100,
-                                       decoration: BoxDecoration(
-                                         color: Color(0xffFF997A),
-                                         borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                        ),
-                                       child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
-
-                                     ),
-                                     Text("Pages",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                   ],
-                                 ),
+                                       Text("Pages",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+                                     ],
+                                   ),
 
 
-                               ],
+                                 ],
+                               ),
                              ),
                              SizedBox(height: 20,),
                              Text("About",style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
@@ -174,6 +177,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                      ),
                    ),
                  ),
+
                  Padding(
                    padding: const EdgeInsets.only(top: 50.0),
                    child: Align(
@@ -186,8 +190,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                child: Image.network(widget.book.imageLink),
                              ),
                              SizedBox(height: 10,),
-                             Container(
-                               child:Text(widget.book.title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)
+                             Padding(
+                               padding: const EdgeInsets.only(left: 30.0,right: 30),
+                               child: Container(
+                                 child:Text(widget.book.title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),)
+                               ),
                              ),
 
                            ],
