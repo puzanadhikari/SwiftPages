@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -105,7 +106,15 @@ class _AllBooksState extends State<AllBooks> {
                 ),
               ],
             ),
-            Expanded(
+            searchController.text.isEmpty?Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(top:80.0),
+                child: SvgPicture.asset('assets/oops.svg',
+                  height: 500,
+                ),
+              ),
+            ): Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.all(16.0),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

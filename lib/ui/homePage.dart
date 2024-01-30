@@ -714,7 +714,7 @@ void _showTutorialCoachMark()async{
                                   padding: const EdgeInsets.only(top:10.0),
                                   child: Container(
                                     width: 200,
-                                    // height: 100,
+                                    height: 300,
 
                                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                                     child: Stack(
@@ -734,16 +734,18 @@ void _showTutorialCoachMark()async{
                                               children: [
                                                 SizedBox(height: 8),
                                                 Container(
-                                                  height: 70,
-                                                  child: SingleChildScrollView(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(top: 30.0),
-                                                      child: Text(
-                                                        myBooksMyReads[index].description,
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                        ),
+                                                  height: 200,
+                                                  width: 200,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
+                                                    child: Text(
+                                                      myBooksMyReads[index].description,
+                                                      textAlign: TextAlign.left,
+                                                      maxLines: 6,
+
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 13
                                                       ),
                                                     ),
                                                   ),

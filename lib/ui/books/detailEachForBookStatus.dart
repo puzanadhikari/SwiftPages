@@ -132,7 +132,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                 SvgPicture.asset('assets/background.svg',
                   fit: BoxFit.cover,
                   height: MediaQuery.of(context).size.height,
-                  // color: Color(0xff#FCCAAC),
+                  color: Colors.grey.withOpacity(0.2),
                 ),
                 Stack(
                   children: [

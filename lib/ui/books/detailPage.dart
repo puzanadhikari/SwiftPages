@@ -74,11 +74,10 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
               SvgPicture.asset('assets/background.svg',
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height,
-                // color: Color(0xff#FCCAAC),
+                color: Colors.grey.withOpacity(0.2),
               ),
              Stack(
                children: [
-
                  Padding(
                    padding: const EdgeInsets.only(top:200.0,left: 20,right: 20),
                    child: SingleChildScrollView(
