@@ -291,7 +291,7 @@ class Book {
       imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
       rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
       pageCount: volumeInfo['pageCount'] ?? 0,
-      publishedDate: volumeInfo['publishedDate'] ?? 'Unknown', // Extract and set the publication date
+      publishedDate: volumeInfo['publishedDate'] ?? '-', // Extract and set the publication date
 
     );
   }

@@ -18,6 +18,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../signUpPage.dart';
 import 'books/allBooks.dart';
+import 'books/detailEachForBookStatus.dart';
 import 'myBooks.dart';
 int currentTimeCount = 0;
 class HomePage extends StatefulWidget {
@@ -707,7 +708,7 @@ void _showTutorialCoachMark()async{
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooksMyReads[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
@@ -1046,7 +1047,7 @@ void _showTutorialCoachMark()async{
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooksToBeRead[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksToBeRead[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),

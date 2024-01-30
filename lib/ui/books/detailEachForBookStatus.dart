@@ -3,18 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg instead of flutter_svg/svg.dart
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:swiftpages/ui/myBooks.dart';
 import 'allBooks.dart';
 
-class AllBookDetailPage extends StatefulWidget {
-  final Book book;
+class AllBookDetailPageEachStatus extends StatefulWidget {
+  final DetailBook book;
 
-  AllBookDetailPage({Key? key, required this.book}) : super(key: key);
+  AllBookDetailPageEachStatus({Key? key, required this.book}) : super(key: key);
 
   @override
-  State<AllBookDetailPage> createState() => _AllBookDetailPageState();
+  State<AllBookDetailPageEachStatus> createState() => _AllBookDetailPageEachStatusState();
 }
 
-class _AllBookDetailPageState extends State<AllBookDetailPage> {
+class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatus> {
 
   void saveMyBook(String author, String image,int totalPage,String status) async {
     try {
@@ -118,7 +119,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                             color: Color(0xffFF997A),
                                             borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                           ),
-                                          child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                          child: Center(child: Text(widget.book.publishedDate.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                         ),
                                         Text("Rating",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
@@ -133,7 +134,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                             color: Color(0xffFF997A),
                                             borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                           ),
-                                          child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                          child: Center(child: Text(widget.book.totalPage.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                         ),
                                         Text("Pages",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
@@ -175,7 +176,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                 ),
                                 SizedBox(height: 10,),
                                 Container(
-                                    child:Text(widget.book.title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)
+                                    child:Text(widget.book.author,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)
                                 ),
 
                               ],
@@ -251,7 +252,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ElevatedButton(
                       onPressed: () {
 
-                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING'); // Example values, replace with your data
+                        saveMyBook( widget.book.author,widget.book.imageLink,widget.book.totalPage,'CURRENTLY READING'); // Example values, replace with your data
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -268,7 +269,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED');  // Example values, replace with your data
+                        saveMyBook( widget.book.author,widget.book.imageLink,widget.book.totalPage,'COMPLETED');  // Example values, replace with your data
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -287,7 +288,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'TO BE READ');  // Example values, replace with your data
+                    saveMyBook( widget.book.author,widget.book.imageLink,widget.book.totalPage,'TO BE READ');  // Example values, replace with your data
                     Navigator.pop(context);
                   },
                   child: Container(

@@ -436,6 +436,7 @@ class DetailBook {
   final String imageLink;
   final String documentId;
   final String description;
+  final String publishedDate ;
   int currentPage; // Add this field
   int totalPage; // Add this field
   List<String> notes; // Add this field
@@ -446,6 +447,7 @@ class DetailBook {
     required this.imageLink,
     required this.documentId,
     required this.description,
+    required this.publishedDate,
     this.currentPage = 0, // Set the default value to 0
     this.totalPage = 0, // Set the default value to 0
     this.notes = const [], // Initialize notes as an empty list
@@ -459,6 +461,8 @@ class DetailBook {
         imageLink: 'No Image',
         documentId: documentId,
           description: 'description',
+          publishedDate: 'publishedDate',
+
         totalPage: 100
       );
     }
@@ -466,7 +470,8 @@ class DetailBook {
       author: map['author'] ?? 'No Author',
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,
-      description: map['description']??'Description',
+      description: map['description']??'No Description',
+      publishedDate: map['publishedDate']??'-',
       currentPage: map['currentPage'] ?? 0, // Set the currentPage value
       totalPage: map['totalPageCount'] ?? 0, // Set the currentPage value
       notes: List<String>.from(map['notes'] ?? []), // Set the notes value
