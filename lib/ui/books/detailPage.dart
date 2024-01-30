@@ -216,8 +216,6 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                      ),
                    ),
                  ),
-
-
                ],
              )
             ],
