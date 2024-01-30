@@ -17,7 +17,8 @@ class _GraphPageState extends State<GraphPage> {
   List<PieChartSectionData> pieChartItems = [];
   Timestamp? lastStrikeTime ;
   DateTime? dateTime;
-  String? lastStreak;
+  int? lastStreak;
+  int? streak;
   @override
   void initState() {
     super.initState();
@@ -42,6 +43,7 @@ class _GraphPageState extends State<GraphPage> {
       setState(() {
         lastStrikeTime = userDoc.get('lastStrikeTimestamp') ?? 0;
         lastStreak =  userDoc.get("lastStrike")??0;
+        streak =  userDoc.get("strikes")??0;
       });
         _formatTimestamp(lastStrikeTime!);
         setState(() {
@@ -148,25 +150,46 @@ class _GraphPageState extends State<GraphPage> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold
                           ),
-
                         ),
                         const SizedBox(height: 5,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.asset(
-                              "assets/strick.png",
-                              height: 50,
-                              color: Color(0xff283E50),
-                              // key: streakKey,
-                            ),
-                            Text(
-                              dateTime.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "assets/strick.png",
+                                  height: 50,
                                   color: Color(0xff283E50),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500
-                              ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${DateTime.now().toLocal().toString().split(' ')[0]}',
+                                      style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                    ),
+                                    Text(
+                                      '${DateTime.now().toLocal().toString().split(' ')[1].substring(0, 5)}',
+                                      style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                    ),
+                                  ],
+                                ),
+
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                           'Last Streak: '+ lastStreak.toString(),
+                                  style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                ),
+                                Text(
+                                  'Current Streak: '+ streak.toString(),
+                                  style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -175,6 +198,72 @@ class _GraphPageState extends State<GraphPage> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            Positioned(
+              top: 300,
+              left: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 300,
+                    // width:/,
+
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.all( 10.0),
+                            child: CircleAvatar(
+                              radius: 30,
+                            ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20,),
+                  Container(
+                    height: 300,
+                    // width:/,
+
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.all( 10.0),
+                        child: CircleAvatar(
+                          radius: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20,),
+                  Container(
+                    height: 300,
+                    // width:/,
+
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.all( 10.0),
+                        child: CircleAvatar(
+                          radius: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
       //   Padding(
