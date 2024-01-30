@@ -164,6 +164,7 @@ class _TimerPageState extends State<TimerPage> {
         _startAdditionalTimer();
       } else {
         _storeCurrentTime();
+        _showInvitationCodePopupToEnterCurrentPage(context);
         _controller.pause();
         _additionalController.pause();
         _pauseAdditionalTimer();
@@ -471,7 +472,7 @@ class _TimerPageState extends State<TimerPage> {
                               height: 50,
                               child: Countdown(
                                 controller: _controller,
-                                seconds: _duration * 60 ,
+                                seconds:finalTime,
                                 build: (_, double time) {
                                   currentTime = time.toInt();
                                   return Padding(
@@ -510,6 +511,7 @@ class _TimerPageState extends State<TimerPage> {
                                     );
                                     updateStrikeInFirestore();
                                     _storeCurrentTimeOnFinished();
+                                    _controller.pause();
                                     setState(() {
                                       _isRunning = false;
                                     });
@@ -1251,7 +1253,7 @@ class _TimerPageState extends State<TimerPage> {
     // log(twoDigitMinutes.toString()+twoDigitSeconds);
     return '$twoDigitMinutes:$twoDigitSeconds';
   }
-
+    int finalTime=0;
   Future<void> _retrieveStoredTime() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
@@ -1268,6 +1270,7 @@ class _TimerPageState extends State<TimerPage> {
           // _duration = storedTime;
           currentTime = storedTime;
           _duration = int.parse(storedTime2);
+          finalTime = currentTime==0? _duration * 60 :currentTime;
         });
         // if (_duration > 0) {
         //   _controller.resume();
