@@ -63,10 +63,10 @@ class _HomePageState extends State<HomePage> {
       }
     } else {
       // Handle errors
-      print("Error: ${response.statusCode}");
+      // print("Error: ${response.statusCode}");
     }
   }
-  void fetchBooks() async {
+  Future fetchBooks() async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           myBooks = bookDocuments
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          print('Books: $myBooks'); // Check the console for the list of books
+          // print('Books: $myBooks'); // Check the console for the list of books
         });
 
         QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          print('Books: $myBooksMyReads'); // Check the console for the list of books
+          // print('Books: $myBooksMyReads'); // Check the console for the list of books
         });
 
 
@@ -110,14 +110,14 @@ class _HomePageState extends State<HomePage> {
           myBooksToBeRead = bookDocumentsToBeRead
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          print('Books: $myBooksToBeRead'); // Check the console for the list of books
+          // print('Books: $myBooksToBeRead'); // Check the console for the list of books
         });
 
         for (DocumentSnapshot doc in bookDocumentsToBeRead) {
           Map<String, dynamic> bookData = doc.data() as Map<String, dynamic>;
 
           // Print or use the fetched book data
-          log('Book: $bookData');
+          // log('Book: $bookData');
 
 
 
@@ -125,10 +125,10 @@ class _HomePageState extends State<HomePage> {
 
         }
       } else {
-        print('No user is currently signed in.');
+        // print('No user is currently signed in.');
       }
     } catch (e) {
-      print('Error fetching books: $e');
+      // print('Error fetching books: $e');
     }
   }
 
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
         currentTimeCount = userDoc.data()?.containsKey('currentTime') ?? false
             ? userDoc.get('currentTime')
             : 0;
-        log(currentTimeCount.toString());
+        // log(currentTimeCount.toString());
         setState(() {});
       }
     } catch (e) {
@@ -932,6 +932,7 @@ void _showTutorialCoachMark()async{
                                                           child: Text(
                                                             myBooks[index].author,
                                                             textAlign: TextAlign.center,
+                                                            overflow: TextOverflow.ellipsis,
                                                             style: const TextStyle(
                                                                 color: Color(0xFF686868),
                                                                 fontSize: 16,
@@ -1113,10 +1114,16 @@ void _showTutorialCoachMark()async{
                 ),
               ),
             ),
-
           ],
         ),
-
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            fetchBooks();
+          },
+          tooltip: 'Refresh',
+          child: Icon(Icons.refresh),
+          backgroundColor: Color(0xFF283E50),
+        ),
       ),
     );
   }
@@ -1408,6 +1415,7 @@ void _showTutorialCoachMark()async{
           ),
         );
       },
+
     );
   }
 

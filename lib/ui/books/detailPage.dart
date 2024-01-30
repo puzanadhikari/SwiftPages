@@ -250,12 +250,13 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
 
                     ElevatedButton(
                       onPressed: () {
-                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING'); // Example values, replace with your data
 
+                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING'); // Example values, replace with your data
+                        Navigator.pop(context);
                       },
                       child: Container(
-                          width: 70,
-                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 14),))),
+                          // width: 70,
+                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -268,11 +269,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ElevatedButton(
                       onPressed: () {
                         saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED');  // Example values, replace with your data
-
+                        Navigator.pop(context);
                       },
                       child: Container(
-                          width: 70,
-                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 14),))),
+                          // width: 70,
+                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -287,7 +288,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 ElevatedButton(
                   onPressed: () {
                     saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'TO BE READ');  // Example values, replace with your data
-
+                    Navigator.pop(context);
                   },
                   child: Container(
                         width: 120,
@@ -301,24 +302,23 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                   ),
                 ),
-
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-
-
-                  },
-                  child: Container(
-                      child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ),
-                ),
+                //
+                // SizedBox(height: 16.0),
+                // ElevatedButton(
+                //   onPressed: () {
+                //
+                //   },
+                //   child: Container(
+                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                //   style: ButtonStyle(
+                //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                //       RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(15.0),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
