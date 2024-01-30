@@ -120,7 +120,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                          child: Center(child: Text(widget.book.publishedDate.substring(0,4).toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                        ),
-                                       Text("Date",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+                                       SizedBox(height: 5,),
+                                       Text("Date",style: TextStyle(color:Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
                                      ],
                                    ),
                                    Column(
@@ -135,7 +136,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                          child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                        ),
-                                       Text("Rating",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+                                       SizedBox(height: 5,),
+                                       Text("Rating",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
                                      ],
                                    ),
                                    Column(
@@ -150,7 +152,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                          child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                        ),
-                                       Text("Pages",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),)
+                                       SizedBox(height: 5,),
+                                       Text("Pages",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
                                      ],
                                    ),
 
@@ -159,14 +162,21 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                ),
                              ),
                              SizedBox(height: 20,),
-                             Text("About",style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
+                             Divider(
+                               color: Colors.white.withOpacity(0.2),
+                               indent: 15,
+                               endIndent: 15,
+                               thickness: 1,
+                             ),
+                             SizedBox(height: 10,),
+                             Text("About",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 20,fontWeight: FontWeight.bold),),
 
                              SizedBox(height: 10,),
                              Padding(
                                padding: const EdgeInsets.all(8.0),
                                child: Text(
 
-                                 widget.book.description,style: TextStyle(color: Colors.white,fontSize: 14),
+                                 widget.book.description,style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14),
                                  textAlign: TextAlign.center,),
                              ),
 
@@ -193,7 +203,10 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                              Padding(
                                padding: const EdgeInsets.only(left: 30.0,right: 30),
                                child: Container(
-                                 child:Text(widget.book.title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),)
+                                 child:Text(
+                                   widget.book.title,
+                                   textAlign: TextAlign.center,
+                                   style: TextStyle(color: Color(0xffD9D9D9),fontWeight: FontWeight.bold,fontSize: 16),)
                                ),
                              ),
 
