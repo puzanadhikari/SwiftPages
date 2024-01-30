@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
+import 'detailPage.dart';
+
 class AllBooks extends StatefulWidget {
   @override
   State<AllBooks> createState() => _AllBooksState();
@@ -16,11 +18,24 @@ class _AllBooksState extends State<AllBooks> {
   TextEditingController searchController = TextEditingController();
   List<Book> books = [];
   List<Book> filteredBooks = [];
-String searchQuery='novels';
+  String searchQuery = 'novels';
+  @override
+  void initState() {
+    super.initState();
+    // Set up a listener to call fetchBooks when the text changes
+    searchController.addListener(() {
+      fetchBooks(searchController.text);
+    });
+
+    // Initial fetch
+    fetchBooks(searchController.text);
+  }
+
+
   Future<void> fetchBooks(String search) async {
     final String apiKey = "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0";
     final String apiUrl =
- "https://www.googleapis.com/books/v1/volumes?q=${searchQuery}+q=novel&maxResults=40";
+        "https://www.googleapis.com/books/v1/volumes?q=${search}+q=novel&maxResults=40";
 
     final response = await http.get(Uri.parse(apiUrl + "&key=$apiKey"));
 
@@ -40,35 +55,6 @@ String searchQuery='novels';
       print("Error: ${response.statusCode}");
     }
   }
-
-  // Future<void> fetchBooks(String searchQuery) async {
-  //   final String apiKey = "30fe2ae32emsh0b5a48e1d0ed53dp17a064jsn7a2f3e3aca01";
-  //   final String apiUrl =
-  //       "https://book-finder1.p.rapidapi.com/api/search?page=1&query=$searchQuery";
-  //   final response = await http.get(
-  //     Uri.parse(apiUrl),
-  //     headers: {
-  //       "X-RapidAPI-Key": apiKey,
-  //     },
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     final Map<String, dynamic> data = json.decode(response.body);
-  //
-  //     if (data.containsKey("results")) {
-  //       final List<dynamic> results = data["results"];
-  //       setState(() {
-  //         books = results.map((result) => Book.fromMap(result)).toList();
-  //       });
-  //     } else {
-  //       // Handle the case when "results" key is not present in the response
-  //       print("Error: 'results' key not found in the response");
-  //     }
-  //   } else {
-  //     // Handle errors
-  //     print("Error: ${response.statusCode}");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,24 +79,20 @@ String searchQuery='novels';
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: TextField(
                         controller: searchController,
-                        onChanged: (query) {
-
-                            searchQuery = query;
-
-                        },
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Search Books...',
-                            hintStyle: TextStyle(
-                              color: Color(0xFF283E50),
-                              fontSize: 18,
-                              fontFamily: 'Abhaya Libre',
-                              fontWeight: FontWeight.w700,
-                            ),
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Color(0xFF283E50),
-                            )),
+                          border: InputBorder.none,
+                          hintText: 'Search Books...',
+                          hintStyle: TextStyle(
+                            color: Color(0xFF283E50),
+                            fontSize: 18,
+                            fontFamily: 'Abhaya Libre',
+                            fontWeight: FontWeight.w700,
+                          ),
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Color(0xFF283E50),
+                          ),
+                        ),
                         style: TextStyle(
                           color: Color(0xFF686868),
                           fontSize: 18,
@@ -124,28 +106,19 @@ String searchQuery='novels';
               ],
             ),
             Expanded(
-              child: FutureBuilder<void>(
-                  future: fetchBooks(searchController.text),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    return GridView.builder(
-                      padding: EdgeInsets.all(16.0),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16.0,
-                        mainAxisSpacing: 16.0,
-                      ),
-                      itemCount: books.length, // Change this line
-                      itemBuilder: (context, index) {
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return buildBookItem(books[index]);
-                        }
-                        // Change this line
-                      },
-                    );
-                  }),
-            )
+              child: GridView.builder(
+                padding: EdgeInsets.all(16.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                ),
+                itemCount: books.length,
+                itemBuilder: (context, index) {
+                  return buildBookItem(books[index]);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -176,8 +149,9 @@ String searchQuery='novels';
           Map<String, dynamic> bookData = {
             'image': image,
             'author': author,
-            'totalPageCount': totalPage,
-            // Add other book details as needed
+            'totalPageCount': totalPage==0?150:totalPage,
+            'status':'TO BE READ',
+            'currentPage':0
           };
 
           // Add the book data to the 'myBooks' collection
@@ -198,8 +172,9 @@ String searchQuery='novels';
   Widget buildBookItem(Book book) {
     return GestureDetector(
         onTap: (){
-          log(book.title.toUpperCase());
-          _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
+          log(book.imageLink.toUpperCase());
+          // _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPage(book: book,)));
         },
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -211,7 +186,17 @@ String searchQuery='novels';
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+            book.imageLink=="No Image"?Container(
+          width: 116,
+            height: 100,
+            decoration: ShapeDecoration(
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9),
+              ),
+            ),
+              child: Center(child: Text("No Image")),
+          ):  Container(
                 width: 116,
                 height: 100,
                 decoration: ShapeDecoration(
@@ -286,6 +271,7 @@ class Book {
   final String description;
   final double rating;
   final int pageCount;
+  final String publishedDate;
 
   Book({
     required this.title,
@@ -293,6 +279,7 @@ class Book {
     required this.description,
     required this.rating,
     required this.pageCount,
+    required this.publishedDate,
 
   });
 
@@ -304,6 +291,8 @@ class Book {
       imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
       rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
       pageCount: volumeInfo['pageCount'] ?? 0,
+      publishedDate: volumeInfo['publishedDate'] ?? 'Unknown', // Extract and set the publication date
+
     );
   }
 }

@@ -24,6 +24,7 @@ class MyBooksDetailPage extends StatefulWidget {
 class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
   TextEditingController _textFieldController = TextEditingController();
   int? selectedPageNumber;
+  String dropdownValue = 'Reading';
   // int totalPages = widget.book.totalPage;
 
   void removeBook(DetailBook book) async {
@@ -383,7 +384,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                               height: 2,
                               color: Colors.white,
                             ),
-                            items: List.generate(1000, (index) => index + 1)
+                            items: List.generate(widget.book!.totalPage==0?150:widget.book!.totalPage, (index) => index + 1)
                                 .map<DropdownMenuItem<int>>((int value) {
                               return DropdownMenuItem<int>(
                                 value: value,
@@ -394,6 +395,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                               if (newValue != null) {
                                 setState(() {
                                   selectedPageNumber = newValue;
+                                  // selectedPageNumber==widget.book!.totalPage?updateStatusOfBook(widget.book!.documentId):
                                   updatePageNumber(widget.book!, selectedPageNumber!);
                                 });
                               }
@@ -406,6 +408,31 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                             },
                             child: Icon(Icons.delete)
                           ),
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                        updateStatusOfBook(widget.book!.documentId);
+                      });
+
+                    },
+                    items: <String>['Reading', 'Completed', 'To Read']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )
                         ],
                       ),
                       TextField(
@@ -460,5 +487,37 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
         ),
       ),
     );
+  }
+
+  void updateStatusOfBook(String bookId)async{
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+
+// Reference to the 'myBooks' collection with the UID as the document ID
+    CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+// Specify the ID of the book you want to update
+    String bookIdToUpdate = bookId; // Replace with the actual ID
+
+// Fetch the specific book document
+    DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
+
+    if (bookSnapshot.exists) {
+      // Access the document data
+      Map<String, dynamic> bookData = bookSnapshot.data() as Map<String, dynamic>;
+
+      // Print the current status for reference
+      print('Current Status: ${bookData['status']}');
+
+      // Update the status to 'CURRENTLY READING'
+      await myBooksRef.doc(bookIdToUpdate).update({'status': dropdownValue=='Completed'?'COMPLETED':dropdownValue=='Reading'?'CURRENTLY READING':'TO BE READ'});
+
+      print('Status updated successfully');
+    } else {
+      // Handle the case where the specified book does not exist
+      print('Book with ID $bookIdToUpdate does not exist.');
+    }
+
   }
 }
