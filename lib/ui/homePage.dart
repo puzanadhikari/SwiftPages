@@ -894,7 +894,7 @@ void _showTutorialCoachMark()async{
                           itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooks[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooks[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
@@ -1046,7 +1046,7 @@ void _showTutorialCoachMark()async{
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooksToBeRead[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooksToBeRead[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
