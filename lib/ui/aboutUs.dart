@@ -107,14 +107,15 @@ class _AboutUsPageState extends State<AboutUsPage> {
                             children: [
                               GestureDetector(
                                   onTap:()=> _launchURL(linkedinName),
-                                  child: Image.network(linkedinLogo)),
+                                  child:  linkedinLogo==''?Text(''):Image.network(linkedinLogo)),
                               SizedBox(width: 10,),
                               GestureDetector(
                                   onTap: ()=> _launchURL(instagramName),
-                                  child: Image.network(instagramLogo)),
+                                  child: instagramLogo==''?Text(''):Image.network(instagramLogo)),
+                              SizedBox(width: 10,),
                               GestureDetector(
                                   onTap: ()=> sendUserDataEmail(),
-                                  child: Image.network(emailLogo,height: 30,))
+                                  child: emailLogo==''?Text(''):Image.network(emailLogo,height: 30,))
                             ],
                           ),
 
@@ -135,20 +136,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(data,style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
-                                SizedBox(height: 50,),
-                                Row(
-                                  children: [
-                                    Image.network(emailLogo==null?'':emailLogo,height: 30,),
-                                    Text(emailUrl)
-                                  ],
-                                )
-                                
-                              ],
-                            ),
+                            child: Text(data,style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
                           ),
 
                         ),
