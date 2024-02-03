@@ -44,6 +44,7 @@ class _TimerPageState extends State<TimerPage> {
   final CountdownController _additionalController = CountdownController(autoStart: false);
   TextEditingController _quoteContoller = TextEditingController();
   TextEditingController _noteContoller = TextEditingController();
+  TextEditingController _currentPage = TextEditingController();
   int totalTimeMin=0;
   int totalTimeSec=0;
   String dailyGoal='';
@@ -154,6 +155,7 @@ class _TimerPageState extends State<TimerPage> {
         // _isRunning = false;
       } else {
         _stopwatch.start();
+
         // _isRunning = true;
       }
       _isRunning = !_isRunning;
@@ -163,6 +165,7 @@ class _TimerPageState extends State<TimerPage> {
         _startAdditionalTimer();
       } else {
         _storeCurrentTime();
+        _showInvitationCodePopupToEnterCurrentPage(context);
         _controller.pause();
         _additionalController.pause();
         _pauseAdditionalTimer();
@@ -420,14 +423,13 @@ class _TimerPageState extends State<TimerPage> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                                    child: Text(
+                                    child:Text(
                                       _isRunning ? 'Pause' : 'Start',
                                       style: TextStyle(fontSize: 16.0),
                                     ),
                                   ),
                                 ),
                               )
-
                             ],
                           ),
                         ),
@@ -470,7 +472,7 @@ class _TimerPageState extends State<TimerPage> {
                               height: 50,
                               child: Countdown(
                                 controller: _controller,
-                                seconds: _duration * 60 ,
+                                seconds:finalTime,
                                 build: (_, double time) {
                                   currentTime = time.toInt();
                                   return Padding(
@@ -509,15 +511,15 @@ class _TimerPageState extends State<TimerPage> {
                                     );
                                     updateStrikeInFirestore();
                                     _storeCurrentTimeOnFinished();
+                                    _controller.pause();
                                     setState(() {
-                                      _isRunning = false;
+                                      // _isRunning = false;
                                     });
                                   } catch (e) {
                                     print('Error in onFinished callback: $e');
                                     log('Error in onFinished callback: $e');
                                   }
                                 },
-
                               ),
                             ),
                           ),
@@ -559,38 +561,43 @@ class _TimerPageState extends State<TimerPage> {
                               ),
                             ),
                           ),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20.0), // Adjust the radius as needed
-                            ),
-                            color: Color(0xFFFF997A),
+                          GestureDetector(
+                            onTap: (){
+                              _showInvitationCodePopupToEnterCurrentPage(context);
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20.0), // Adjust the radius as needed
+                              ),
+                              color: Color(0xFFFF997A),
 
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Pages Read: ',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xff283E50),
-                                            fontWeight: FontWeight.bold
+                              child: Container(
+                                width: 200,
+                                height: 50,
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Pages Read: ',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Color(0xff283E50),
+                                              fontWeight: FontWeight.bold
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        widget.book.currentPage.toString()+'/'+totalPages.toString(),
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xff686868),
-                                            fontWeight: FontWeight.bold
+                                        Text(
+                                          widget.book.currentPage.toString()+'/'+totalPages.toString(),
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Color(0xff686868),
+                                              fontWeight: FontWeight.bold
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -856,165 +863,6 @@ class _TimerPageState extends State<TimerPage> {
                 ],
               ),
 
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(top: 10.0),
-              //     child: Column(
-              //       children: [
-              //         Padding(
-              //           padding: const EdgeInsets.all(15.0),
-              //           child: CircularCountDownTimer(
-              //             duration: (_duration*60),
-              //             controller: _controller,
-              //             width: MediaQuery.of(context).size.width / 3,
-              //             height: MediaQuery.of(context).size.height / 3,
-              //             ringColor: Colors.grey[300]!,
-              //             fillColor: Color(0xFF283E50)!,
-              //             backgroundColor: Color(0xFFFEEAD4),
-              //             strokeWidth: 15.0,
-              //             strokeCap: StrokeCap.round,
-              //             textStyle: const TextStyle(
-              //               fontSize: 33.0,
-              //               color: Color(0xFF283E50),
-              //               fontWeight: FontWeight.bold,
-              //             ),
-              //             isReverse: false,
-              //             isReverseAnimation: false,
-              //             isTimerTextShown: true,
-              //             autoStart: false,
-              //
-              //             onStart: () {
-              //               debugPrint('Countdown Started');
-              //             },
-              //             onComplete: () {
-              //               log('Countdown Ended');
-              //               setState(() {
-              //                 _isRunning = false;
-              //               });
-              //               updateStrikeInFirestore();
-              //               _controller.restart(duration: (_duration * 60));
-              //             },
-              //             onChange: (String timeStamp) {
-              //               debugPrint('Countdown Changed $timeStamp');
-              //              setState(() {
-              //
-              //              });
-              //
-              //             },
-              //             timeFormatterFunction:
-              //                 (defaultFormatterFunction, duration) {
-              //               if (duration.inSeconds == 0) {
-              //                 return "Start";
-              //               } else {
-              //                 return Function.apply(
-              //                     defaultFormatterFunction, [duration]);
-              //
-              //               }
-              //             },
-              //           ),
-              //         ),
-              //         Text("Remaining Goal\n${(_duration*60)-currentTime} seconds"),
-              //         ElevatedButton(
-              //           onPressed: _handleTimerButtonPressed,
-              //           child: Text(_isRunning ? 'Pause' : 'Start'),
-              //           style: ElevatedButton.styleFrom(
-              //             primary: Color(0xFF283E50), // Background color
-              //             shape: RoundedRectangleBorder(
-              //               borderRadius: BorderRadius.circular(
-              //                   8), // Adjust the border radius as needed
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // DraggableScrollableSheet(
-              //     initialChildSize: 0.3,
-              //     minChildSize: 0.3,
-              //     maxChildSize: 1,
-              //     snapSizes: [0.5, 1],
-              //     snap: true,
-              //     builder: (BuildContext context, scrollSheetController) {
-              //       return Container(
-              //         decoration: BoxDecoration(
-              //           color: Colors.white,
-              //           borderRadius: BorderRadius.only(
-              //             topLeft: Radius.circular(20.0),
-              //             topRight: Radius.circular(20.0),
-              //           ),
-              //         ),
-              //         child: Column(
-              //           children: [
-              //             ListTile(
-              //               // leading: Image.asset('assets/logo.png', height: 50),
-              //               title: Row(
-              //                 children: [
-              //                   Expanded(
-              //                     child: Divider(
-              //                       color: Color(0xFF283E50),
-              //                       endIndent: 18,
-              //                       thickness: 2,
-              //                     ),
-              //                   ),
-              //                   Text(
-              //                     'MUSIC',
-              //                     style: TextStyle(
-              //                         color: Color(0xFF283E50),
-              //                         fontSize: 22,
-              //                         fontWeight: FontWeight.bold),
-              //                   ),
-              //                   Icon(
-              //                     Icons.music_note,
-              //                     color: Color(0xFF283E50),
-              //                   ),
-              //                   Expanded(
-              //                     child: Divider(
-              //                       color: Color(0xFF283E50),
-              //                       indent: 14,
-              //                       thickness: 2,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //
-              //               // trailing: IconButton(
-              //               //       icon: Icon(Icons.play_arrow),
-              //               //       onPressed: () {
-              //               //         // Handle play button action
-              //               //       },
-              //               //     ),
-              //             ),
-              //
-              //             Expanded(
-              //               child: ListView.builder(
-              //                 controller: scrollSheetController,
-              //                 itemCount: musicUrls.length,
-              //                 itemBuilder: (context, index) {
-              //                   return musicUrls.isEmpty?CircularProgressIndicator():ListTile(
-              //                     title: Row(
-              //                       mainAxisAlignment:
-              //                           MainAxisAlignment.spaceBetween,
-              //                       crossAxisAlignment: CrossAxisAlignment.start,
-              //                       children: [
-              //                         Text(musicUrls[index].title),
-              //                         GestureDetector(
-              //                             onTap: () {
-              //                               _isPlaying==true?pauseMusic():playMusic(musicUrls[index].path);
-              //                             },
-              //                             child: _isPlaying==true?Icon(Icons.pause):Icon(Icons.play_arrow))
-              //                       ],
-              //                     ),
-              //                     onTap: () {},
-              //                   );
-              //                 },
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       );
-              //     }),
             ],
           ),
         ),
@@ -1108,7 +956,116 @@ class _TimerPageState extends State<TimerPage> {
       },
     );
   }
+  void _showInvitationCodePopupToEnterCurrentPage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Color(0xffD9D9D9),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Which page currently are you in?',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF283E50),
+                  ),
+                ),
+                Divider(
+                  color: Color(0xFF283E50),
+                  thickness: 1,
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  height: 50,
+                  padding: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50.0),
+                    color: Colors.grey[200], // Change the color as needed
+                  ),
+                  child: TextField(
+                    controller: _currentPage,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: 'Enter the current page number',
+                      prefixIcon: Icon(Icons.pages),
+                      border: InputBorder.none, // Remove the default border
+                    ),
+                    // onChanged: _onSearchChanged,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if(int.parse(_currentPage.text)>widget.book.totalPage){
+                      _currentPage.clear();
+                      Fluttertoast.showToast(msg: "The number is greater than the total page of the book!");
+                    }else{
 
+                      updatePageNumber(widget.book,int.parse(_currentPage.text));
+                      _currentPage.clear();
+                    }
+
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                      width: 120,
+                      child: Center(child: Text("Update",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  void updatePageNumber(DetailBook book, int newPageNumber) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        // Reference to the 'myBooks' collection with the UID as the document ID
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
+
+        // Update the page number in the Firestore document
+        await myBooksRef
+            .doc(book.documentId)
+            .update({'currentPage': newPageNumber});
+
+        // Update the local state with the new page number
+        setState(() {
+          book.currentPage = newPageNumber;
+        });
+
+        print('Page number updated successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error updating page number: $e');
+    }
+  }
   Future<void> updateStrikeInFirestore() async {
     try {
       // Get the current user
@@ -1134,7 +1091,6 @@ class _TimerPageState extends State<TimerPage> {
                 .doc(uid)
                 .update({'lastStrikeTimestamp': FieldValue.serverTimestamp()});
 
-
             int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
                 ? userDoc.get('strikes')
                 : 0;
@@ -1146,7 +1102,7 @@ class _TimerPageState extends State<TimerPage> {
             print('Cannot add a new strike within 24 hours.');
           }
         } else {
-          // If 'lastStrikeTimestamp' field does not exist, initialize it
+
           await FirebaseFirestore.instance
               .collection('users')
               .doc(uid)
@@ -1296,7 +1252,7 @@ class _TimerPageState extends State<TimerPage> {
     // log(twoDigitMinutes.toString()+twoDigitSeconds);
     return '$twoDigitMinutes:$twoDigitSeconds';
   }
-
+    int finalTime=0;
   Future<void> _retrieveStoredTime() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
@@ -1313,6 +1269,7 @@ class _TimerPageState extends State<TimerPage> {
           // _duration = storedTime;
           currentTime = storedTime;
           _duration = int.parse(storedTime2);
+          finalTime = currentTime==0? _duration * 60 :currentTime;
         });
         // if (_duration > 0) {
         //   _controller.resume();

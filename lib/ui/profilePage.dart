@@ -16,6 +16,7 @@ import 'package:swiftpages/ui/spashScreen.dart';
 import 'package:swiftpages/ui/topNavigatorBar.dart';
 
 import '../signUpPage.dart';
+import 'aboutUs.dart';
 import 'chart/ui.dart';
 import 'community/myPosts.dart';
 class ProfilePage extends StatefulWidget {
@@ -560,7 +561,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
-                            SizedBox(height: 20,),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black.withOpacity(0.25),
+                            ),
+
                             Text(
                               "Streak Setting",
                               style: TextStyle(
@@ -594,6 +599,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text("Chart",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
+
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black.withOpacity(0.25),
+                            ),
+                            GestureDetector(
+                                onTap: (){
+                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsPage()));
+                                },
+                                child: Text("About us",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),fontWeight: FontWeight.bold),)),
 
                           ],
                         ),

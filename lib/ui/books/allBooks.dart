@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,7 +36,7 @@ class _AllBooksState extends State<AllBooks> {
   Future<void> fetchBooks(String search) async {
     final String apiKey = "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0";
     final String apiUrl =
-        "https://www.googleapis.com/books/v1/volumes?q=${search}+q=novel&maxResults=40";
+        "https://www.googleapis.com/books/v1/volumes?q=${search}&maxResults=40";
 
     final response = await http.get(Uri.parse(apiUrl + "&key=$apiKey"));
 
@@ -105,7 +106,15 @@ class _AllBooksState extends State<AllBooks> {
                 ),
               ],
             ),
-            Expanded(
+            searchController.text.isEmpty?Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.only(top:80.0),
+                child: SvgPicture.asset('assets/oops.svg',
+                  height: 500,
+                ),
+              ),
+            ): Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.all(16.0),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -291,7 +300,7 @@ class Book {
       imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
       rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
       pageCount: volumeInfo['pageCount'] ?? 0,
-      publishedDate: volumeInfo['publishedDate'] ?? 'Unknown', // Extract and set the publication date
+      publishedDate: volumeInfo['publishedDate'] ?? '-', // Extract and set the publication date
 
     );
   }

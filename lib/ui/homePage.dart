@@ -18,6 +18,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../signUpPage.dart';
 import 'books/allBooks.dart';
+import 'books/detailEachForBookStatus.dart';
 import 'myBooks.dart';
 int currentTimeCount = 0;
 class HomePage extends StatefulWidget {
@@ -63,10 +64,10 @@ class _HomePageState extends State<HomePage> {
       }
     } else {
       // Handle errors
-      print("Error: ${response.statusCode}");
+      // print("Error: ${response.statusCode}");
     }
   }
-  void fetchBooks() async {
+  Future fetchBooks() async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
           myBooks = bookDocuments
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          print('Books: $myBooks'); // Check the console for the list of books
+          // print('Books: $myBooks'); // Check the console for the list of books
         });
 
         QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          print('Books: $myBooksMyReads'); // Check the console for the list of books
+          // print('Books: $myBooksMyReads'); // Check the console for the list of books
         });
 
 
@@ -110,14 +111,14 @@ class _HomePageState extends State<HomePage> {
           myBooksToBeRead = bookDocumentsToBeRead
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          print('Books: $myBooksToBeRead'); // Check the console for the list of books
+          // print('Books: $myBooksToBeRead'); // Check the console for the list of books
         });
 
         for (DocumentSnapshot doc in bookDocumentsToBeRead) {
           Map<String, dynamic> bookData = doc.data() as Map<String, dynamic>;
 
           // Print or use the fetched book data
-          log('Book: $bookData');
+          // log('Book: $bookData');
 
 
 
@@ -125,10 +126,10 @@ class _HomePageState extends State<HomePage> {
 
         }
       } else {
-        print('No user is currently signed in.');
+        // print('No user is currently signed in.');
       }
     } catch (e) {
-      print('Error fetching books: $e');
+      // print('Error fetching books: $e');
     }
   }
 
@@ -170,7 +171,7 @@ class _HomePageState extends State<HomePage> {
         currentTimeCount = userDoc.data()?.containsKey('currentTime') ?? false
             ? userDoc.get('currentTime')
             : 0;
-        log(currentTimeCount.toString());
+        // log(currentTimeCount.toString());
         setState(() {});
       }
     } catch (e) {
@@ -502,18 +503,7 @@ void _showTutorialCoachMark()async{
       ),
     ];
   }
-///quotes
-  // Stream<List<String>> getQuoteDataStream() {
-  //   return FirebaseFirestore.instance
-  //       .collection('app_quotes')
-  //       .snapshots()
-  //       .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-  //     return snapshot.docs
-  //         .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-  //     doc['quotes'] as String)
-  //         .toList();
-  //   });
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -684,15 +674,20 @@ void _showTutorialCoachMark()async{
                                 children: [
                                   Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                                   SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                    ],
+                                  GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                        Image.asset('assets/self.png'),
+                                      ],
+                                    ),
                                   )
                                 ],
                               )))
@@ -702,13 +697,13 @@ void _showTutorialCoachMark()async{
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooksMyReads[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
                                   child: Container(
                                     width: 200,
-                                    // height: 100,
+                                    height: 300,
 
                                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                                     child: Stack(
@@ -717,43 +712,29 @@ void _showTutorialCoachMark()async{
                                         Positioned(
                                           top: 120,
                                           child: Container(
-                                            // height: 300,
+                                            height: 300,
                                             width: 250,
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(
                                               color: Color(0xFFD9D9D9),
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius: BorderRadius.circular(20.0),
                                             ),
                                             child: Column(
                                               children: [
-                                                // SizedBox(height: 30,),
-                                                // RatingBar.builder(
-                                                //   initialRating: 2.5,
-                                                //   minRating: 1,
-                                                //   direction: Axis.horizontal,
-                                                //   allowHalfRating: true,
-                                                //   itemCount: 5,
-                                                //   itemSize: 20,
-                                                //   itemBuilder: (context, _) => Icon(
-                                                //     Icons.star,
-                                                //     color: Colors.amber,
-                                                //   ),
-                                                //   onRatingUpdate: (rating) {
-                                                //     // You can update the rating if needed
-                                                //   },
-                                                // ),
                                                 SizedBox(height: 8),
                                                 Container(
-                                                  height: 70,
-                                                  child: SingleChildScrollView(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(top: 30.0),
-                                                      child: Text(
-                                                        myBooksMyReads[index].description,
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                        ),
+                                                  height: 200,
+                                                  width: 200,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
+                                                    child: Text(
+                                                      myBooksMyReads[index].description,
+                                                      textAlign: TextAlign.left,
+                                                      maxLines: 6,
+
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 13
                                                       ),
                                                     ),
                                                   ),
@@ -780,88 +761,7 @@ void _showTutorialCoachMark()async{
                             },
                           ),
                         ),
-                        // Expanded(
-                        //   child: ListView.builder(
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: books.length,
-                        //     itemBuilder: (context, index) {
-                        //       return Container(
-                        //         width: 250,
-                        //         margin: EdgeInsets.symmetric(horizontal: 16.0),
-                        //         child: Stack(
-                        //           alignment: Alignment.topCenter,
-                        //           children: [
-                        //             Positioned(
-                        //               top: 120,
-                        //               child: Container(
-                        //                 height: 150,
-                        //                 width: 250,
-                        //                 padding: EdgeInsets.all(8),
-                        //                 decoration: BoxDecoration(
-                        //                   color: Color(0xFFD9D9D9),
-                        //                   borderRadius: BorderRadius.circular(20.0),
-                        //                 ),
-                        //                 child: Column(
-                        //                   children: [
-                        //                     SizedBox(
-                        //                       height: 30,
-                        //                     ),
-                        //                     SizedBox(height: 8),
-                        //                     Container(
-                        //                       child: SingleChildScrollView(
-                        //                         child: Padding(
-                        //                           padding: const EdgeInsets.only(top: 10.0),
-                        //                           child: Column(
-                        //                             crossAxisAlignment: CrossAxisAlignment.center,
-                        //                             children: [
-                        //                               Text(
-                        //                                 books[index].title,
-                        //                                 textAlign: TextAlign.center,
-                        //                                 style: TextStyle(
-                        //                                   color: Colors.black,
-                        //                                   overflow: TextOverflow.ellipsis,
-                        //                                 ),
-                        //                               ),
-                        //                               SizedBox(height: 10),
-                        //                               ElevatedButton(
-                        //                                 // key: readKey,
-                        //                                 onPressed: () {
-                        //                                   guestLogin==true?_showPersistentBottomSheet( context): _showConfirmationDialog(books[index].title, books[index].imageLink,books[index].description);
-                        //                                 },
-                        //                                 child: Text("Add to list"),
-                        //                                 style: ButtonStyle(
-                        //                                   backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                        //                                   minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
-                        //                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        //                                     RoundedRectangleBorder(
-                        //                                       borderRadius: BorderRadius.circular(15.0),
-                        //                                     ),
-                        //                                   ),
-                        //                                 ),
-                        //                               ),
-                        //                             ],
-                        //                           ),
-                        //                         ),
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //             Padding(
-                        //               padding: const EdgeInsets.all(8.0),
-                        //               child: Image.network(
-                        //                 books[index].imageLink,
-                        //                 height: 150,
-                        //                 width: 150,
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
+
                         SizedBox(height: 10),
                         Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                         myBooks.isEmpty?
@@ -889,7 +789,7 @@ void _showTutorialCoachMark()async{
                           itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooks[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooks[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
@@ -927,6 +827,7 @@ void _showTutorialCoachMark()async{
                                                           child: Text(
                                                             myBooks[index].author,
                                                             textAlign: TextAlign.center,
+                                                            overflow: TextOverflow.ellipsis,
                                                             style: const TextStyle(
                                                                 color: Color(0xFF686868),
                                                                 fontSize: 16,
@@ -1040,13 +941,13 @@ void _showTutorialCoachMark()async{
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: myBooksToBeRead[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksToBeRead[index],)));
                                 },
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
                                   child: Container(
                                     width: 250,
-                                    height: 200,
+                                    height: 300,
 
                                     margin: EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Stack(
@@ -1055,7 +956,7 @@ void _showTutorialCoachMark()async{
                                         Positioned(
                                           top: 120,
                                           child: Container(
-                                            // height: 300,
+                                            height: 300,
                                             width: 250,
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(
@@ -1065,7 +966,7 @@ void _showTutorialCoachMark()async{
                                             child: Column(
                                               children: [
                                                 Container(
-                                                  height: 70,
+                                                  height: 200,
                                                   child: SingleChildScrollView(
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(top: 30.0),
@@ -1108,10 +1009,16 @@ void _showTutorialCoachMark()async{
                 ),
               ),
             ),
-
           ],
         ),
-
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            fetchBooks();
+          },
+          tooltip: 'Refresh',
+          child: Icon(Icons.refresh),
+          backgroundColor: Color(0xFF283E50),
+        ),
       ),
     );
   }
@@ -1403,6 +1310,7 @@ void _showTutorialCoachMark()async{
           ),
         );
       },
+
     );
   }
 

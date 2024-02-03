@@ -16,7 +16,7 @@ class AllBookDetailPage extends StatefulWidget {
 
 class _AllBookDetailPageState extends State<AllBookDetailPage> {
 
-  void saveMyBook(String author, String image,int totalPage,String status) async {
+  void saveMyBook(String author, String image,int totalPage,String status,String publishedDate,String description) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -43,7 +43,9 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
             'author': author,
             'totalPageCount': totalPage==0?150:totalPage,
             'status':status,
-            'currentPage':0
+            'currentPage':0,
+            'description':description,
+            'publishedDate':publishedDate
           };
 
           // Add the book data to the 'myBooks' collection
@@ -64,18 +66,28 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffFEEAD4),
         body: Container(
           height: MediaQuery.of(context).size.height,
           child:Stack(
             children: [
+              Positioned(
+                top: 20,
+                left: 30,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back,),
+                ),
+              ),
               SvgPicture.asset('assets/background.svg',
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height,
-                // color: Color(0xff#FCCAAC),
+                color: Colors.grey.withOpacity(0.2),
               ),
              Stack(
                children: [
-
                  Padding(
                    padding: const EdgeInsets.only(top:200.0,left: 20,right: 20),
                    child: SingleChildScrollView(
@@ -87,71 +99,84 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                          color: Color(0xFF283E50),
                        ),
                        child: Padding(
-                         padding: const EdgeInsets.only(top:120.0,left: 5,right: 5),
+                         padding: const EdgeInsets.all(8.0),
                          child: Column(
                            children: [
-                             Row(
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                               children: [
-                                 Column(
-                                   children: [
-                                     Container(
-                                       height:50,
-                                       width:100,
-                                       decoration: BoxDecoration(
-                                         color: Color(0xffFF997A),
-                                         borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                             Padding(
+                               padding: const EdgeInsets.only(top:120.0,left: 40,right: 40),
+                               child: Row(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                   Column(
+                                     children: [
+                                       Container(
+                                         height:40,
+                                         width:70,
+                                         decoration: BoxDecoration(
+                                           color: Color(0xffFF997A),
+                                           borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                         ),
+                                         child: Center(child: Text(widget.book.publishedDate.substring(0,4).toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+
                                        ),
-                                       child: Center(child: Text(widget.book.publishedDate.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                       SizedBox(height: 5,),
+                                       Text("Date",style: TextStyle(color:Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
+                                     ],
+                                   ),
+                                   Column(
+                                     children: [
+                                       Container(
+                                         height:40,
+                                         width:70,
+                                         decoration: BoxDecoration(
+                                           color: Color(0xffFF997A),
+                                           borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                         ),
+                                         child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
-                                     ),
-                                     Text("Date",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                   ],
-                                 ),
-                                 Column(
-                                   children: [
-                                     Container(
-                                       height:50,
-                                       width:100,
-                                       decoration: BoxDecoration(
-                                         color: Color(0xffFF997A),
-                                         borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                        ),
-                                       child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                       SizedBox(height: 5,),
+                                       Text("Rating",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
+                                     ],
+                                   ),
+                                   Column(
+                                     children: [
+                                       Container(
+                                         height:40,
+                                         width:70,
+                                         decoration: BoxDecoration(
+                                           color: Color(0xffFF997A),
+                                           borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                         ),
+                                         child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
-                                     ),
-                                     Text("Rating",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                   ],
-                                 ),
-                                 Column(
-                                   children: [
-                                     Container(
-                                       height:50,
-                                       width:100,
-                                       decoration: BoxDecoration(
-                                         color: Color(0xffFF997A),
-                                         borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                        ),
-                                       child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
-
-                                     ),
-                                     Text("Pages",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                   ],
-                                 ),
+                                       SizedBox(height: 5,),
+                                       Text("Pages",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
+                                     ],
+                                   ),
 
 
-                               ],
+                                 ],
+                               ),
                              ),
                              SizedBox(height: 20,),
-                             Text("About",style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
+                             Divider(
+                               color: Colors.white.withOpacity(0.2),
+                               indent: 15,
+                               endIndent: 15,
+                               thickness: 1,
+                             ),
+                             SizedBox(height: 10,),
+                             Text("About",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 20,fontWeight: FontWeight.bold),),
 
                              SizedBox(height: 10,),
                              Padding(
                                padding: const EdgeInsets.all(8.0),
                                child: Text(
 
-                                 widget.book.description,style: TextStyle(color: Colors.white,fontSize: 14),
+                                 widget.book.description,style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14),
                                  textAlign: TextAlign.center,),
                              ),
 
@@ -162,6 +187,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                      ),
                    ),
                  ),
+
                  Padding(
                    padding: const EdgeInsets.only(top: 50.0),
                    child: Align(
@@ -174,8 +200,14 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                child: Image.network(widget.book.imageLink),
                              ),
                              SizedBox(height: 10,),
-                             Container(
-                               child:Text(widget.book.title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)
+                             Padding(
+                               padding: const EdgeInsets.only(left: 30.0,right: 30),
+                               child: Container(
+                                 child:Text(
+                                   widget.book.title,
+                                   textAlign: TextAlign.center,
+                                   style: TextStyle(color: Color(0xffD9D9D9),fontWeight: FontWeight.bold,fontSize: 16),)
+                               ),
                              ),
 
                            ],
@@ -204,8 +236,6 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                      ),
                    ),
                  ),
-
-
                ],
              )
             ],
@@ -250,12 +280,13 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
 
                     ElevatedButton(
                       onPressed: () {
-                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING'); // Example values, replace with your data
 
+                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING',widget.book.publishedDate.substring(0,4),widget.book.description); // Example values, replace with your data
+                        Navigator.pop(context);
                       },
                       child: Container(
-                          width: 70,
-                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 14),))),
+                          // width: 70,
+                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -267,12 +298,12 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED');  // Example values, replace with your data
-
+                        saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED',widget.book.publishedDate.substring(0,4),widget.book.description);  // Example values, replace with your data
+                        Navigator.pop(context);
                       },
                       child: Container(
-                          width: 70,
-                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 14),))),
+                          // width: 70,
+                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -286,8 +317,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'TO BE READ');  // Example values, replace with your data
-
+                    saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'TO BE READ',widget.book.publishedDate.substring(0,4),widget.book.description);  // Example values, replace with your data
+                    Navigator.pop(context);
                   },
                   child: Container(
                         width: 120,
@@ -301,6 +332,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                   ),
                 ),
+
 
                 SizedBox(height: 16.0),
                 ElevatedButton(
@@ -316,6 +348,25 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                   ),
                 ),
+
+                //
+                // SizedBox(height: 16.0),
+                // ElevatedButton(
+                //   onPressed: () {
+                //
+                //   },
+                //   child: Container(
+                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                //   style: ButtonStyle(
+                //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                //       RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(15.0),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
               ],
             ),
           ),
