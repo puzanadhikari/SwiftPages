@@ -36,7 +36,7 @@ class _TimerPageState extends State<TimerPage> {
   int additionalTimerValue = 0;
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    
+
     int time = preferences.getInt('currentTime')!;
 
   }
@@ -141,12 +141,22 @@ class _TimerPageState extends State<TimerPage> {
       });
     }
   }
+  int selectedNumber =0 ;
   late Stopwatch _stopwatch;
   // @override
   // void dispose() {
   //   _timer.cancel();
   //   super.dispose();
   // }
+  String formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+
+    String minutesStr = minutes < 10 ? '0$minutes' : '$minutes';
+    String secondsStr = remainingSeconds < 10 ? '0$remainingSeconds' : '$remainingSeconds';
+
+    return '$minutesStr:$secondsStr';
+  }
 
   void _startPauseTimer() {
     setState(() {
@@ -225,652 +235,951 @@ class _TimerPageState extends State<TimerPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFFFEEAD4),
+        backgroundColor: Color(0xFFD9D9D9),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Stack(
             children: [
-              Positioned(
-                top: 0,
-                left: -30,
 
-                child: Image.asset(
-                  'assets/Ellipse.png', // Replace with the correct image path
-                  fit: BoxFit.contain,
-                ),
-              ),
-              Positioned(
-                top: -20,
-                left: -10,
-                child: Image.asset(
-                  "assets/logo.png",
-                  height: 120,
-                ),
-              ),
               Positioned(
                 top: 10,
                 right: 10,
-                child: Image.asset(
-                  "assets/search.png",
-                  height: 50,
-                ),
-              ),
-              Positioned(
-                top: 20,
-                left: MediaQuery.of(context).size.width / 3,
-                child: Text(
-                  "Reading",
-                  style: const TextStyle(
-                    fontFamily: "Abhaya Libre ExtraBold",
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xfffeead4),
-                    height: 29 / 22,
+                child: Container(
+                  height: 35,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+
+                    ),
+
+                  ),
+                  child: TextButton(
+                    onPressed: () async {
+                      int? result = await showDialog<int>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomAlertDialog(book:widget.book,totalPage: widget.book.totalPage,currentPage: widget.book.currentPage,);
+                        },
+                      );
+
+                      if (result != null) {
+                        // Do something with the selected number
+                        print('Selected Number: $result');
+                      }
+                    },
+
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: Text(widget.book.currentPage.toString()+'/'+totalPages.toString(),style: TextStyle(
+                  color:  Color(0xff686868),fontSize: 18,fontWeight: FontWeight.bold
+                ),)),
+              ),
+
               Align(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 100.0),
+                  padding: const EdgeInsets.only(top: 30.0),
                   child: Container(
-                    width: 200,
+                    width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Stack(
-                      alignment: Alignment.topLeft,
-                      children: [
-                        // Positioned(
-                        //   top: 0,
-                        //   left: 30,
-                        //   child: Container(
-                        //     height: 250,
-                        //     width: 250,
-                        //     padding: const EdgeInsets.all(8),
-                        //     decoration: BoxDecoration(
-                        //       color: const Color(0xFFD9D9D9),
-                        //       borderRadius: BorderRadius.circular(20.0),
-                        //     ),
-                        //     child: Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       children: [
-                        //         const SizedBox(height: 8),
-                        //         Container(
-                        //           height: 150,
-                        //           // Set a fixed height for description
-                        //           child: Column(
-                        //             crossAxisAlignment: CrossAxisAlignment.start,
-                        //             children: [
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(top: 10.0),
-                        //                 child: Text(
-                        //                   "Currently Reading",
-                        //                   textAlign: TextAlign.center,
-                        //                   style: const TextStyle(
-                        //                       color: Color(0xFF283E50),
-                        //                       fontWeight: FontWeight.bold,
-                        //                       fontSize: 14),
-                        //                 ),
-                        //               ),
-                        //               SingleChildScrollView(
-                        //                 child: Padding(
-                        //                   padding:
-                        //                       const EdgeInsets.only(top: 5.0),
-                        //                   child: Text(
-                        //                     widget.book.author,
-                        //                     textAlign: TextAlign.center,
-                        //                     style: const TextStyle(
-                        //                         color: Color(0xFF686868),
-                        //                         fontSize: 12,
-                        //                         fontWeight: FontWeight.w500),
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                        // Positioned(
-                        //   top: 105,
-                        //   right: 10,
-                        //   child: Column(
-                        //     children: [
-                        //       Stack(
-                        //         children: [
-                        //           CircularProgressIndicator(
-                        //             value: calculatePercentage() / 100,
-                        //             strokeWidth: 5.0,
-                        //             backgroundColor: Colors.black12,
-                        //             // Adjust the stroke width as needed
-                        //             valueColor: AlwaysStoppedAnimation<Color>(
-                        //               Color(0xFF283E50),
-                        //             ), // Adjust the color as needed
-                        //           ),
-                        //           Positioned(
-                        //             top: 10,
-                        //             left: 5,
-                        //             child: Text(
-                        //               "${calculatePercentage().toStringAsFixed(1)}%",
-                        //               style: TextStyle(
-                        //                   color: Color(0xFF283E50),
-                        //                   fontWeight: FontWeight.bold,
-                        //                   fontSize: 11),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //       SizedBox(
-                        //         height: 10,
-                        //       ),
-                        //       Text(
-                        //         "Progress",
-                        //         style: TextStyle(
-                        //             color: Color(0xFF686868), fontSize: 14),
-                        //       ),
-                        //       SizedBox(
-                        //         height: 20,
-                        //       ),
-                        //
-                        //     ],
-                        //   ),
-                        // ),
-                        Padding(
-                          padding: const EdgeInsets.only(top:30.0),
-                          child: Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30.0),
-                                child: Image.network(
-                                  widget.book.imageLink,
-                                  height: 200,
-                                  width: 150,
-                                  loadingBuilder: (BuildContext context, Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      // Image is fully loaded, display the actual image
-                                      return child;
-                                    } else {
-                                      // Image is still loading, display a placeholder or loading indicator
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  (loadingProgress
-                                                          .expectedTotalBytes ??
-                                                      1)
-                                              : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: 10,),
-                              Container(
-                                height: 40,
-                                width: 100,
-                                child: ElevatedButton(
-                                  onPressed: _startPauseTimer,
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color(0xff283E50), // Set your desired button color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                                    child:Text(
-                                      _isRunning ? 'Pause' : 'Start',
-                                      style: TextStyle(fontSize: 16.0),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(top:120),
-                      child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-
-                          SizedBox(
-                            width: 200,
-                            child: Text(widget.book.author,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Color(0xff686868),
-                                fontWeight: FontWeight.bold
-                            ),),
-                          ),
-                          SizedBox(height: 16,),
-                          // Original Countdown Timer
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20.0), // Adjust the radius as needed
-                            ),
-                            color: Color(0xFFFF997A),
-
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              child: Countdown(
-                                controller: _controller,
-                                seconds:finalTime,
-                                build: (_, double time) {
-                                  currentTime = time.toInt();
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Daily Goal: ',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xff283E50),
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        Text(
-                                         time.floor().toString()+ ' sec',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xff686868),
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                interval: Duration(milliseconds: 100),
-                                onFinished: () {
-                                  print('Countdown finished!');
-                                  try {
-                                    // Your existing code here
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Timer is done!'),
-                                      ),
-                                    );
-                                    updateStrikeInFirestore();
-                                    _storeCurrentTimeOnFinished();
-                                    _controller.pause();
-                                    setState(() {
-                                      // _isRunning = false;
-                                    });
-                                  } catch (e) {
-                                    print('Error in onFinished callback: $e');
-                                    log('Error in onFinished callback: $e');
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                          // SizedBox(height: 16),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20.0), // Adjust the radius as needed
-                            ),
-                            color: Color(0xFFFF997A),
-
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Total Read: ',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff283E50),
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      Text(
-                                        _formatDuration(_stopwatch.elapsed),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff686868),
-                                          fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: (){
-                              _showInvitationCodePopupToEnterCurrentPage(context);
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    20.0), // Adjust the radius as needed
-                              ),
-                              color: Color(0xFFFF997A),
-
-                              child: Container(
-                                width: 200,
-                                height: 50,
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Pages Read: ',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xff283E50),
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        Text(
-                                          widget.book.currentPage.toString()+'/'+totalPages.toString(),
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xff686868),
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20.0),
-
-                          // Container(
-                          //   padding: const EdgeInsets.symmetric(horizontal: 16),
-                          //   child: ElevatedButton(
-                          //     child: Text(_isRunning ? 'Pause' : 'Start'),
-                          //     onPressed: () {
-                          //       setState(() {
-                          //         _isRunning = !_isRunning;
-                          //         if (_isRunning) {
-                          //           _controller.start();
-                          //           _additionalController.start();
-                          //           _startAdditionalTimer();
-                          //         } else {
-                          //           _storeCurrentTime();
-                          //           _controller.pause();
-                          //           _additionalController.pause();
-                          //           _pauseAdditionalTimer();
-                          //         }
-                          //       });
-                          //     },
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Divider(
-                    endIndent: 10,
-                    indent: 10,
-                    thickness: 1,
-                    color: Color(0xff283E50)
-                  ),
-                  Container(
                     child: Column(
                       children: [
-                        
-                      ],
-                    ),
-                  ),
-                  
-                  Text("Notes",  style: const TextStyle(
-                      color: Color(0xFF283E50),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      // height: 250,
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: widget.book!.notes.map((note) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                child: Text(
-                                  '-'+note,
-                                  style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          // Padding(
-                          //   padding:
-                          //       const EdgeInsets.only(top: 5.0),
-                          //   child: Text(
-                          //     widget.book.description,
-                          //     textAlign: TextAlign.center,
-                          //     maxLines: 12, // Adjust the number of lines as needed
-                          //     overflow: TextOverflow.ellipsis,
-                          //     style: const TextStyle(
-                          //       color: Color(0xFF686868),
-                          //       fontSize: 12,
-                          //       fontWeight: FontWeight.w500,
-                          //     ),
-                          //   )
-                          //
-                          // ),
-                          SizedBox(height: 5,),
-                          Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color:Colors.grey[100],
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:8.0),
-                                    child: TextField(
-                                      controller: _noteContoller,
-                                      onChanged: (value) {
-
-                                      },
-                                      cursorColor: Color(0xFF283E50),
-                                      decoration: InputDecoration(
-                                        hintText: 'Type your note...',
-                                        hintStyle: TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-
-                                      ),
-
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF283E50),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-
-                                      ),
-
-                                    ),
-                                    child: TextButton(
-                                      onPressed: (){
-                                        setState(() {
-                                          String newNote = _noteContoller.text.trim();
-                                          if (newNote.isNotEmpty) {
-                                            addNote(widget.book, newNote);
-                                            _noteContoller.clear();
-                                            Fluttertoast.showToast(
-                                              msg: "Note added successfully!",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              backgroundColor: Color(0xFF283E50),
-                                              textColor: Colors.white,
-                                            );
-                                          }
-                                        });
-                                      },
-                                      child: Text(
-                                        'Post',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Text("Quotes",  style: const TextStyle(
-                      color: Color(0xFF283E50),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFD9D9D9),
-                      ),
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: widget.book!.quotes.map((quotes) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                child: Text(
-                                  '-'+quotes,
-                                  style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:8.0),
-                                    child: TextField(
-                                      controller: _quoteContoller,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          // comment = value;
-                                        });
-                                      },
-                                      cursorColor: Color(0xFF283E50),
-                                      decoration: InputDecoration(
-                                          hintText: 'Type your quote...',
-                                          hintStyle: TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-
-                                      ),
-
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF283E50),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-
-                                      ),
-
-                                    ),
-                                    child: TextButton(
-                                      onPressed: (){
-                                        String newQuote = _quoteContoller.text.trim();
-                                        if (newQuote.isNotEmpty) {
-                                          addQuote(widget.book, newQuote);
-                                          _quoteContoller.clear();
-                                          Fluttertoast.showToast(
-                                            msg: "Quote added successfully!",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            backgroundColor: Color(0xFF283E50),
-                                            textColor: Colors.white,
+                        Stack(
+                          alignment: Alignment.topLeft,
+                          children: [
+                            // Positioned(
+                            //   top: 0,
+                            //   left: 30,
+                            //   child: Container(
+                            //     height: 250,
+                            //     width: 250,
+                            //     padding: const EdgeInsets.all(8),
+                            //     decoration: BoxDecoration(
+                            //       color: const Color(0xFFD9D9D9),
+                            //       borderRadius: BorderRadius.circular(20.0),
+                            //     ),
+                            //     child: Column(
+                            //       crossAxisAlignment: CrossAxisAlignment.start,
+                            //       children: [
+                            //         const SizedBox(height: 8),
+                            //         Container(
+                            //           height: 150,
+                            //           // Set a fixed height for description
+                            //           child: Column(
+                            //             crossAxisAlignment: CrossAxisAlignment.start,
+                            //             children: [
+                            //               Padding(
+                            //                 padding: const EdgeInsets.only(top: 10.0),
+                            //                 child: Text(
+                            //                   "Currently Reading",
+                            //                   textAlign: TextAlign.center,
+                            //                   style: const TextStyle(
+                            //                       color: Color(0xFF283E50),
+                            //                       fontWeight: FontWeight.bold,
+                            //                       fontSize: 14),
+                            //                 ),
+                            //               ),
+                            //               SingleChildScrollView(
+                            //                 child: Padding(
+                            //                   padding:
+                            //                       const EdgeInsets.only(top: 5.0),
+                            //                   child: Text(
+                            //                     widget.book.author,
+                            //                     textAlign: TextAlign.center,
+                            //                     style: const TextStyle(
+                            //                         color: Color(0xFF686868),
+                            //                         fontSize: 12,
+                            //                         fontWeight: FontWeight.w500),
+                            //                   ),
+                            //                 ),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            // Positioned(
+                            //   top: 105,
+                            //   right: 10,
+                            //   child: Column(
+                            //     children: [
+                            //       Stack(
+                            //         children: [
+                            //           CircularProgressIndicator(
+                            //             value: calculatePercentage() / 100,
+                            //             strokeWidth: 5.0,
+                            //             backgroundColor: Colors.black12,
+                            //             // Adjust the stroke width as needed
+                            //             valueColor: AlwaysStoppedAnimation<Color>(
+                            //               Color(0xFF283E50),
+                            //             ), // Adjust the color as needed
+                            //           ),
+                            //           Positioned(
+                            //             top: 10,
+                            //             left: 5,
+                            //             child: Text(
+                            //               "${calculatePercentage().toStringAsFixed(1)}%",
+                            //               style: TextStyle(
+                            //                   color: Color(0xFF283E50),
+                            //                   fontWeight: FontWeight.bold,
+                            //                   fontSize: 11),
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //       SizedBox(
+                            //         height: 10,
+                            //       ),
+                            //       Text(
+                            //         "Progress",
+                            //         style: TextStyle(
+                            //             color: Color(0xFF686868), fontSize: 14),
+                            //       ),
+                            //       SizedBox(
+                            //         height: 20,
+                            //       ),
+                            //
+                            //     ],
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:30.0),
+                              child: Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    child: Image.network(
+                                      widget.book.imageLink,
+                                      height: 200,
+                                      width: 150,
+                                      loadingBuilder: (BuildContext context, Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          // Image is fully loaded, display the actual image
+                                          return child;
+                                        } else {
+                                          // Image is still loading, display a placeholder or loading indicator
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress.expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      (loadingProgress
+                                                              .expectedTotalBytes ??
+                                                          1)
+                                                  : null,
+                                            ),
                                           );
                                         }
                                       },
-                                      child: Text(
-                                        'Post',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
                                     ),
                                   ),
+                                  SizedBox(height: 10,),
+
+                                  // Container(
+                                  //   height: 40,
+                                  //   width: 100,
+                                  //   child: ElevatedButton(
+                                  //     onPressed: _startPauseTimer,
+                                  //     style: ElevatedButton.styleFrom(
+                                  //       primary: Color(0xff283E50), // Set your desired button color
+                                  //       shape: RoundedRectangleBorder(
+                                  //         borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                                  //       ),
+                                  //     ),
+                                  //     child: Padding(
+                                  //       padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
+                                  //       child:Text(
+                                  //         _isRunning ? 'Pause' : 'Start',
+                                  //         style: TextStyle(fontSize: 16.0),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Text("Started",style: TextStyle(color: Color(0xff686868)),),
+                                Text("Started",style: TextStyle(color: Color(0xff686868)),),
+                              ],
+                            ),
+                            Container(
+                                width: 200,
+                                child: Center(child: Text(widget.book.author,style: TextStyle(color: Color(0xff686868),fontWeight: FontWeight.bold,fontSize: 16),))),
+                            Text('status',style: TextStyle(color: Color(0xff686868)),),
+                          ],
+                        ),
+                        Divider(
+                          color:Color(0xffFEEAD4) ,
+                          thickness: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Notes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
+                              Text("Quotes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
+                                  Text('Page',style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          color:Color(0xffFEEAD4) ,
+                          thickness: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Countdown(
+                                    controller: _controller,
+                                    seconds: finalTime,
+                                    build: (_, double time) {
+                                      currentTime = time.toInt();
+                                      return Text(
+                                        formatTime(time.toInt()),
+                                        style: TextStyle(
+                                          fontSize: 30,
+                                          color: Color(0xff686868),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    },
+                                    interval: Duration(milliseconds: 100),
+                                    onFinished: () {
+                                      print('Countdown finished!');
+                                      try {
+                                        // Your existing code here
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text('Timer is done!'),
+                                          ),
+                                        );
+                                        updateStrikeInFirestore();
+                                        _storeCurrentTimeOnFinished();
+                                        _controller.pause();
+                                        setState(() {
+                                          // _isRunning = false;
+                                        });
+                                      } catch (e) {
+                                        print('Error in onFinished callback: $e');
+                                        log('Error in onFinished callback: $e');
+                                      }
+                                    },
+                                  ),
+                                  Text(
+                                    "Daily Goal",
+                                    style: TextStyle(
+                                      color: Color(0xff283E50),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ), ],
+                              ),
+                              Column(
+                                children: [
+                                  Text(  _formatDuration(_stopwatch.elapsed),style: TextStyle(color: Color(0xff686868),fontSize: 30,fontWeight: FontWeight.bold),),
+                                  Text("Total Time",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                                ],
+                              ),
+                                ],
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          width: 100,
+                          child: ElevatedButton(
+                            onPressed: _startPauseTimer,
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xff283E50), // Set your desired button color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
+                              child:Text(
+                                _isRunning ? 'Pause' : 'Start',
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          color:Color(0xffFEEAD4) ,
+                          thickness: 1,
+                        ),
+
+                        Text("Notes",  style: const TextStyle(
+                            color: Color(0xFF283E50),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            // height: 250,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFEEAD4),
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: widget.book.notes.map((note) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                      child: Text(
+                                        '-'+note,
+                                        style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.only(top: 5.0),
+                                //   child: Text(
+                                //     widget.book.description,
+                                //     textAlign: TextAlign.center,
+                                //     maxLines: 12, // Adjust the number of lines as needed
+                                //     overflow: TextOverflow.ellipsis,
+                                //     style: const TextStyle(
+                                //       color: Color(0xFF686868),
+                                //       fontSize: 12,
+                                //       fontWeight: FontWeight.w500,
+                                //     ),
+                                //   )
+                                //
+                                // ),
+
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Text("Quotes",  style: const TextStyle(
+                            color: Color(0xFF283E50),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFFFEEAD4),
+                            ),
+                            padding: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: widget.book.quotes.map((quotes) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                      child: Text(
+                                        '-'+quotes,
+                                        style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
+
+              // Column(
+              //   children: [
+              //     Align(
+              //       alignment: Alignment.topRight,
+              //       child: Padding(
+              //         padding: EdgeInsets.only(top:120),
+              //         child: Column(
+              //           // crossAxisAlignment: CrossAxisAlignment.center,
+              //           children: <Widget>[
+              //
+              //             SizedBox(
+              //               width: 200,
+              //               child: Text(widget.book.author,
+              //                 textAlign: TextAlign.center,
+              //                 style: TextStyle(
+              //                   fontSize: 14,
+              //                   color: Color(0xff686868),
+              //                   fontWeight: FontWeight.bold
+              //               ),),
+              //             ),
+              //             SizedBox(height: 16,),
+              //             // Original Countdown Timer
+              //             Card(
+              //               shape: RoundedRectangleBorder(
+              //                 borderRadius: BorderRadius.circular(
+              //                     20.0), // Adjust the radius as needed
+              //               ),
+              //               color: Color(0xFFFF997A),
+              //
+              //               child: Container(
+              //                 width: 200,
+              //                 height: 50,
+              //                 child: Countdown(
+              //                   controller: _controller,
+              //                   seconds:finalTime,
+              //                   build: (_, double time) {
+              //                     currentTime = time.toInt();
+              //                     return Padding(
+              //                       padding: const EdgeInsets.all(8.0),
+              //                       child: Row(
+              //                         children: [
+              //                           Text(
+              //                             'Daily Goal: ',
+              //                             style: TextStyle(
+              //                               fontSize: 14,
+              //                               color: Color(0xff283E50),
+              //                                 fontWeight: FontWeight.bold
+              //                             ),
+              //                           ),
+              //                           Text(
+              //                            time.floor().toString()+ ' sec',
+              //                             style: TextStyle(
+              //                               fontSize: 14,
+              //                               color: Color(0xff686868),
+              //                                 fontWeight: FontWeight.bold
+              //                             ),
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     );
+              //                   },
+              //                   interval: Duration(milliseconds: 100),
+              //                   onFinished: () {
+              //                     print('Countdown finished!');
+              //                     try {
+              //                       // Your existing code here
+              //                       ScaffoldMessenger.of(context).showSnackBar(
+              //                         SnackBar(
+              //                           content: Text('Timer is done!'),
+              //                         ),
+              //                       );
+              //                       updateStrikeInFirestore();
+              //                       _storeCurrentTimeOnFinished();
+              //                       _controller.pause();
+              //                       setState(() {
+              //                         // _isRunning = false;
+              //                       });
+              //                     } catch (e) {
+              //                       print('Error in onFinished callback: $e');
+              //                       log('Error in onFinished callback: $e');
+              //                     }
+              //                   },
+              //                 ),
+              //               ),
+              //             ),
+              //             // SizedBox(height: 16),
+              //             Card(
+              //               shape: RoundedRectangleBorder(
+              //                 borderRadius: BorderRadius.circular(
+              //                     20.0), // Adjust the radius as needed
+              //               ),
+              //               color: Color(0xFFFF997A),
+              //
+              //               child: Container(
+              //                 width: 200,
+              //                 height: 50,
+              //                 child: Center(
+              //                   child: Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: Row(
+              //                       children: [
+              //                         Text(
+              //                           'Total Read: ',
+              //                           style: TextStyle(
+              //                             fontSize: 14,
+              //                             color: Color(0xff283E50),
+              //                               fontWeight: FontWeight.bold
+              //                           ),
+              //                         ),
+              //                         Text(
+              //                           _formatDuration(_stopwatch.elapsed),
+              //                           style: TextStyle(
+              //                             fontSize: 14,
+              //                             color: Color(0xff686868),
+              //                             fontWeight: FontWeight.bold
+              //                           ),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //             GestureDetector(
+              //               onTap: (){
+              //                 _showInvitationCodePopupToEnterCurrentPage(context);
+              //               },
+              //               child: Card(
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.circular(
+              //                       20.0), // Adjust the radius as needed
+              //                 ),
+              //                 color: Color(0xFFFF997A),
+              //
+              //                 child: Container(
+              //                   width: 200,
+              //                   height: 50,
+              //                   child: Center(
+              //                     child: Padding(
+              //                       padding: const EdgeInsets.all(8.0),
+              //                       child: Row(
+              //                         children: [
+              //                           Text(
+              //                             'Pages Read: ',
+              //                             style: TextStyle(
+              //                                 fontSize: 14,
+              //                                 color: Color(0xff283E50),
+              //                                 fontWeight: FontWeight.bold
+              //                             ),
+              //                           ),
+              //                           Text(
+              //                             widget.book.currentPage.toString()+'/'+totalPages.toString(),
+              //                             style: TextStyle(
+              //                                 fontSize: 14,
+              //                                 color: Color(0xff686868),
+              //                                 fontWeight: FontWeight.bold
+              //                             ),
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //             SizedBox(height: 20.0),
+              //
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //     SizedBox(height: 30,),
+              //     Divider(
+              //       endIndent: 10,
+              //       indent: 10,
+              //       thickness: 1,
+              //       color: Color(0xff283E50)
+              //     ),
+              //     Container(
+              //       child: Column(
+              //         children: [
+              //
+              //         ],
+              //       ),
+              //     ),
+              //
+              //     Text("Notes",  style: const TextStyle(
+              //         color: Color(0xFF283E50),
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: 20),),
+              //     Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: Container(
+              //         // height: 250,
+              //         width: MediaQuery.of(context).size.width,
+              //         padding: const EdgeInsets.all(8),
+              //         decoration: BoxDecoration(
+              //           color: const Color(0xFFD9D9D9),
+              //           borderRadius: BorderRadius.circular(20.0),
+              //         ),
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               children: widget.book!.notes.map((note) {
+              //                 return Padding(
+              //                   padding: EdgeInsets.symmetric(vertical: 8),
+              //                   child: Text(
+              //                     '-'+note,
+              //                     style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+              //                   ),
+              //                 );
+              //               }).toList(),
+              //             ),
+              //             // Padding(
+              //             //   padding:
+              //             //       const EdgeInsets.only(top: 5.0),
+              //             //   child: Text(
+              //             //     widget.book.description,
+              //             //     textAlign: TextAlign.center,
+              //             //     maxLines: 12, // Adjust the number of lines as needed
+              //             //     overflow: TextOverflow.ellipsis,
+              //             //     style: const TextStyle(
+              //             //       color: Color(0xFF686868),
+              //             //       fontSize: 12,
+              //             //       fontWeight: FontWeight.w500,
+              //             //     ),
+              //             //   )
+              //             //
+              //             // ),
+              //             SizedBox(height: 5,),
+              //             Container(
+              //               height: 50,
+              //               decoration: BoxDecoration(
+              //                 color:Colors.grey[100],
+              //                 borderRadius: BorderRadius.all(
+              //                   Radius.circular(10),
+              //                 ),
+              //               ),
+              //               child: Row(
+              //                 children: [
+              //                   Expanded(
+              //                     child: Padding(
+              //                       padding: const EdgeInsets.only(left:8.0),
+              //                       child: TextField(
+              //                         controller: _noteContoller,
+              //                         onChanged: (value) {
+              //
+              //                         },
+              //                         cursorColor: Color(0xFF283E50),
+              //                         decoration: InputDecoration(
+              //                           hintText: 'Type your note...',
+              //                           hintStyle: TextStyle(color: Colors.grey),
+              //                           border: InputBorder.none,
+              //
+              //                         ),
+              //
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: Container(
+              //                       decoration: BoxDecoration(
+              //                         color: Color(0xFF283E50),
+              //                         borderRadius: BorderRadius.all(
+              //                           Radius.circular(10),
+              //
+              //                         ),
+              //
+              //                       ),
+              //                       child: TextButton(
+              //                         onPressed: (){
+              //                           setState(() {
+              //                             String newNote = _noteContoller.text.trim();
+              //                             if (newNote.isNotEmpty) {
+              //                               addNote(widget.book, newNote);
+              //                               _noteContoller.clear();
+              //                               Fluttertoast.showToast(
+              //                                 msg: "Note added successfully!",
+              //                                 toastLength: Toast.LENGTH_SHORT,
+              //                                 gravity: ToastGravity.BOTTOM,
+              //                                 backgroundColor: Color(0xFF283E50),
+              //                                 textColor: Colors.white,
+              //                               );
+              //                             }
+              //                           });
+              //                         },
+              //                         child: Text(
+              //                           'Post',
+              //                           style: TextStyle(color: Colors.white),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //     Text("Quotes",  style: const TextStyle(
+              //         color: Color(0xFF283E50),
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: 20),),
+              //     Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: Container(
+              //         width: MediaQuery.of(context).size.width,
+              //         decoration: BoxDecoration(
+              //           borderRadius: BorderRadius.circular(10),
+              //           color: Color(0xFFD9D9D9),
+              //         ),
+              //         padding: EdgeInsets.all(12),
+              //         child: Column(
+              //           children: [
+              //             Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               children: widget.book!.quotes.map((quotes) {
+              //                 return Padding(
+              //                   padding: EdgeInsets.symmetric(vertical: 8),
+              //                   child: Text(
+              //                     '-'+quotes,
+              //                     style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+              //                   ),
+              //                 );
+              //               }).toList(),
+              //             ),
+              //             Container(
+              //               height: 50,
+              //               decoration: BoxDecoration(
+              //                 color: Colors.grey[100],
+              //                 borderRadius: BorderRadius.all(
+              //                   Radius.circular(10),
+              //                 ),
+              //               ),
+              //               child: Row(
+              //                 children: [
+              //                   Expanded(
+              //                     child: Padding(
+              //                       padding: const EdgeInsets.only(left:8.0),
+              //                       child: TextField(
+              //                         controller: _quoteContoller,
+              //                         onChanged: (value) {
+              //                           setState(() {
+              //                             // comment = value;
+              //                           });
+              //                         },
+              //                         cursorColor: Color(0xFF283E50),
+              //                         decoration: InputDecoration(
+              //                             hintText: 'Type your quote...',
+              //                             hintStyle: TextStyle(color: Colors.grey),
+              //                           border: InputBorder.none,
+              //
+              //                         ),
+              //
+              //                       ),
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: Container(
+              //                       decoration: BoxDecoration(
+              //                         color: Color(0xFF283E50),
+              //                         borderRadius: BorderRadius.all(
+              //                           Radius.circular(10),
+              //
+              //                         ),
+              //
+              //                       ),
+              //                       child: TextButton(
+              //                         onPressed: (){
+              //                           String newQuote = _quoteContoller.text.trim();
+              //                           if (newQuote.isNotEmpty) {
+              //                             addQuote(widget.book, newQuote);
+              //                             _quoteContoller.clear();
+              //                             Fluttertoast.showToast(
+              //                               msg: "Quote added successfully!",
+              //                               toastLength: Toast.LENGTH_SHORT,
+              //                               gravity: ToastGravity.BOTTOM,
+              //                               backgroundColor: Color(0xFF283E50),
+              //                               textColor: Colors.white,
+              //                             );
+              //                           }
+              //                         },
+              //                         child: Text(
+              //                           'Post',
+              //                           style: TextStyle(color: Colors.white),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
             ],
           ),
         ),
         extendBody: true,
-      
+
       ),
     );
   }
+
+  void _showDoneDialog(DetailBook book) {
+    showDialog(
+
+      context: context,
+      builder: (BuildContext context) {
+
+        return AlertDialog(
+          backgroundColor: Color(0xffFEEAD4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          title: Text('Done Reading?'),
+
+          content: Container(
+            height: 50,
+            width: 100,
+            decoration: BoxDecoration(
+              color:Colors.grey[100],
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child:Container(
+                      height: 50,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.book.totalPage,
+                        itemBuilder: (BuildContext context, int index) {
+                          int number = index + 1;
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedNumber = number;
+                              });
+                            },
+                            child: Container(
+                              width: 50,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: number == selectedNumber
+                                      ? Colors.blue
+                                      : Colors.transparent,
+                                  width: 2.0,
+                                ),
+                              ),
+                              child: Text(
+                                '$number',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+
+                    ),
+
+                  ),
+                  child: TextButton(
+                    onPressed: (){
+                      setState(() {
+
+                      });
+                    },
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          ],
+        );
+      },
+    );
+  }
+
   int? _additionalTimer;
 
   void _startAdditionalTimer() {
@@ -1277,6 +1586,234 @@ class _TimerPageState extends State<TimerPage> {
       }
     } catch (error) {
       print('Error retrieving stored time: $error');
+    }
+  }
+}
+
+
+class CustomAlertDialog extends StatefulWidget {
+  DetailBook book;
+  final int totalPage;
+  final int currentPage;
+
+  CustomAlertDialog({required this.book,required this.totalPage,required this.currentPage});
+
+  @override
+  _CustomAlertDialogState createState() => _CustomAlertDialogState();
+}
+
+class _CustomAlertDialogState extends State<CustomAlertDialog> {
+  int selectedNumber = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedNumber = widget.currentPage;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text('Done Reading?',style: TextStyle(color:  Color(0xff283E50)),),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+
+          Text('Update your Progress',style: TextStyle(fontSize: 14,color: Color(0xff686868), ),),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.totalPage,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = index + 1;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedNumber = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color:number == selectedNumber
+                                ?Color(0xffD9D9D9)
+                                : Colors.transparent ,
+                            border: Border.all(
+                              color: number == selectedNumber
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+                      updateStatusOfBook('COMPLETED');
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Finish',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+                      updatePageNumber(widget.book,selectedNumber);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      setState(() {
+
+                      });
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+      ],
+    );
+  }
+  void updateStatusOfBook(String status)async{
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+
+// Reference to the 'myBooks' collection with the UID as the document ID
+    CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+// Specify the ID of the book you want to update
+    String bookIdToUpdate = widget.book.documentId; // Replace with the actual ID
+
+// Fetch the specific book document
+    DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
+
+    if (bookSnapshot.exists) {
+      // Access the document data
+      Map<String, dynamic> bookData = bookSnapshot.data() as Map<String, dynamic>;
+
+      // Print the current status for reference
+      print('Current Status: ${bookData['status']}');
+
+      // Update the status to 'CURRENTLY READING'
+      await myBooksRef.doc(bookIdToUpdate).update({'status': status});
+
+      print('Status updated successfully');
+    } else {
+      // Handle the case where the specified book does not exist
+      print('Book with ID $bookIdToUpdate does not exist.');
+    }
+
+  }
+  void updatePageNumber(DetailBook book, int newPageNumber) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
+
+        // Update the page number in the Firestore document
+        await myBooksRef
+            .doc(book.documentId)
+            .update({'currentPage': newPageNumber});
+
+        // Update the local state with the new page number
+        setState(() {
+          book.currentPage = newPageNumber;
+        });
+
+        print('Page number updated successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error updating page number: $e');
     }
   }
 }

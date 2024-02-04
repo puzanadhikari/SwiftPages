@@ -1420,20 +1420,23 @@ userName  = preferences.getString("userName")!;
                                           ),
 
 
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Notes",  style: const TextStyle(
-                                                  color: Color(0xFF283E50),
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),),
-                                              GestureDetector(
-                                                  onTap: (){
-                                                    _showAddNotesDialog(myBooks[index]);
-                                                  },
-                                                  child: Icon(Icons.add,color:  Color(0xFF283E50),))
-                                            ],
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:15.0,right: 15),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Notes",  style: const TextStyle(
+                                                    color: Color(0xFF283E50),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),),
+                                                GestureDetector(
+                                                    onTap: (){
+                                                      _showAddNotesDialog(myBooks[index]);
+                                                    },
+                                                    child: Icon(Icons.add,color:  Color(0xFF283E50),))
+                                              ],
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -1481,20 +1484,23 @@ userName  = preferences.getString("userName")!;
                                               ),
                                             ),
                                           ),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Quotes",  style: const TextStyle(
-                                                  color: Color(0xFF283E50),
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),),
-                                              GestureDetector(
-                                                  onTap: (){
-                                                    _showAddQuotesDialog(myBooks[index]);
-                                                  },
-                                                  child: Icon(Icons.add,color:  Color(0xFF283E50),))
-                                            ],
+                                          Padding(
+                                            padding: const EdgeInsets.only(left:15.0,right: 15),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Quotes",  style: const TextStyle(
+                                                    color: Color(0xFF283E50),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),),
+                                                GestureDetector(
+                                                    onTap: (){
+                                                      _showAddQuotesDialog(myBooks[index]);
+                                                    },
+                                                    child: Icon(Icons.add,color:  Color(0xFF283E50),))
+                                              ],
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
