@@ -554,75 +554,119 @@ userName  = preferences.getString("userName")!;
                 ),
               ),
             ),
-            Positioned(
-              top: 130,
-              left: 40,
-              child: Container(
-                height: 100,
-                width: MediaQuery.of(context).size.width/1.2,
-
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD9D9D9),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding:
-                    const EdgeInsets.all( 10.0),
-                    child: Column(
-                      key: timeKey,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 5,),
-                         Text(
-                        "Today's Goal",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
+        Positioned(
+          top: 130,
+          left: 20,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 100,
+                  width: MediaQuery.of(context).size.width/2.5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 5,),
+                          Text(
+                            "Today's Goal",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color:  Color(0xff283E50),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-
-                        ),
-                        const SizedBox(height: 5,),
-                         Text(
-                          "Today: ${dailyGoal} mins",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
+                          const SizedBox(height: 5,),
+                          Text(
+                            "Today: ${dailyGoal} mins",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
                               color: Color(0xFF686868),
                               fontSize: 16,
-                              fontWeight: FontWeight.w500
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 5,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                             Text(
-                              "Completed: ${((totalTimeMin * 60 + totalTimeSec)/60).toStringAsFixed(2)} mins",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Color(0xFF686868),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500
-
-                              ),
+                          const SizedBox(height: 5,),
+                          Text(
+                            "Completed: ${((totalTimeMin * 60 + totalTimeSec) / 60).toStringAsFixed(2)} mins",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF686868),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
-                            Image.asset(
-                              "assets/clock.png",
-                              height: 20,
-                            ),
-                          ],
-                        ),
-
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                SizedBox(width: 10), // Adjust the spacing between the two containers
+                Container(
+                  height: 100,
+                  width: MediaQuery.of(context).size.width/2.5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        key: timeKey,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 5,),
+                          Text(
+                            "Today's Goal",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                          Text(
+                            "Today: ${dailyGoal} mins",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF686868),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                          Text(
+                            "Completed: ${((totalTimeMin * 60 + totalTimeSec) / 60).toStringAsFixed(2)} mins",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF686868),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
+        ),
 
-            Positioned(
+
+        Positioned(
               top: 20,
               left: MediaQuery.of(context).size.width / 2.5,
               child: Row(
@@ -662,107 +706,107 @@ userName  = preferences.getString("userName")!;
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("My Reads",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
-                        Expanded(
-                          flex: 1,
-                          child: myBooksMyReads.isEmpty?
-                          Container(
-                              height: 100,
-                              child: Center(child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
-                                  SizedBox(height: 10,),
-                                  GestureDetector(
-                                    onTap: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Image.asset('assets/self.png'),
-                                        Image.asset('assets/self.png'),
-                                        Image.asset('assets/self.png'),
-                                        Image.asset('assets/self.png'),
-                                        Image.asset('assets/self.png'),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              )))
-                              : ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: myBooksMyReads.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
-                                },
-                                child:Padding(
-                                  padding: const EdgeInsets.only(top:10.0),
-                                  child: Container(
-                                    width: 200,
-                                    height: 300,
-
-                                    margin: EdgeInsets.symmetric(horizontal: 10.0),
-                                    child: Stack(
-                                      alignment: Alignment.topCenter,
-                                      children: [
-                                        Positioned(
-                                          top: 120,
-                                          child: Container(
-                                            height: 300,
-                                            width: 250,
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFFD9D9D9),
-                                              borderRadius: BorderRadius.circular(20.0),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                SizedBox(height: 8),
-                                                Container(
-                                                  height: 200,
-                                                  width: 200,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
-                                                    child: Text(
-                                                      myBooksMyReads[index].description,
-                                                      textAlign: TextAlign.left,
-                                                      maxLines: 6,
-
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 13
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 20,),
-
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Image.network(
-                                            myBooksMyReads[index].imageLink,
-                                            height: 150,
-                                            width: 150,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-
-                        SizedBox(height: 10),
+                        // Text("My Reads",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                        // Expanded(
+                        //   flex: 1,
+                        //   child: myBooksMyReads.isEmpty?
+                        //   Container(
+                        //       height: 100,
+                        //       child: Center(child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                        //           SizedBox(height: 10,),
+                        //           GestureDetector(
+                        //             onTap: (){
+                        //               Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                        //             },
+                        //             child: Row(
+                        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //               children: [
+                        //                 Image.asset('assets/self.png'),
+                        //                 Image.asset('assets/self.png'),
+                        //                 Image.asset('assets/self.png'),
+                        //                 Image.asset('assets/self.png'),
+                        //                 Image.asset('assets/self.png'),
+                        //               ],
+                        //             ),
+                        //           )
+                        //         ],
+                        //       )))
+                        //       : ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: myBooksMyReads.length,
+                        //     itemBuilder: (context, index) {
+                        //       return GestureDetector(
+                        //         onTap: (){
+                        //           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
+                        //         },
+                        //         child:Padding(
+                        //           padding: const EdgeInsets.only(top:10.0),
+                        //           child: Container(
+                        //             width: 200,
+                        //             height: 300,
+                        //
+                        //             margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        //             child: Stack(
+                        //               alignment: Alignment.topCenter,
+                        //               children: [
+                        //                 Positioned(
+                        //                   top: 120,
+                        //                   child: Container(
+                        //                     height: 300,
+                        //                     width: 250,
+                        //                     padding: EdgeInsets.all(8),
+                        //                     decoration: BoxDecoration(
+                        //                       color: Color(0xFFD9D9D9),
+                        //                       borderRadius: BorderRadius.circular(20.0),
+                        //                     ),
+                        //                     child: Column(
+                        //                       children: [
+                        //                         SizedBox(height: 8),
+                        //                         Container(
+                        //                           height: 200,
+                        //                           width: 200,
+                        //                           child: Padding(
+                        //                             padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
+                        //                             child: Text(
+                        //                               myBooksMyReads[index].description,
+                        //                               textAlign: TextAlign.left,
+                        //                               maxLines: 6,
+                        //
+                        //                               style: TextStyle(
+                        //                                 color: Colors.black,
+                        //                                 fontSize: 13
+                        //                               ),
+                        //                             ),
+                        //                           ),
+                        //                         ),
+                        //                         SizedBox(height: 20,),
+                        //
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //                 Padding(
+                        //                   padding: const EdgeInsets.all(8.0),
+                        //                   child: Image.network(
+                        //                     myBooksMyReads[index].imageLink,
+                        //                     height: 150,
+                        //                     width: 150,
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+                        //
+                        // SizedBox(height: 10),
                         Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                         myBooks.isEmpty?
                         Container(
@@ -794,19 +838,147 @@ userName  = preferences.getString("userName")!;
                                 child:Padding(
                                   padding: const EdgeInsets.only(top:10.0),
                                   child: Container(
-                                    width: 250,
-                                    height: 200,
+                                    width: MediaQuery.of(context).size.width/1.2,
+                                    // height: 200,
 
                                     margin: EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Stack(
-                                      alignment: Alignment.topCenter,
+                                    child: Column(
                                       children: [
-                                        Positioned(
-                                          top: 0,
-                                          left: 30,
+                                        Stack(
+                                          alignment: Alignment.topCenter,
+                                          children: [
+                                            Positioned(
+                                              top: 0,
+                                              left: 30,
+                                              child: Container(
+                                                height: 200,
+                                                width: 200,
+                                                padding: const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFFD9D9D9),
+                                                  borderRadius: BorderRadius.circular(20.0),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(height: 8),
+                                                    Container(
+                                                      height: 50, // Set a fixed height for description
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          SingleChildScrollView(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.only(top: 5.0),
+                                                              child: Text(
+                                                                myBooks[index].author,
+                                                                textAlign: TextAlign.center,
+                                                                overflow: TextOverflow.ellipsis,
+                                                                style: const TextStyle(
+                                                                    color: Color(0xFF686868),
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.w500),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: 80,
+                                              right: 30,
+                                              child: Column(
+                                                children: [
+                                                  Stack(
+                                                    children: [
+                                                      CircularProgressIndicator(
+                                                        value: (myBooks[index].currentPage/myBooks[index].totalPage),
+                                                        strokeWidth: 5.0,
+                                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                                          Color(0xFF283E50),
+                                                        ), // Adjust the color as needed
+                                                      ),
+                                                      Positioned(
+                                                        top: 10,
+                                                        left: 5,
+                                                        child: Text(
+                                                          "${((myBooks[index].currentPage/myBooks[index].totalPage)*100).toStringAsFixed(1)}%",
+                                                          style: TextStyle(
+                                                              color: Color(0xFF283E50),
+                                                              fontWeight: FontWeight.bold,
+                                                              fontSize: 11),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    "Progress",
+                                                    style: TextStyle(
+                                                        color: Color(0xFF686868), fontSize: 14),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Image.asset(
+                                                    "assets/notes.png",
+                                                    height: 30,
+                                                  ),
+                                                  Text(
+                                                    "Notes",
+                                                    style: TextStyle(
+                                                        color: Color(0xFF686868), fontSize: 14),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 70.0, right:120),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(25.0),
+                                                child: Image.network(
+                                                  myBooks[index].imageLink,
+                                                  height: 180,
+                                                  width: 200,
+
+                                                ),
+                                              ),
+                                            ),
+
+                                          ],
+                                        ),
+                                        Divider(
+                                            endIndent: 10,
+                                            indent: 10,
+                                            thickness: 1,
+                                            color: Color(0xff283E50)
+                                        ),
+
+
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Notes",  style: const TextStyle(
+                                                color: Color(0xFF283E50),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),),
+                                            GestureDetector(
+                                                onTap: (){
+                                                  _showAddNotesDialog(myBooks[index]);
+                                                },
+                                                child: Icon(Icons.add,color:  Color(0xFF283E50),))
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            height: 200,
-                                            width: 200,
+                                            // height: 250,
+                                            width: MediaQuery.of(context).size.width,
                                             padding: const EdgeInsets.all(8),
                                             decoration: BoxDecoration(
                                               color: const Color(0xFFD9D9D9),
@@ -815,193 +987,183 @@ userName  = preferences.getString("userName")!;
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const SizedBox(height: 8),
-                                                Container(
-                                                  height: 50, // Set a fixed height for description
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      SingleChildScrollView(
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(top: 5.0),
-                                                          child: Text(
-                                                            myBooks[index].author,
-                                                            textAlign: TextAlign.center,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: const TextStyle(
-                                                                color: Color(0xFF686868),
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.w500),
-                                                          ),
-                                                        ),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: myBooks[index].notes.map((note) {
+                                                    return Padding(
+                                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                                      child: Text(
+                                                        '-'+note,
+                                                        style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    );
+                                                  }).toList(),
                                                 ),
+                                                // Padding(
+                                                //   padding:
+                                                //       const EdgeInsets.only(top: 5.0),
+                                                //   child: Text(
+                                                //     widget.book.description,
+                                                //     textAlign: TextAlign.center,
+                                                //     maxLines: 12, // Adjust the number of lines as needed
+                                                //     overflow: TextOverflow.ellipsis,
+                                                //     style: const TextStyle(
+                                                //       color: Color(0xFF686868),
+                                                //       fontSize: 12,
+                                                //       fontWeight: FontWeight.w500,
+                                                //     ),
+                                                //   )
+                                                //
+                                                // ),
+
                                               ],
                                             ),
                                           ),
                                         ),
-                                        Positioned(
-                                          top: 80,
-                                          right: 30,
-                                          child: Column(
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  CircularProgressIndicator(
-                                                    value: (myBooks[index].currentPage/myBooks[index].totalPage),
-                                                    strokeWidth: 5.0,
-                                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                                      Color(0xFF283E50),
-                                                    ), // Adjust the color as needed
-                                                  ),
-                                                  Positioned(
-                                                    top: 10,
-                                                    left: 5,
-                                                    child: Text(
-                                                      "${((myBooks[index].currentPage/myBooks[index].totalPage)*100).toStringAsFixed(1)}%",
-                                                      style: TextStyle(
-                                                          color: Color(0xFF283E50),
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 11),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                "Progress",
-                                                style: TextStyle(
-                                                    color: Color(0xFF686868), fontSize: 14),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Image.asset(
-                                                "assets/notes.png",
-                                                height: 30,
-                                              ),
-                                              Text(
-                                                "Notes",
-                                                style: TextStyle(
-                                                    color: Color(0xFF686868), fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Quotes",  style: const TextStyle(
+                                                color: Color(0xFF283E50),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),),
+                                            GestureDetector(
+                                                onTap: (){
+                                                  _showAddQuotesDialog(myBooks[index]);
+                                                },
+                                                child: Icon(Icons.add,color:  Color(0xFF283E50),))
+                                          ],
                                         ),
-
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 70.0, right:120),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(25.0),
-                                            child: Image.network(
-                                              myBooks[index].imageLink,
-                                              height: 180,
-                                              width: 200,
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: Color(0xFFD9D9D9),
+                                            ),
+                                            padding: EdgeInsets.all(12),
+                                            child: Column(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: myBooks[index].quotes.map((quotes) {
+                                                    return Padding(
+                                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                                      child: Text(
+                                                        '-'+quotes,
+                                                        style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
 
+                                              ],
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
+
                                 ),
                               );
                           },
                         ),
                             ),
-                        SizedBox(height: 20,),
-                        Text("To Be Read",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
-                        Expanded(
-                          flex: 1,
-                          child: myBooksToBeRead.isEmpty?
-                          Container(
-                              height: 100,
-                              child: Center(child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
-                                  SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                    ],
-                                  )
-                                ],
-                              )))
-                              : ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: myBooksToBeRead.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksToBeRead[index],)));
-                                },
-                                child:Padding(
-                                  padding: const EdgeInsets.only(top:10.0),
-                                  child: Container(
-                                    width: 250,
-                                    height: 300,
-
-                                    margin: EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Stack(
-                                      alignment: Alignment.topCenter,
-                                      children: [
-                                        Positioned(
-                                          top: 120,
-                                          child: Container(
-                                            height: 300,
-                                            width: 250,
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFFD9D9D9),
-                                              borderRadius: BorderRadius.circular(10.0),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 200,
-                                                  child: SingleChildScrollView(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(top: 30.0),
-                                                      child: Text(
-                                                        myBooksToBeRead[index].description,
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 20,),
-
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Image.network(
-                                            myBooksToBeRead[index].imageLink,
-                                            height: 150,
-                                            width: 150,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        // SizedBox(height: 20,),
+                        // Text("To Be Read",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                        // Expanded(
+                        //   flex: 1,
+                        //   child: myBooksToBeRead.isEmpty?
+                        //   Container(
+                        //       height: 100,
+                        //       child: Center(child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                        //           SizedBox(height: 10,),
+                        //           Row(
+                        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //             children: [
+                        //               Image.asset('assets/self.png'),
+                        //               Image.asset('assets/self.png'),
+                        //               Image.asset('assets/self.png'),
+                        //               Image.asset('assets/self.png'),
+                        //               Image.asset('assets/self.png'),
+                        //             ],
+                        //           )
+                        //         ],
+                        //       )))
+                        //       : ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: myBooksToBeRead.length,
+                        //     itemBuilder: (context, index) {
+                        //       return GestureDetector(
+                        //         onTap: (){
+                        //           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksToBeRead[index],)));
+                        //         },
+                        //         child:Padding(
+                        //           padding: const EdgeInsets.only(top:10.0),
+                        //           child: Container(
+                        //             width: 250,
+                        //             height: 300,
+                        //
+                        //             margin: EdgeInsets.symmetric(horizontal: 16.0),
+                        //             child: Stack(
+                        //               alignment: Alignment.topCenter,
+                        //               children: [
+                        //                 Positioned(
+                        //                   top: 120,
+                        //                   child: Container(
+                        //                     height: 300,
+                        //                     width: 250,
+                        //                     padding: EdgeInsets.all(8),
+                        //                     decoration: BoxDecoration(
+                        //                       color: Color(0xFFD9D9D9),
+                        //                       borderRadius: BorderRadius.circular(10.0),
+                        //                     ),
+                        //                     child: Column(
+                        //                       children: [
+                        //                         Container(
+                        //                           height: 200,
+                        //                           child: SingleChildScrollView(
+                        //                             child: Padding(
+                        //                               padding: const EdgeInsets.only(top: 30.0),
+                        //                               child: Text(
+                        //                                 myBooksToBeRead[index].description,
+                        //                                 textAlign: TextAlign.center,
+                        //                                 style: TextStyle(
+                        //                                   color: Colors.black,
+                        //                                 ),
+                        //                               ),
+                        //                             ),
+                        //                           ),
+                        //                         ),
+                        //                         SizedBox(height: 20,),
+                        //
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //                 Padding(
+                        //                   padding: const EdgeInsets.all(8.0),
+                        //                   child: Image.network(
+                        //                     myBooksToBeRead[index].imageLink,
+                        //                     height: 150,
+                        //                     width: 150,
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
 
                       ],
                     ),
@@ -1024,46 +1186,240 @@ userName  = preferences.getString("userName")!;
   }
   void _showAddNotesDialog(DetailBook book) {
     showDialog(
+
       context: context,
       builder: (BuildContext context) {
         TextEditingController notesController = TextEditingController();
 
         return AlertDialog(
-          title: Text('Add Notes'),
-          content: TextField(
-            controller: notesController,
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              hintText: 'Write your notes here...',
+          backgroundColor: Color(0xffFEEAD4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          title: Text('Notes'),
+
+          content: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color:Colors.grey[100],
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextField(
+                      controller: notesController,
+                      onChanged: (value) {
+
+                      },
+                      cursorColor: Color(0xFFD9D9D9),
+                      decoration: InputDecoration(
+                        hintText: 'Write your note',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: InputBorder.none,
+
+                      ),
+
+                    ),
+                  ),
+                ),
+
+              ],
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                String newNote = notesController.text.trim();
-                if (newNote.isNotEmpty) {
-                  shareBookDetails(book,notesController.text);
-                  Navigator.pop(context); // Close the dialog
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Note added successfully!'),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+
                     ),
-                  );
-                }
-              },
-              child: Text('Save'),
+
+                  ),
+                  child: TextButton(
+                    onPressed: (){
+                      setState(() {
+                        String newNote = notesController.text.trim();
+                        if (newNote.isNotEmpty) {
+                          addNote(book, newNote);
+                          notesController.clear();
+                          Fluttertoast.showToast(
+                            msg: "Note added successfully!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Color(0xFF283E50),
+                            textColor: Colors.white,
+                          );
+                        }
+                      });
+                    },
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
             ),
+
           ],
         );
       },
     );
+  }
+  void _showAddQuotesDialog(DetailBook book) {
+    showDialog(
+
+      context: context,
+      builder: (BuildContext context) {
+
+        TextEditingController quotesController = TextEditingController();
+
+        return AlertDialog(
+          backgroundColor: Color(0xffFEEAD4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          title: Text('Quotes'),
+
+          content: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color:Colors.grey[100],
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextField(
+                      controller: quotesController,
+                      onChanged: (value) {
+
+                      },
+                      cursorColor: Color(0xFFD9D9D9),
+                      decoration: InputDecoration(
+                        hintText: 'Write your Quote',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: InputBorder.none,
+
+                      ),
+
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+
+                    ),
+
+                  ),
+                  child: TextButton(
+                    onPressed: (){
+                      setState(() {
+                        String newQuote = quotesController.text.trim();
+                        if (newQuote.isNotEmpty) {
+                          addQuote(book, newQuote);
+                          quotesController.clear();
+                          Fluttertoast.showToast(
+                            msg: "Note added successfully!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Color(0xFF283E50),
+                            textColor: Colors.white,
+                          );
+                        }
+                      });
+                    },
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          ],
+        );
+      },
+    );
+  }
+  void addNote(DetailBook book, String newNote) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Update the notes in the Firestore document
+        await myBooksRef.doc(book.documentId).update({
+          'notes': FieldValue.arrayUnion([newNote]),
+        });
+
+        // Update the local state with the new notes
+        setState(() {
+          book.notes.add(newNote);
+        });
+
+        print('Note added successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error adding note: $e');
+    }
+  }
+  void addQuote(DetailBook book, String newQuote) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef =
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+
+        // Update the notes in the Firestore document
+        await myBooksRef.doc(book.documentId).update({
+          'quotes': FieldValue.arrayUnion([newQuote]),
+        });
+
+        // Update the local state with the new notes
+        setState(() {
+          book.quotes.add(newQuote);
+        });
+
+        print('Quotes added successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error adding note: $e');
+    }
   }
   void shareBookDetails(DetailBook book,String note) async {
     try {
