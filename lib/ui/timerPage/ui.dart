@@ -465,7 +465,7 @@ class _TimerPageState extends State<TimerPage> {
                             Container(
                                 width: 200,
                                 child: Center(child: Text(widget.book.author,style: TextStyle(color: Color(0xff686868),fontWeight: FontWeight.bold,fontSize: 16),))),
-                            Text('status',style: TextStyle(color: Color(0xff686868)),),
+                            Text(widget.book.status=='CURRENTLY READING'?'Reading':widget.book.status=='TO BE READ'?'Pending':'Finished',style: TextStyle(color: Color(0xff686868)),),
                           ],
                         ),
                         Divider(
