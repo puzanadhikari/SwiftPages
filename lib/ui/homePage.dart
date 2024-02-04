@@ -842,7 +842,7 @@ userName  = preferences.getString("userName")!;
                               "Reading Goal",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Color(0xFF283E50),
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1058,7 +1058,7 @@ userName  = preferences.getString("userName")!;
                                         children: [
                                           Row(
                                             crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Stack(
                                                 alignment: Alignment.topLeft,
@@ -1198,7 +1198,10 @@ userName  = preferences.getString("userName")!;
                                                           height: 40,
                                                           width: 100,
                                                           child: ElevatedButton(
-                                                            onPressed: _startPauseTimer,
+                                                            onPressed:(){
+                                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>TimerPage(book: myBooks[index],)));
+
+                                                            },
                                                             style: ElevatedButton.styleFrom(
                                                               primary: Color(0xff283E50), // Set your desired button color
                                                               shape: RoundedRectangleBorder(
@@ -1208,7 +1211,7 @@ userName  = preferences.getString("userName")!;
                                                             child: Padding(
                                                               padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
                                                               child:Text(
-                                                                _isRunning ? 'Pause' : 'Start',
+                                                                'Start',
                                                                 style: TextStyle(fontSize: 16.0),
                                                               ),
                                                             ),
@@ -1717,6 +1720,7 @@ userName  = preferences.getString("userName")!;
                             backgroundColor: Color(0xFF283E50),
                             textColor: Colors.white,
                           );
+                          Navigator.pop(context);
                         }
                       });
                     },
