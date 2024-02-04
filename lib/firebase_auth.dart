@@ -35,7 +35,7 @@ class FirebaseAuthService {
   }
 
   Future<User?> SignUpWithEmailAndPassword(
-      BuildContext context, String email, String password, String username,String avatars,String dailyGoal,Color _avatarColor) async {
+      BuildContext context, String email, String password, String username,String avatars,String dailyGoal,Color _avatarColor,int yearlyGoal) async {
     try {
       UserCredential userCredential =
       await _auth.createUserWithEmailAndPassword(
@@ -44,7 +44,7 @@ class FirebaseAuthService {
       );
       await userCredential.user?.updateDisplayName(username);
       await userCredential.user?.updatePhotoURL(avatars);
-     await addUserData(email,username,password,avatars,dailyGoal,_avatarColor);
+     await addUserData(email,username,password,avatars,dailyGoal,_avatarColor,yearlyGoal);
       Fluttertoast.showToast(
           msg: 'Signup successfully',
           backgroundColor: Colors.green,
@@ -73,7 +73,7 @@ class FirebaseAuthService {
       return null;
     }
   }
-  Future addUserData(String email,String username,String password,String avatar,String dailyGoal,Color _avatarColor) async {
+  Future addUserData(String email,String username,String password,String avatar,String dailyGoal,Color _avatarColor,int yearlyGoal) async {
     try {
 
       User? user = FirebaseAuth.instance.currentUser;
@@ -90,7 +90,8 @@ class FirebaseAuthService {
           'dailyGoal': dailyGoal,
           'currentTime': 0,
           'avatarColor': _avatarColor.value,
-          'lastStrikeTimestamp': DateTime.april
+          'lastStrikeTimestamp': DateTime.april,
+          'yearlyGoal':yearlyGoal
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);

@@ -23,6 +23,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
   late List<String> avatarUrls;
   Color _avatarColor = Colors.white;
   TextEditingController _dailyGoal = TextEditingController();
+  TextEditingController _yearlyGoal = TextEditingController();
   String? selectedAvatar;
   final storage = FirebaseStorage.instance;
   Reference get firebaseStorage => FirebaseStorage.instance.ref();
@@ -254,6 +255,35 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                           ),
                         ],
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Yearly Goal for number of books",
+                            style: TextStyle(
+                              fontSize:14,
+                              fontWeight: FontWeight.bold,
+                              color:  Color(0xFF686868),
+                              fontFamily: 'Abhaya Libre',
+                            ),
+                          ),
+                          SizedBox(height: 5,),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2.0),
+                              color: Color(0xFFD9D9D9),
+                            ),
+                            child: TextField(
+                              controller: _yearlyGoal,
+                              decoration: InputDecoration(
+                                hintText: 'Number of books for this year',
+                                border: InputBorder.none,
+                                prefixIcon: Icon(Icons.lock_clock),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 50,),
                       ElevatedButton(
                         onPressed: () async{
@@ -261,7 +291,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                           Navigator.pop(context);
                           Navigator.pop(context);
                           await _auth.SignUpWithEmailAndPassword(
-                              context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor);
+                              context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor,int.parse(_yearlyGoal.text));
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Color(0xFFFF997A),// Background color
