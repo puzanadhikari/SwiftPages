@@ -50,8 +50,8 @@ class _MainPageState extends State<MainPage> {
 
       if (timeDifferenceInHours > 24||timeDifferenceInHours ==24) {
         // Update the strike to 0
-      setState(() async{
-        await usersCollection.doc(user?.uid).update({'lastStrike': userDoc['strikes'],'strikes':0});
+      setState(() {
+         usersCollection.doc(user?.uid).update({'lastStrike': userDoc['strikes'],'strikes':0});
       });
 
         // Update the last strike timestamp to the current time

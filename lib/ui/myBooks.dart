@@ -436,12 +436,12 @@ class DetailBook {
   final String imageLink;
   final String documentId;
   final String description;
-  final String publishedDate ;
-  final String status ;
-  int currentPage; // Add this field
-  int totalPage; // Add this field
-  List<String> notes; // Add this field
-  List<String> quotes; // Add this field
+  final String publishedDate;
+  final String status;
+  int currentPage;
+  int totalPage;
+  List<Map<String, dynamic>> notes; // Updated to list of maps
+  List<String> quotes;
 
   DetailBook({
     required this.author,
@@ -450,10 +450,10 @@ class DetailBook {
     required this.description,
     required this.publishedDate,
     required this.status,
-    this.currentPage = 0, // Set the default value to 0
-    this.totalPage = 0, // Set the default value to 0
-    this.notes = const [], // Initialize notes as an empty list
-    this.quotes = const [], // Initialize notes as an empty list
+    this.currentPage = 0,
+    this.totalPage = 0,
+    this.notes = const [], // Initialize notes as an empty list of maps
+    this.quotes = const [],
   });
 
   factory DetailBook.fromMap(String documentId, Map<String, dynamic>? map) {
@@ -462,24 +462,23 @@ class DetailBook {
         author: 'No Author',
         imageLink: 'No Image',
         documentId: documentId,
-          description: 'description',
-          publishedDate: 'publishedDate',
-          status: 'status',
-
-        totalPage: 100
+        description: 'description',
+        publishedDate: 'publishedDate',
+        status: 'status',
+        totalPage: 100,
       );
     }
     return DetailBook(
       author: map['author'] ?? 'No Author',
       imageLink: map['image'] ?? 'No Image',
       documentId: documentId,
-      description: map['description']??'No Description',
-      publishedDate: map['publishedDate']??'-',
-      status: map['status']??'-',
-      currentPage: map['currentPage'] ?? 0, // Set the currentPage value
-      totalPage: map['totalPageCount'] ?? 0, // Set the currentPage value
-      notes: List<String>.from(map['notes'] ?? []), // Set the notes value
-      quotes: List<String>.from(map['quotes'] ?? []), // Set the notes value
+      description: map['description'] ?? 'No Description',
+      publishedDate: map['publishedDate'] ?? '-',
+      status: map['status'] ?? '-',
+      currentPage: map['currentPage'] ?? 0,
+      totalPage: map['totalPageCount'] ?? 0,
+      notes: List<Map<String, dynamic>>.from(map['notes'] ?? []),
+      quotes: List<String>.from(map['quotes'] ?? []),
     );
   }
 }

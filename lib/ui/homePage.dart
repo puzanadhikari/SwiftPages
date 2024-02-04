@@ -1456,9 +1456,18 @@ userName  = preferences.getString("userName")!;
                                                     children: myBooks[index].notes.map((note) {
                                                       return Padding(
                                                         padding: EdgeInsets.symmetric(vertical: 8),
-                                                        child: Text(
-                                                          '-'+note,
-                                                          style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                                          children: [
+                                                            Text(
+                                                              '-'+note['note'],
+                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                            ),
+                                                            Text(
+                                                              'Page -'+note['pageNumber'],
+                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ],
                                                         ),
                                                       );
                                                     }).toList(),
@@ -1658,6 +1667,7 @@ userName  = preferences.getString("userName")!;
       context: context,
       builder: (BuildContext context) {
         TextEditingController notesController = TextEditingController();
+        TextEditingController pageNumberController = TextEditingController();
 
         return AlertDialog(
           backgroundColor: Color(0xffFEEAD4),
@@ -1700,43 +1710,78 @@ userName  = preferences.getString("userName")!;
             ),
           ),
           actions: <Widget>[
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF283E50),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
 
-                    ),
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF283E50),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
 
-                  ),
-                  child: TextButton(
-                    onPressed: (){
-                      setState(() {
-                        String newNote = notesController.text.trim();
-                        if (newNote.isNotEmpty) {
-                          addNote(book, newNote);
-                          notesController.clear();
-                          Fluttertoast.showToast(
-                            msg: "Note added successfully!",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Color(0xFF283E50),
-                            textColor: Colors.white,
-                          );
-                          Navigator.pop(context);
-                        }
-                      });
-                    },
-                    child: Text(
-                      'Done',
-                      style: TextStyle(color: Colors.white),
+                        ),
+
+                      ),
+                      child: TextButton(
+                        onPressed: (){
+                          setState(() {
+                            String newNote = notesController.text.trim();
+                            if (newNote.isNotEmpty) {
+                              addNote(book, newNote,pageNumberController.text);
+                              notesController.clear();
+                              Fluttertoast.showToast(
+                                msg: "Note added successfully!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Color(0xFF283E50),
+                                textColor: Colors.white,
+                              );
+                              Navigator.pop(context);
+                            }
+                          });
+                        },
+                        child: Text(
+                          'Done',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color:Colors.grey[100],
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:8.0),
+                      child: TextField(
+                        controller: pageNumberController,
+                        onChanged: (value) {
+
+                        },
+                        cursorColor: Color(0xFFD9D9D9),
+                        decoration: InputDecoration(
+                          hintText: '0',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+
+                        ),
+
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
           ],
@@ -1836,7 +1881,7 @@ userName  = preferences.getString("userName")!;
       },
     );
   }
-  void addNote(DetailBook book, String newNote) async {
+  void addNote(DetailBook book, String newNote,String pageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -1847,14 +1892,14 @@ userName  = preferences.getString("userName")!;
 
         // Update the notes in the Firestore document
         await myBooksRef.doc(book.documentId).update({
-          'notes': FieldValue.arrayUnion([newNote]),
+          'notes': FieldValue.arrayUnion([
+            {'note': newNote, 'pageNumber': pageNumber}
+          ]),
         });
-
         // Update the local state with the new notes
         setState(() {
-          book.notes.add(newNote);
+          book.notes.add({'note': newNote, 'pageNumber': pageNumber});
         });
-
         print('Note added successfully!');
       } else {
         print('No user is currently signed in.');

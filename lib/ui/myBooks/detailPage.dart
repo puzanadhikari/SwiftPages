@@ -135,33 +135,33 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
       print('Error updating page number: $e');
     }
   }
-  void addNote(DetailBook book, String newNote) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        String uid = user.uid;
-
-        CollectionReference myBooksRef =
-        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
-
-        // Update the notes in the Firestore document
-        await myBooksRef.doc(book.documentId).update({
-          'notes': FieldValue.arrayUnion([newNote]),
-        });
-
-        // Update the local state with the new notes
-        setState(() {
-          book.notes.add(newNote);
-        });
-
-        print('Note added successfully!');
-      } else {
-        print('No user is currently signed in.');
-      }
-    } catch (e) {
-      print('Error adding note: $e');
-    }
-  }
+  // void addNote(DetailBook book, String newNote) async {
+  //   try {
+  //     User? user = FirebaseAuth.instance.currentUser;
+  //     if (user != null) {
+  //       String uid = user.uid;
+  //
+  //       CollectionReference myBooksRef =
+  //       FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+  //
+  //       // Update the notes in the Firestore document
+  //       await myBooksRef.doc(book.documentId).update({
+  //         'notes': FieldValue.arrayUnion([newNote]),
+  //       });
+  //
+  //       // Update the local state with the new notes
+  //       setState(() {
+  //         book.notes.add(newNote);
+  //       });
+  //
+  //       print('Note added successfully!');
+  //     } else {
+  //       print('No user is currently signed in.');
+  //     }
+  //   } catch (e) {
+  //     print('Error adding note: $e');
+  //   }
+  // }
 
   @override
   void initState() {
@@ -443,7 +443,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                             onPressed: () {
                               String newNote = _textFieldController.text.trim();
                               if (newNote.isNotEmpty) {
-                                addNote(widget.book!, newNote);
+                                // addNote(widget.book!, newNote);
                                 _textFieldController.clear();
                                 Fluttertoast.showToast(
                                   msg: "Note added successfully!",
@@ -458,26 +458,26 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey[200],
-                        ),
-                        padding: EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: widget.book!.notes.map((note) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                note,
-                                style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                      // Container(
+                      //   width: MediaQuery.of(context).size.width,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     color: Colors.grey[200],
+                      //   ),
+                      //   padding: EdgeInsets.all(12),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: widget.book!.notes.map((note) {
+                      //       return Padding(
+                      //         padding: EdgeInsets.symmetric(vertical: 8),
+                      //         child: Text(
+                      //           note,
+                      //           style: TextStyle(fontSize: 16, color: Color(0xFF686868)),
+                      //         ),
+                      //       );
+                      //     }).toList(),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
