@@ -209,7 +209,6 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                    style: TextStyle(color: Color(0xffD9D9D9),fontWeight: FontWeight.bold,fontSize: 16),)
                                ),
                              ),
-
                            ],
                          ),
                        ],
