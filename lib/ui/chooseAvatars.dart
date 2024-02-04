@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../firebase_auth.dart';
@@ -290,8 +291,10 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                           Navigator.pop(context);
                           Navigator.pop(context);
                           Navigator.pop(context);
+                          _dailyGoal.text.isNotEmpty&&_yearlyGoal.text.isNotEmpty?
                           await _auth.SignUpWithEmailAndPassword(
-                              context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor,int.parse(_yearlyGoal.text));
+                              context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor,int.parse(_yearlyGoal.text)):
+                          Fluttertoast.showToast(msg: "Please enter both the values");
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Color(0xFFFF997A),// Background color
