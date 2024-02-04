@@ -503,18 +503,7 @@ void _showTutorialCoachMark()async{
       ),
     ];
   }
-///quotes
-  // Stream<List<String>> getQuoteDataStream() {
-  //   return FirebaseFirestore.instance
-  //       .collection('app_quotes')
-  //       .snapshots()
-  //       .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-  //     return snapshot.docs
-  //         .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-  //     doc['quotes'] as String)
-  //         .toList();
-  //   });
-  // }
+
 
   @override
   Widget build(BuildContext context) {

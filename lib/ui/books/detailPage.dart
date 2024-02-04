@@ -331,6 +331,23 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                   ),
                 ),
+
+
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Container(
+                      child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                ),
+
                 //
                 // SizedBox(height: 16.0),
                 // ElevatedButton(
@@ -348,6 +365,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 //     ),
                 //   ),
                 // ),
+
               ],
             ),
           ),
