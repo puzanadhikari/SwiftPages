@@ -441,7 +441,7 @@ class DetailBook {
   int currentPage;
   int totalPage;
   List<Map<String, dynamic>> notes; // Updated to list of maps
-  List<String> quotes;
+  List<Map<String, dynamic>> quotes;
 
   DetailBook({
     required this.author,
@@ -478,7 +478,7 @@ class DetailBook {
       currentPage: map['currentPage'] ?? 0,
       totalPage: map['totalPageCount'] ?? 0,
       notes: List<Map<String, dynamic>>.from(map['notes'] ?? []),
-      quotes: List<String>.from(map['quotes'] ?? []),
+      quotes: List<Map<String, dynamic>>.from(map['quotes'] ?? []),
     );
   }
 }

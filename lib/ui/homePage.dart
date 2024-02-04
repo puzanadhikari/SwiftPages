@@ -1527,9 +1527,18 @@ userName  = preferences.getString("userName")!;
                                                     children: myBooks[index].quotes.map((quotes) {
                                                       return Padding(
                                                         padding: EdgeInsets.symmetric(vertical: 8),
-                                                        child: Text(
-                                                          '-'+quotes,
-                                                          style: TextStyle(fontSize: 14, color: Color(0xFF283E50)),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                                          children: [
+                                                            Text(
+                                                              '-'+quotes['quote'],
+                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                            ),
+                                                            Text(
+                                                              'Page -'+quotes['pageNumber'],
+                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ],
                                                         ),
                                                       );
                                                     }).toList(),
@@ -1796,6 +1805,7 @@ userName  = preferences.getString("userName")!;
       builder: (BuildContext context) {
 
         TextEditingController quotesController = TextEditingController();
+        TextEditingController pageNumberController = TextEditingController();
 
         return AlertDialog(
           backgroundColor: Color(0xffFEEAD4),
@@ -1838,10 +1848,10 @@ userName  = preferences.getString("userName")!;
             ),
           ),
           actions: <Widget>[
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
                   decoration: BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
@@ -1855,10 +1865,10 @@ userName  = preferences.getString("userName")!;
                       setState(() {
                         String newQuote = quotesController.text.trim();
                         if (newQuote.isNotEmpty) {
-                          addQuote(book, newQuote);
+                          addQuote(book, newQuote,pageNumberController.text);
                           quotesController.clear();
                           Fluttertoast.showToast(
-                            msg: "Note added successfully!",
+                            msg: "Quote added successfully!",
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: Color(0xFF283E50),
@@ -1866,6 +1876,7 @@ userName  = preferences.getString("userName")!;
                           );
                         }
                       });
+                      Navigator.pop(context);
                     },
                     child: Text(
                       'Done',
@@ -1873,7 +1884,36 @@ userName  = preferences.getString("userName")!;
                     ),
                   ),
                 ),
-              ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color:Colors.grey[100],
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:8.0),
+                      child: TextField(
+                        controller: pageNumberController,
+                        onChanged: (value) {
+
+                        },
+                        cursorColor: Color(0xFFD9D9D9),
+                        decoration: InputDecoration(
+                          hintText: '0',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+
+                        ),
+
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
           ],
@@ -1908,7 +1948,7 @@ userName  = preferences.getString("userName")!;
       print('Error adding note: $e');
     }
   }
-  void addQuote(DetailBook book, String newQuote) async {
+  void addQuote(DetailBook book, String newQuote ,String pageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -1919,12 +1959,12 @@ userName  = preferences.getString("userName")!;
 
         // Update the notes in the Firestore document
         await myBooksRef.doc(book.documentId).update({
-          'quotes': FieldValue.arrayUnion([newQuote]),
+          'quotes': FieldValue.arrayUnion([   {'quote': newQuote, 'pageNumber': pageNumber}]),
         });
 
         // Update the local state with the new notes
         setState(() {
-          book.quotes.add(newQuote);
+          book.notes.add({'quote': newQuote, 'pageNumber': pageNumber});
         });
 
         print('Quotes added successfully!');
