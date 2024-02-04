@@ -303,206 +303,206 @@ userName  = preferences.getString("userName")!;
     }
     fetchBooksFromGoogle();
     fetchUserInfo();
-    Future.delayed(Duration(seconds: 1), ()async{
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.getBool('firstTime')==false?
-      '':_showTutorialCoachMark();
-    });
+    // Future.delayed(Duration(seconds: 1), ()async{
+    //   SharedPreferences preferences = await SharedPreferences.getInstance();
+    //   preferences.getBool('firstTime')==false?
+    //   '':_showTutorialCoachMark();
+    // });
 
   }
-void _showTutorialCoachMark()async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool("firstTime", false);
-    _initTarget();
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-
-    )..show(context: context);
-}
-  void _initTarget() {
-    targets = [
-      TargetFocus(
-        identify: 'streaks',
-        keyTarget: streakRowKey,
-        contents: [
-          TargetContent(
-            builder: (context, controller) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [SizedBox(height: 20,),
-                  Container(
-                      height: 150,
-                      width: 200,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment:CrossAxisAlignment.end,
-                        children: [
-                          Text("Here you can find the streaks , \n The streak counts increases as per you complete \n your daily goal of reading."),
-                          ElevatedButton(
-                            onPressed: () {
-                              controller.next();
-                            },
-                            child: Text("Next"),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-
-                ],
-              );
-            },
-            align: ContentAlign.bottom,
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: 'time',
-        keyTarget: timeKey,
-        contents: [
-          TargetContent(
-            builder: (context, controller) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [SizedBox(height: 20,),
-                  Container(
-                      height: 150,
-                      width: 200,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment:CrossAxisAlignment.end,
-                        children: [
-                          Text("Here you can find the times of your daily goal, \n and the total time you have spent reading."),
-                          ElevatedButton(
-                            onPressed: () {
-                              controller.next();
-                            },
-                            child: Text("Next"),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-
-                ],
-              );
-            },
-            align: ContentAlign.bottom,
-          ),
-        ],
-      ),
-      // TargetFocus(
-      //   identify: 'read',
-      //   keyTarget: readKey,
-      //   contents: [
-      //     TargetContent(
-      //       builder: (context, controller) {
-      //         return Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [SizedBox(height: 20,),
-      //             Container(
-      //                 height: 150,
-      //                 width: 200,
-      //                 padding: EdgeInsets.all(8),
-      //                 decoration: BoxDecoration(
-      //                   color: Color(0xFFD9D9D9),
-      //                   borderRadius: BorderRadius.circular(20.0),
-      //                 ),
-      //                 child: Column(
-      //                   crossAxisAlignment:CrossAxisAlignment.end,
-      //                   children: [
-      //                     Text("Here you can find the latest books and can \n add them into your reading list."),
-      //                     ElevatedButton(
-      //                       onPressed: () {
-      //                         controller.next();
-      //                       },
-      //                       child: Text("Next"),
-      //                       style: ButtonStyle(
-      //                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-      //                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-      //                           RoundedRectangleBorder(
-      //                             borderRadius: BorderRadius.circular(15.0),
-      //                           ),
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 )),
-      //
-      //           ],
-      //         );
-      //       },
-      //       align: ContentAlign.bottom,
-      //     ),
-      //   ],
-      // ),
-      TargetFocus(
-        identify: 'more',
-        keyTarget: moreKey,
-        contents: [
-          TargetContent(
-            builder: (context, controller) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [SizedBox(height: 20,),
-                  Container(
-                      height: 150,
-                      width: 200,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment:CrossAxisAlignment.end,
-                        children: [
-                          Text("Here you can find the all the books and can \n add them into your reading list."),
-                          ElevatedButton(
-                            onPressed: () {
-                              controller.next();
-                            },
-                            child: Text("Next"),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-
-                ],
-              );
-            },
-            align: ContentAlign.bottom,
-          ),
-        ],
-      ),
-    ];
-  }
+// void _showTutorialCoachMark()async{
+//     SharedPreferences preferences = await SharedPreferences.getInstance();
+//     preferences.setBool("firstTime", false);
+//     _initTarget();
+//     tutorialCoachMark = TutorialCoachMark(
+//       targets: targets,
+//
+//     )..show(context: context);
+// }
+//   void _initTarget() {
+//     targets = [
+//       TargetFocus(
+//         identify: 'streaks',
+//         keyTarget: streakRowKey,
+//         contents: [
+//           TargetContent(
+//             builder: (context, controller) {
+//               return Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [SizedBox(height: 20,),
+//                   Container(
+//                       height: 150,
+//                       width: 200,
+//                       padding: EdgeInsets.all(8),
+//                       decoration: BoxDecoration(
+//                         color: Color(0xFFD9D9D9),
+//                         borderRadius: BorderRadius.circular(20.0),
+//                       ),
+//                       child: Column(
+//                         crossAxisAlignment:CrossAxisAlignment.end,
+//                         children: [
+//                           Text("Here you can find the streaks , \n The streak counts increases as per you complete \n your daily goal of reading."),
+//                           ElevatedButton(
+//                             onPressed: () {
+//                               controller.next();
+//                             },
+//                             child: Text("Next"),
+//                             style: ButtonStyle(
+//                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+//                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//                                 RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(15.0),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       )),
+//
+//                 ],
+//               );
+//             },
+//             align: ContentAlign.bottom,
+//           ),
+//         ],
+//       ),
+//       TargetFocus(
+//         identify: 'time',
+//         keyTarget: timeKey,
+//         contents: [
+//           TargetContent(
+//             builder: (context, controller) {
+//               return Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [SizedBox(height: 20,),
+//                   Container(
+//                       height: 150,
+//                       width: 200,
+//                       padding: EdgeInsets.all(8),
+//                       decoration: BoxDecoration(
+//                         color: Color(0xFFD9D9D9),
+//                         borderRadius: BorderRadius.circular(20.0),
+//                       ),
+//                       child: Column(
+//                         crossAxisAlignment:CrossAxisAlignment.end,
+//                         children: [
+//                           Text("Here you can find the times of your daily goal, \n and the total time you have spent reading."),
+//                           ElevatedButton(
+//                             onPressed: () {
+//                               controller.next();
+//                             },
+//                             child: Text("Next"),
+//                             style: ButtonStyle(
+//                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+//                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//                                 RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(15.0),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       )),
+//
+//                 ],
+//               );
+//             },
+//             align: ContentAlign.bottom,
+//           ),
+//         ],
+//       ),
+//       // TargetFocus(
+//       //   identify: 'read',
+//       //   keyTarget: readKey,
+//       //   contents: [
+//       //     TargetContent(
+//       //       builder: (context, controller) {
+//       //         return Column(
+//       //           crossAxisAlignment: CrossAxisAlignment.start,
+//       //           children: [SizedBox(height: 20,),
+//       //             Container(
+//       //                 height: 150,
+//       //                 width: 200,
+//       //                 padding: EdgeInsets.all(8),
+//       //                 decoration: BoxDecoration(
+//       //                   color: Color(0xFFD9D9D9),
+//       //                   borderRadius: BorderRadius.circular(20.0),
+//       //                 ),
+//       //                 child: Column(
+//       //                   crossAxisAlignment:CrossAxisAlignment.end,
+//       //                   children: [
+//       //                     Text("Here you can find the latest books and can \n add them into your reading list."),
+//       //                     ElevatedButton(
+//       //                       onPressed: () {
+//       //                         controller.next();
+//       //                       },
+//       //                       child: Text("Next"),
+//       //                       style: ButtonStyle(
+//       //                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+//       //                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//       //                           RoundedRectangleBorder(
+//       //                             borderRadius: BorderRadius.circular(15.0),
+//       //                           ),
+//       //                         ),
+//       //                       ),
+//       //                     ),
+//       //                   ],
+//       //                 )),
+//       //
+//       //           ],
+//       //         );
+//       //       },
+//       //       align: ContentAlign.bottom,
+//       //     ),
+//       //   ],
+//       // ),
+//       TargetFocus(
+//         identify: 'more',
+//         keyTarget: moreKey,
+//         contents: [
+//           TargetContent(
+//             builder: (context, controller) {
+//               return Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [SizedBox(height: 20,),
+//                   Container(
+//                       height: 150,
+//                       width: 200,
+//                       padding: EdgeInsets.all(8),
+//                       decoration: BoxDecoration(
+//                         color: Color(0xFFD9D9D9),
+//                         borderRadius: BorderRadius.circular(20.0),
+//                       ),
+//                       child: Column(
+//                         crossAxisAlignment:CrossAxisAlignment.end,
+//                         children: [
+//                           Text("Here you can find the all the books and can \n add them into your reading list."),
+//                           ElevatedButton(
+//                             onPressed: () {
+//                               controller.next();
+//                             },
+//                             child: Text("Next"),
+//                             style: ButtonStyle(
+//                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+//                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//                                 RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(15.0),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       )),
+//
+//                 ],
+//               );
+//             },
+//             align: ContentAlign.bottom,
+//           ),
+//         ],
+//       ),
+//     ];
+//   }
 
 
   @override

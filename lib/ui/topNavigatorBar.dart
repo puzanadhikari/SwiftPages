@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:swiftpages/ui/profilePage.dart';
 import 'chats/chatUiListing.dart';
 import 'community/myPosts.dart';
 import 'community/savedPosts.dart';
+import 'community/searchPage.dart';
 import 'community/ui.dart';
 import 'notificationPage.dart';
 
@@ -18,6 +21,9 @@ class TopNavigation extends StatefulWidget {
 }
 
 class _TopNavigationState extends State<TopNavigation> {
+  late Stream<List<Map<String, dynamic>>> _usersStream;
+  late TextEditingController _searchController;
+  List<Map<String, dynamic>> _users = [];
   Stream<int> getActivityCountStream() async* {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -33,6 +39,28 @@ class _TopNavigationState extends State<TopNavigation> {
     } else {
       yield 0;
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _searchController = TextEditingController();
+    _usersStream = FirebaseFirestore.instance
+        .collection('users')
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs
+          .map((doc) =>
+      {
+
+        'userId': doc.id,
+        'username': doc['username'] ?? 'Unknown User',
+
+        // Add any other properties you need
+      })
+          .toList();
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -64,11 +92,11 @@ class _TopNavigationState extends State<TopNavigation> {
               ),
             ),
             Positioned(
-              top: -20,
+              top:-20,
               left: -10,
               child: Image.asset(
                 "assets/logo.png",
-                height: 120,
+                height: 150,
               ),
             ),
             Positioned(
@@ -124,10 +152,55 @@ class _TopNavigationState extends State<TopNavigation> {
                 ),
               ),
             ),
+            Positioned(
+              top: 5,
+              right: 40,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SearchPage()));
+                },
+                child: Image.asset(
+                  "assets/search.png",
+                  height: 50,
+                ),
+              ),
+            ),
+
+
+
+
           ],
         ),
       ),
     );
+  }
+  void _onSearchChanged(String query) {
+    setState(() {
+      _usersStream = FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('username', descending: false)
+          .startAt([query])
+          .endAt([query + '\uf8ff'])
+          .snapshots()
+          .map((querySnapshot) {
+        return querySnapshot.docs
+            .map((doc) => {
+          'userId': doc.id,
+          'username': (doc['username'] as String?) ?? 'Unknown User',
+          'avatar' : doc['avatar']
+          // Add any other properties you need
+        })
+            .toList();
+      });
+    });
+  }
+
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }
 
@@ -183,6 +256,7 @@ class TopNavigationBar extends StatelessWidget {
       ),
     );
   }
+
 }
 
 
