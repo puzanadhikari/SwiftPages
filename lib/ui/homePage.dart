@@ -1964,7 +1964,7 @@ userName  = preferences.getString("userName")!;
 
         // Update the local state with the new notes
         setState(() {
-          book.notes.add({'quote': newQuote, 'pageNumber': pageNumber});
+          book.quotes.add({'quote': newQuote, 'pageNumber': pageNumber});
         });
 
         print('Quotes added successfully!');
