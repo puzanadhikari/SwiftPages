@@ -478,8 +478,16 @@ class _TimerPageState extends State<TimerPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Notes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
-                              Text("Quotes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
+                              GestureDetector(
+                                  onTap:(){
+                        _showAddNotesDialog(widget.book);
+                        },
+                                  child: Text("Notes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),)),
+                              GestureDetector(
+                                  onTap: (){
+                                    _showAddQuotesDialog(widget.book);
+                                  },
+                                  child: Text("Quotes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),)),
                                   Text('Page',style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
                             ],
                           ),
@@ -1587,6 +1595,191 @@ class _TimerPageState extends State<TimerPage> {
     } catch (error) {
       print('Error retrieving stored time: $error');
     }
+  }
+  void _showAddNotesDialog(DetailBook book) {
+    showDialog(
+
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController notesController = TextEditingController();
+
+        return AlertDialog(
+          backgroundColor: Color(0xffFEEAD4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          title: Text('Notes'),
+
+          content: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color:Colors.grey[100],
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextField(
+                      controller: notesController,
+                      onChanged: (value) {
+
+                      },
+                      cursorColor: Color(0xFFD9D9D9),
+                      decoration: InputDecoration(
+                        hintText: 'Write your note',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: InputBorder.none,
+
+                      ),
+
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+
+                    ),
+
+                  ),
+                  child: TextButton(
+                    onPressed: (){
+                      setState(() {
+                        String newNote = notesController.text.trim();
+                        if (newNote.isNotEmpty) {
+                          addNote(book, newNote);
+                          notesController.clear();
+                          Fluttertoast.showToast(
+                            msg: "Note added successfully!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Color(0xFF283E50),
+                            textColor: Colors.white,
+                          );
+                          Navigator.pop(context);
+                        }
+                      });
+                    },
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          ],
+        );
+      },
+    );
+  }
+  void _showAddQuotesDialog(DetailBook book) {
+    showDialog(
+
+      context: context,
+      builder: (BuildContext context) {
+
+        TextEditingController quotesController = TextEditingController();
+
+        return AlertDialog(
+          backgroundColor: Color(0xffFEEAD4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          title: Text('Quotes'),
+
+          content: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color:Colors.grey[100],
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextField(
+                      controller: quotesController,
+                      onChanged: (value) {
+
+                      },
+                      cursorColor: Color(0xFFD9D9D9),
+                      decoration: InputDecoration(
+                        hintText: 'Write your Quote',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: InputBorder.none,
+
+                      ),
+
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+
+                    ),
+
+                  ),
+                  child: TextButton(
+                    onPressed: (){
+                      setState(() {
+                        String newQuote = quotesController.text.trim();
+                        if (newQuote.isNotEmpty) {
+                          addQuote(book, newQuote);
+                          quotesController.clear();
+                          Fluttertoast.showToast(
+                            msg: "Quote added successfully!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Color(0xFF283E50),
+                            textColor: Colors.white,
+                          );
+                        }
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          ],
+        );
+      },
+    );
   }
 }
 
