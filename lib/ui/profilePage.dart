@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swiftpages/contactUs.dart';
 import 'package:swiftpages/ui/choosePage.dart';
 import 'package:swiftpages/ui/community/savedPosts.dart';
 import 'package:swiftpages/ui/community/ui.dart';
@@ -604,12 +605,35 @@ class _ProfilePageState extends State<ProfilePage> {
                               thickness: 1,
                               color: Colors.black.withOpacity(0.25),
                             ),
-                            GestureDetector(
-                                onTap: (){
-                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsPage()));
-                                },
-                                child: Text("About us",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),fontWeight: FontWeight.bold),)),
-
+                            Text(
+                              "Profile Setting",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            SizedBox(height: 20,),
+                           Row(
+                             children: [
+                               Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
+                               SizedBox(width: 15,),
+                               GestureDetector(
+                                   onTap: (){
+                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsPage()));
+                                   },
+                                   child: Text("About us",style: TextStyle(fontSize: 16,color:   Color(0xFF686868)),)),
+                             ],
+                           ),
+                            SizedBox(height: 20,),
+                            Row(
+                              children: [
+                                Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUsPage()));
+                                    },
+                                    child: Text("Contact us",style: TextStyle(fontSize: 16,color:   Color(0xFF686868)),)),
+                              ],
+                            )
                           ],
                         ),
                       ),

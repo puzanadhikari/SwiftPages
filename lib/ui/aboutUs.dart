@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg instead of flutter_svg/svg.dart
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:swiftpages/contactUs.dart';
 import 'package:swiftpages/ui/myBooks.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -158,7 +159,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                         padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
                         child: ElevatedButton(
                           onPressed: () {
-
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUsPage()));
                           },
                           child: Text("Contact Us",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 18),),
                           style: ButtonStyle(
