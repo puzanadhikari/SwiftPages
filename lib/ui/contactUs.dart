@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ContactUsPage extends StatefulWidget {
@@ -8,6 +12,38 @@ class ContactUsPage extends StatefulWidget {
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController msg = TextEditingController();
+  Future addFormData() async {
+    try {
+
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "email": email.text,
+         "username":name.text,
+          "message":msg.text
+        };
+        CollectionReference contactFormRef =
+        FirebaseFirestore.instance.collection('contact_form').doc(uid).collection('forms');
+
+
+        await contactFormRef.add(contactFormData);
+        email.clear();
+        name.clear();
+        msg.clear();
+
+
+        log('Form data stored successfully!');
+      }} catch (e) {
+      log('Error storing form data data: $e'); // Add this line to print the error
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -93,6 +129,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 30.0, vertical: 8.0),
                               child: TextFormField(
+                                controller: name,
                                 decoration: InputDecoration(
                                   hintText: 'Full Name',
                                   hintStyle: TextStyle(
@@ -114,6 +151,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 30.0, vertical: 8.0),
                               child: TextFormField(
+                                controller: email,
                                 decoration: InputDecoration(
                                   hintText: 'Email',
                                   hintStyle: TextStyle(
@@ -137,6 +175,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30.0, vertical: 8.0),
                                 child: TextFormField(
+                                  controller: msg,
                                   decoration: InputDecoration(
                                     hintText: 'Message',
                                     hintStyle: TextStyle(
@@ -152,7 +191,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                addFormData();
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 12.0),
                                 child: Text(

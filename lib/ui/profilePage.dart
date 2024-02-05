@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swiftpages/contactUs.dart';
+import 'package:swiftpages/ui/contactUs.dart';
 import 'package:swiftpages/ui/choosePage.dart';
 import 'package:swiftpages/ui/community/savedPosts.dart';
 import 'package:swiftpages/ui/community/ui.dart';

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg instead of flutter_svg/svg.dart
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:swiftpages/contactUs.dart';
+import 'package:swiftpages/ui/contactUs.dart';
 import 'package:swiftpages/ui/myBooks.dart';
 import 'package:url_launcher/url_launcher.dart';
 
