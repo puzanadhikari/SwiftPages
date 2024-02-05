@@ -32,7 +32,11 @@ List <String > pace = [
   'Medium',
   'Fast',
 ];
+List <String > genre = [];
+List <String > mood = [];
 String selectedPace = '';
+String selectedGenre = '';
+String selectedMood = '';
 
   @override
   void initState() {
@@ -297,7 +301,122 @@ String selectedPace = '';
                             },
                           ),
                         ),
+                        SizedBox(height: 20,),
+                        Text("Genre Tags",  style: const TextStyle(
+                            color: Color(0xFF283E50),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24),),
+                        SizedBox(height: 20,),
 
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection('genre').doc('LRagKW0Akvpz8E8cquRW').snapshots(),
+                          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return CircularProgressIndicator();
+                            }
+
+                            if (!snapshot.data!.exists) {
+                              return Text('Document does not exist');
+                            }
+
+                            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                            List<String> names = List.from(data['names']);
+
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFD9D9D9),
+                              ),
+
+                              child: GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 4.0,
+                                    mainAxisSpacing: 16.0,
+                                    childAspectRatio: 2.0
+                                ),
+                                itemCount: names.length,
+                                itemBuilder: (context, index) {
+                                  final isSelected = selectedGenre == names[index];
+                                  return GestureDetector(
+                                    onTap: (){
+                                      setState(() {
+                                        selectedGenre = names[index];
+                                        log(selectedGenre.toString());
+                                      });
+                                    },
+                                    child: Card(
+                                      child: Container(
+                                          width: 200,
+                                          height: 100,
+                                          color: isSelected ? Color(0xFF283E50): Color(0xFFFEEAD4),
+                                          child: Center(child: Text(names[index],style: TextStyle(fontWeight: FontWeight.bold,color: isSelected?Color(0xFFFEEAD4):Color(0xFF283E50)),))),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20,),
+                        Text("Mood Tags",  style: const TextStyle(
+                            color: Color(0xFF283E50),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24),),
+                        SizedBox(height: 20,),
+
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection('mood').doc('wMRGe5BuXbNeTkwOsNGh').snapshots(),
+                          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return CircularProgressIndicator();
+                            }
+
+                            if (!snapshot.data!.exists) {
+                              return Text('Document does not exist');
+                            }
+
+                            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                            List<String> names = List.from(data['names']);
+
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFD9D9D9),
+                              ),
+
+                              child: GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 4.0,
+                                    mainAxisSpacing: 16.0,
+                                    childAspectRatio: 2.0
+                                ),
+                                itemCount: names.length,
+                                itemBuilder: (context, index) {
+                                  final isSelected = selectedMood == names[index];
+                                  return GestureDetector(
+                                    onTap: (){
+                                      setState(() {
+                                        selectedMood = names[index];
+                                        log(selectedMood.toString());
+                                      });
+                                    },
+                                    child: Card(
+                                      child: Container(
+                                          width: 200,
+                                          height: 100,
+                                          color: isSelected ? Color(0xFF283E50): Color(0xFFFEEAD4),
+                                          child: Center(child: Text(names[index],style: TextStyle(fontWeight: FontWeight.bold,color: isSelected?Color(0xFFFEEAD4):Color(0xFF283E50)),))),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        )
 
                       ],
                     ),
