@@ -1763,6 +1763,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   child: TextButton(
                     onPressed: () {
                       updateStatusOfBook('COMPLETED');
+                      addFinishedDate(widget.book.documentId);
                       Navigator.pop(context);
                       Navigator.push(
                           context,
@@ -1817,6 +1818,32 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     );
   }
 
+  Future<void> addFinishedDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "finishedDate": DateTime.now(),
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
   void updateStatusOfBook(String status) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid;
@@ -2151,6 +2178,7 @@ class _CustomAlertForStartDateDialogState
       print('Error adding starting date: $e');
     }
   }
+
 
 
   void updateStatusOfBook(String status) async {
