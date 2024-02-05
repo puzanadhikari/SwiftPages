@@ -469,29 +469,29 @@ class _TimerPageState extends State<TimerPage> {
                                               color: Color(0xff686868)),
                                         )),
                                     Text(
-                                      "Started",
+                                      widget.book.startingDate==null?'-':widget.book.startingDate,
                                       style:
-                                          TextStyle(color: Color(0xff686868)),
+                                          TextStyle(color: Color(0xff686868),fontSize: 12),
                                     ),
                                   ],
                                 ),
                                 Container(
-                                    width: 200,
-                                    child: Center(
-                                        child: Text(
+                                    width: 120,
+                                    child: Text(
                                       widget.book.author,
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color: Color(0xff686868),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ))),
+                                      color: Color(0xff686868),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                    )),
                                 Text(
                                   widget.book.status == 'CURRENTLY READING'
                                       ? 'Reading'
                                       : widget.book.status == 'TO BE READ'
                                           ? 'Pending'
                                           : 'Finished',
-                                  style: TextStyle(color: Color(0xff686868)),
+                                  style: TextStyle(color: Color(0xff686868),fontSize: 12),
                                 ),
                               ],
                             ),
@@ -1691,59 +1691,55 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         height: 50,
         width: 100,
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Container(
-                  height: 50,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.totalPage,
-                    itemBuilder: (BuildContext context, int index) {
-                      int number = index + 1;
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedNumber = number;
-                          });
-                        },
-                        child: Container(
-                          width: 50,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: number == selectedNumber
-                                ? Color(0xffD9D9D9)
-                                : Colors.transparent,
-                            border: Border.all(
-                              color: number == selectedNumber
-                                  ? Color(0xffD9D9D9)
-                                  : Colors.transparent,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            '$number',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      );
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Container(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.totalPage,
+                itemBuilder: (BuildContext context, int index) {
+                  int number = index + 1;
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedNumber = number;
+                      });
                     },
-                  ),
-                ),
+                    child: Container(
+                      width: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: number == selectedNumber
+                            ? Color(0xffD9D9D9)
+                            : Colors.transparent,
+                        border: Border.all(
+                          color: number == selectedNumber
+                              ? Color(0xffD9D9D9)
+                              : Colors.transparent,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '$number',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
+          ),
         ),
       ),
       actions: <Widget>[
@@ -1755,6 +1751,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
+                  width: 100,
+                  height: 45,
                   decoration: BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
@@ -1788,6 +1786,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
+                  width: 100,
+                  height: 45,
                   decoration: BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
@@ -1902,7 +1902,10 @@ class CustomAlertForStartDateDialog extends StatefulWidget {
 
 class _CustomAlertForStartDateDialogState
     extends State<CustomAlertForStartDateDialog> {
-  int selectedNumber = 0;
+  int selectedYear = 0;
+  int selectedDays = 0;
+  String selectedMonth = '';
+  String startingDate = '';
 
   @override
   void initState() {
@@ -1920,27 +1923,21 @@ class _CustomAlertForStartDateDialogState
       title: Column(
         children: [
           Text(
-            'Done Reading?',
+            'Started Date',
             style: TextStyle(color: Color(0xff283E50)),
           ),
           Divider(
             color: Colors.grey,
             thickness: 1,
           ),
-          Text(
-            'Update your Progress',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xff686868),
-            ),
-          ),
+
         ],
       ),
       content: Container(
         height: 50,
         width: 100,
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Color(0xffFEEAD4),
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
@@ -1954,6 +1951,7 @@ class _CustomAlertForStartDateDialogState
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Container(
                   height: 50,
+
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: widget.year.length,
@@ -1962,18 +1960,18 @@ class _CustomAlertForStartDateDialogState
                       return InkWell(
                         onTap: () {
                           setState(() {
-                            selectedNumber = number;
+                            selectedYear = number;
                           });
                         },
                         child: Container(
                           width: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: number == selectedNumber
+                            color: number == selectedYear
                                 ? Color(0xffD9D9D9)
                                 : Colors.transparent,
                             border: Border.all(
-                              color: number == selectedNumber
+                              color: number == selectedYear
                                   ? Color(0xffD9D9D9)
                                   : Colors.transparent,
                               width: 2.0,
@@ -1985,6 +1983,7 @@ class _CustomAlertForStartDateDialogState
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Color(0xff686868),
                             ),
                           ),
                         ),
@@ -2007,18 +2006,18 @@ class _CustomAlertForStartDateDialogState
                       return InkWell(
                         onTap: () {
                           setState(() {
-                            // selectedNumber = number;
+                            selectedMonth = number;
                           });
                         },
                         child: Container(
                           width: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: number == selectedNumber
+                            color: number == selectedMonth
                                 ? Color(0xffD9D9D9)
                                 : Colors.transparent,
                             border: Border.all(
-                              color: number == selectedNumber
+                              color: number == selectedMonth
                                   ? Color(0xffD9D9D9)
                                   : Colors.transparent,
                               width: 2.0,
@@ -2030,6 +2029,7 @@ class _CustomAlertForStartDateDialogState
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Color(0xff686868),
                             ),
                           ),
                         ),
@@ -2052,18 +2052,18 @@ class _CustomAlertForStartDateDialogState
                       return InkWell(
                         onTap: () {
                           setState(() {
-                            selectedNumber = number;
+                            selectedDays = number;
                           });
                         },
                         child: Container(
                           width: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: number == selectedNumber
+                            color: number == selectedDays
                                 ? Color(0xffD9D9D9)
                                 : Colors.transparent,
                             border: Border.all(
-                              color: number == selectedNumber
+                              color: number == selectedDays
                                   ? Color(0xffD9D9D9)
                                   : Colors.transparent,
                               width: 2.0,
@@ -2075,6 +2075,7 @@ class _CustomAlertForStartDateDialogState
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Color(0xff686868),
                             ),
                           ),
                         ),
@@ -2088,75 +2089,69 @@ class _CustomAlertForStartDateDialogState
         ),
       ),
       actions: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF283E50),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  // Add your action widgets here
-                  child: TextButton(
-                    onPressed: () {
-                      updateStatusOfBook('COMPLETED');
-                      Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ReviewPage(
-                                    book: widget.book,
-                                  )));
-                      // Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Finish',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 115,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Color(0xFF283E50),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    startingDate = selectedYear.toString()+'/'+selectedMonth.toString()+'/'+selectedDays.toString();
+                    log(startingDate);
+                  });
+                  addStartingDate(widget.book.documentId);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  setState(() {});
+                },
+                child: Text(
+                  'Update',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF283E50),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      updatePageNumber(widget.book, selectedNumber);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      setState(() {});
-                    },
-                    child: Text(
-                      'Save',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ],
     );
   }
+  Future<void> addStartingDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "startingDate": startingDate,
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
+
 
   void updateStatusOfBook(String status) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -2222,4 +2217,5 @@ class _CustomAlertForStartDateDialogState
       print('Error updating page number: $e');
     }
   }
+
 }

@@ -438,6 +438,7 @@ class DetailBook {
   final String description;
   final String publishedDate;
   final String status;
+  final String startingDate;
   int currentPage;
   int totalPage;
   List<Map<String, dynamic>> notes; // Updated to list of maps
@@ -451,6 +452,7 @@ class DetailBook {
     required this.description,
     required this.publishedDate,
     required this.status,
+    required this.startingDate,
     this.currentPage = 0,
     this.totalPage = 0,
     this.notes = const [], // Initialize notes as an empty list of maps
@@ -467,6 +469,7 @@ class DetailBook {
         description: 'description',
         publishedDate: 'publishedDate',
         status: 'status',
+        startingDate: 'startingDate',
         totalPage: 100,
       );
     }
@@ -477,6 +480,7 @@ class DetailBook {
       description: map['description'] ?? 'No Description',
       publishedDate: map['publishedDate'] ?? '-',
       status: map['status'] ?? '-',
+      startingDate: map['startingDate'] ?? '-',
       currentPage: map['currentPage'] ?? 0,
       totalPage: map['totalPageCount'] ?? 0,
       notes: List<Map<String, dynamic>>.from(map['notes'] ?? []),
