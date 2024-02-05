@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:async';
+
 // import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +16,6 @@ import '../myBooks.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
 import '../reviewPage.dart';
-
 
 class Music {
   final String title;
@@ -36,36 +36,89 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
   int additionalTimerValue = 0;
+
   Future<void> fetchUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     int time = preferences.getInt('currentTime')!;
-
   }
+
   final CountdownController _controller = CountdownController(autoStart: false);
-  final CountdownController _additionalController = CountdownController(autoStart: false);
+  final CountdownController _additionalController =
+      CountdownController(autoStart: false);
   TextEditingController _quoteContoller = TextEditingController();
   TextEditingController _noteContoller = TextEditingController();
   TextEditingController _currentPage = TextEditingController();
-  int totalTimeMin=0;
-  int totalTimeSec=0;
-  String dailyGoal='';
-   int _duration = 0;
-   int currentTime=0;
+  int totalTimeMin = 0;
+  int totalTimeSec = 0;
+  String dailyGoal = '';
+  int _duration = 0;
+  int currentTime = 0;
+  List<int> year = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+  List<int> days = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ];
+
+  List<String> month = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+
   // final CountDownController _controller = CountDownController();
   late bool _isRunning;
   late bool _isPlaying;
   int totalPages = 0;
+
   Future<void> fetchData() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
     try {
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc(_auth.currentUser?.uid).get();
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
 
       if (userDoc.exists) {
-
-
         setState(() {
           totalTimeMin = userDoc.get('totalTimeMin') ?? 0;
           totalTimeSec = userDoc.get('totalTimeSec') ?? 0;
@@ -75,6 +128,7 @@ class _TimerPageState extends State<TimerPage> {
       log('Error fetching data: $error');
     }
   }
+
   final AudioPlayer audioPlayer = AudioPlayer();
 
   double calculatePercentage() {
@@ -86,8 +140,9 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   Reference get firebaseStorage => FirebaseStorage.instance.ref();
-  String twoDigitMinutes='';
-  String twoDigitSeconds='';
+  String twoDigitMinutes = '';
+  String twoDigitSeconds = '';
+
   Future<void> loadMusic() async {
     List<Music> urls = []; // Update the type to List<Music>
 
@@ -130,12 +185,14 @@ class _TimerPageState extends State<TimerPage> {
       log('Error: Empty file path.');
     }
   }
+
   Future<void> pauseMusic() async {
     await audioPlayer.pause();
     setState(() {
-      _isPlaying=false;
+      _isPlaying = false;
     });
   }
+
   void _onTimerTick(Timer timer) {
     if (_stopwatch.isRunning) {
       setState(() {
@@ -143,8 +200,11 @@ class _TimerPageState extends State<TimerPage> {
       });
     }
   }
-  int selectedNumber =0 ;
+
+  int selectedNumber = 0;
+
   late Stopwatch _stopwatch;
+
   // @override
   // void dispose() {
   //   _timer.cancel();
@@ -155,7 +215,8 @@ class _TimerPageState extends State<TimerPage> {
     int remainingSeconds = seconds % 60;
 
     String minutesStr = minutes < 10 ? '0$minutes' : '$minutes';
-    String secondsStr = remainingSeconds < 10 ? '0$remainingSeconds' : '$remainingSeconds';
+    String secondsStr =
+        remainingSeconds < 10 ? '0$remainingSeconds' : '$remainingSeconds';
 
     return '$minutesStr:$secondsStr';
   }
@@ -212,7 +273,7 @@ class _TimerPageState extends State<TimerPage> {
     fetchUserInfo();
     loadMusic();
     fetchData();
-    totalPages = widget.book.totalPage==0?200:widget.book.totalPage;
+    totalPages = widget.book.totalPage == 0 ? 200 : widget.book.totalPage;
     _isRunning = false;
     _isPlaying = false;
     _stopwatch = Stopwatch();
@@ -241,13 +302,11 @@ class _TimerPageState extends State<TimerPage> {
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Padding(
-            padding: const EdgeInsets.only(left:20.0,right: 20),
+            padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Container(
-              color:Color(0xffD9D9D9),
+              color: Color(0xffD9D9D9),
               child: Stack(
-
                 children: [
-
                   Positioned(
                     top: 10,
                     right: 10,
@@ -257,16 +316,18 @@ class _TimerPageState extends State<TimerPage> {
                         color: Color(0xFF283E50),
                         borderRadius: BorderRadius.all(
                           Radius.circular(15),
-
                         ),
-
                       ),
                       child: TextButton(
                         onPressed: () async {
                           int? result = await showDialog<int>(
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomAlertDialog(book:widget.book,totalPage: widget.book.totalPage,currentPage: widget.book.currentPage,);
+                              return CustomAlertDialog(
+                                book: widget.book,
+                                totalPage: widget.book.totalPage,
+                                currentPage: widget.book.currentPage,
+                              );
                             },
                           );
 
@@ -275,7 +336,6 @@ class _TimerPageState extends State<TimerPage> {
                             print('Selected Number: $result');
                           }
                         },
-
                         child: Text(
                           'Done',
                           style: TextStyle(color: Colors.white),
@@ -285,11 +345,17 @@ class _TimerPageState extends State<TimerPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(40.0),
-                    child: Center(child: Text(widget.book.currentPage.toString()+'/'+totalPages.toString(),style: TextStyle(
-                      color:  Color(0xff686868),fontSize: 18,fontWeight: FontWeight.bold
-                    ),)),
+                    child: Center(
+                        child: Text(
+                      widget.book.currentPage.toString() +
+                          '/' +
+                          totalPages.toString(),
+                      style: TextStyle(
+                          color: Color(0xff686868),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    )),
                   ),
-
                   Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
@@ -302,27 +368,31 @@ class _TimerPageState extends State<TimerPage> {
                             Stack(
                               alignment: Alignment.topLeft,
                               children: [
-
                                 Padding(
-                                  padding: const EdgeInsets.only(top:30.0),
+                                  padding: const EdgeInsets.only(top: 30.0),
                                   child: Column(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(30.0),
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
                                         child: Image.network(
                                           widget.book.imageLink,
                                           height: 200,
                                           width: 150,
-                                          loadingBuilder: (BuildContext context, Widget child,
-                                              ImageChunkEvent? loadingProgress) {
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent?
+                                                  loadingProgress) {
                                             if (loadingProgress == null) {
                                               // Image is fully loaded, display the actual image
                                               return child;
                                             } else {
                                               // Image is still loading, display a placeholder or loading indicator
                                               return Center(
-                                                child: CircularProgressIndicator(
-                                                  value: loadingProgress.expectedTotalBytes !=
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: loadingProgress
+                                                              .expectedTotalBytes !=
                                                           null
                                                       ? loadingProgress
                                                               .cumulativeBytesLoaded /
@@ -336,7 +406,9 @@ class _TimerPageState extends State<TimerPage> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
 
                                       // Container(
                                       //   height: 40,
@@ -369,49 +441,113 @@ class _TimerPageState extends State<TimerPage> {
                               children: [
                                 Column(
                                   children: [
-                                    Text("Started",style: TextStyle(color: Color(0xff686868)),),
-                                    Text("Started",style: TextStyle(color: Color(0xff686868)),),
+                                    GestureDetector(
+                                        onTap: ()async {
+                                          int? result = await showDialog<int>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return
+                                              CustomAlertForStartDateDialog(
+                                                book: widget.book,
+                                                year: year,
+                                                days: days,
+                                                month: month,
+                                              );
+                                            },
+                                          );
+
+                                          if (result != null) {
+                                            // Do something with the selected number
+                                            print('Selected Number: $result');
+                                          }
+                                        },
+
+
+                                        child: Text(
+                                          "Started",
+                                          style: TextStyle(
+                                              color: Color(0xff686868)),
+                                        )),
+                                    Text(
+                                      "Started",
+                                      style:
+                                          TextStyle(color: Color(0xff686868)),
+                                    ),
                                   ],
                                 ),
                                 Container(
                                     width: 200,
-                                    child: Center(child: Text(widget.book.author,style: TextStyle(color: Color(0xff686868),fontWeight: FontWeight.bold,fontSize: 16),))),
-                                Text(widget.book.status=='CURRENTLY READING'?'Reading':widget.book.status=='TO BE READ'?'Pending':'Finished',style: TextStyle(color: Color(0xff686868)),),
+                                    child: Center(
+                                        child: Text(
+                                      widget.book.author,
+                                      style: TextStyle(
+                                          color: Color(0xff686868),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ))),
+                                Text(
+                                  widget.book.status == 'CURRENTLY READING'
+                                      ? 'Reading'
+                                      : widget.book.status == 'TO BE READ'
+                                          ? 'Pending'
+                                          : 'Finished',
+                                  style: TextStyle(color: Color(0xff686868)),
+                                ),
                               ],
                             ),
                             Divider(
-                              color:Color(0xffFEEAD4) ,
+                              color: Color(0xffFEEAD4),
                               thickness: 1,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   GestureDetector(
-                                      onTap:(){
-                            _showAddNotesDialog(widget.book);
-                            },
-                                      child: Text("Notes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),)),
+                                      onTap: () {
+                                        _showAddNotesDialog(widget.book);
+                                      },
+                                      child: Text(
+                                        "Notes",
+                                        style: TextStyle(
+                                            color: Color(0xff283E50),
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold),
+                                      )),
                                   GestureDetector(
-                                      onTap: (){
+                                      onTap: () {
                                         _showAddQuotesDialog(widget.book);
                                       },
-                                      child: Text("Quotes",style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),)),
-                                      Text('Page',style: TextStyle(color: Color(0xff283E50),fontSize: 24,fontWeight: FontWeight.bold),),
+                                      child: Text(
+                                        "Quotes",
+                                        style: TextStyle(
+                                            color: Color(0xff283E50),
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  Text(
+                                    'Page',
+                                    style: TextStyle(
+                                        color: Color(0xff283E50),
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ],
                               ),
                             ),
                             Divider(
-                              color:Color(0xffFEEAD4) ,
+                              color: Color(0xffFEEAD4),
                               thickness: 1,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     children: [
@@ -434,7 +570,8 @@ class _TimerPageState extends State<TimerPage> {
                                           print('Countdown finished!');
                                           try {
                                             // Your existing code here
-                                            ScaffoldMessenger.of(context).showSnackBar(
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
                                               SnackBar(
                                                 content: Text('Timer is done!'),
                                               ),
@@ -446,12 +583,15 @@ class _TimerPageState extends State<TimerPage> {
                                               // _isRunning = false;
                                             });
                                           } catch (e) {
-                                            print('Error in onFinished callback: $e');
+                                            print(
+                                                'Error in onFinished callback: $e');
                                             log('Error in onFinished callback: $e');
                                           }
                                         },
                                       ),
-                                      SizedBox(height: 5,),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
                                       Text(
                                         "Daily Goal",
                                         style: TextStyle(
@@ -459,16 +599,31 @@ class _TimerPageState extends State<TimerPage> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                      ), ],
+                                      ),
+                                    ],
                                   ),
                                   Column(
                                     children: [
-                                      Text(  _formatDuration(_stopwatch.elapsed),style: TextStyle(color: Color(0xff686868),fontSize: 30,fontWeight: FontWeight.bold),),
-                                      SizedBox(height: 5,),
-                                      Text("Total Time",style: TextStyle(color: Color(0xff283E50),fontSize: 16,fontWeight: FontWeight.bold),),
+                                      Text(
+                                        _formatDuration(_stopwatch.elapsed),
+                                        style: TextStyle(
+                                            color: Color(0xff686868),
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "Total Time",
+                                        style: TextStyle(
+                                            color: Color(0xff283E50),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ],
                                   ),
-                                    ],
+                                ],
                               ),
                             ),
                             Container(
@@ -477,14 +632,17 @@ class _TimerPageState extends State<TimerPage> {
                               child: ElevatedButton(
                                 onPressed: _startPauseTimer,
                                 style: ElevatedButton.styleFrom(
-                                  primary: Color(0xff283E50), // Set your desired button color
+                                  primary: Color(0xff283E50),
+                                  // Set your desired button color
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // Adjust the radius as needed
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                                  child:Text(
+                                  padding: const EdgeInsets.all(10.0),
+                                  // Adjust the padding as needed
+                                  child: Text(
                                     _isRunning ? 'Pause' : 'Start',
                                     style: TextStyle(fontSize: 16.0),
                                   ),
@@ -492,21 +650,24 @@ class _TimerPageState extends State<TimerPage> {
                               ),
                             ),
                             Divider(
-                              color:Color(0xffFEEAD4) ,
+                              color: Color(0xffFEEAD4),
                               thickness: 1,
                             ),
-
-                            Text("Notes",  style: const TextStyle(
-                                color: Color(0xFF283E50),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),),
-                            SizedBox(height: 15,),
+                            Text(
+                              "Notes",
+                              style: const TextStyle(
+                                  color: Color(0xFF283E50),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
                             Container(
                               // height: 250,
                               width: MediaQuery.of(context).size.width,
                               // padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                               child: Column(
@@ -517,34 +678,54 @@ class _TimerPageState extends State<TimerPage> {
                                     children: widget.book.notes.map((note) {
                                       return Card(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                        color:  Color(0xFFFEEAD4).withOpacity(0.9),
+                                        color:
+                                            Color(0xFFFEEAD4).withOpacity(0.9),
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
-                                              width: MediaQuery.of(context).size.width,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    flex:5,
+                                                    flex: 5,
                                                     child: Text(
                                                       note['note'],
-                                                      style: TextStyle(fontSize: 12, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Color(0xff686868),
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    flex:1,
+                                                    flex: 1,
                                                     child: Padding(
-                                                      padding:  EdgeInsets.only(top: 20),
+                                                      padding: EdgeInsets.only(
+                                                          top: 20),
                                                       child: Text(
-                                                        'Page -'+note['pageNumber'],
-
-                                                        style: TextStyle(fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                        'Page -' +
+                                                            note['pageNumber'],
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: Color(
+                                                                0xff686868),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                     ),
                                                   ),
@@ -572,26 +753,28 @@ class _TimerPageState extends State<TimerPage> {
                                   //   )
                                   //
                                   // ),
-
                                 ],
                               ),
                             ),
                             Divider(
-                              color:Color(0xffFEEAD4) ,
+                              color: Color(0xffFEEAD4),
                               thickness: 1,
                             ),
-
-                            Text("Quotes",  style: const TextStyle(
-                                color: Color(0xFF283E50),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),),
-                            SizedBox(height: 15,),
+                            Text(
+                              "Quotes",
+                              style: const TextStyle(
+                                  color: Color(0xFF283E50),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
                             Container(
                               // height: 250,
                               width: MediaQuery.of(context).size.width,
 
                               decoration: BoxDecoration(
-
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                               child: Column(
@@ -602,34 +785,55 @@ class _TimerPageState extends State<TimerPage> {
                                     children: widget.book.quotes.map((quotes) {
                                       return Card(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                        color: const Color(0xFFFEEAD4).withOpacity(0.9),
+                                        color: const Color(0xFFFEEAD4)
+                                            .withOpacity(0.9),
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
-                                              width: MediaQuery.of(context).size.width,
-                                              child:  Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    flex:5,
+                                                    flex: 5,
                                                     child: Text(
                                                       quotes['quote'],
-                                                      style: TextStyle(fontSize: 12, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Color(0xff686868),
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    flex:1,
+                                                    flex: 1,
                                                     child: Padding(
-                                                      padding:  EdgeInsets.only(top: 20),
+                                                      padding: EdgeInsets.only(
+                                                          top: 20),
                                                       child: Text(
-                                                        'Page -'+quotes['pageNumber'],
-
-                                                        style: TextStyle(fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                        'Page -' +
+                                                            quotes[
+                                                                'pageNumber'],
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: Color(
+                                                                0xff686868),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                     ),
                                                   ),
@@ -657,48 +861,40 @@ class _TimerPageState extends State<TimerPage> {
                                   //   )
                                   //
                                   // ),
-
                                 ],
                               ),
                             ),
-
                           ],
                         ),
                       ),
                     ),
                   ),
-
-
-
                 ],
               ),
             ),
           ),
         ),
         extendBody: true,
-
       ),
     );
   }
 
   void _showDoneDialog(DetailBook book) {
     showDialog(
-
       context: context,
       builder: (BuildContext context) {
-
         return AlertDialog(
           backgroundColor: Color(0xffFEEAD4),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+            borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
           ),
           title: Text('Done Reading?'),
-
           content: Container(
             height: 50,
             width: 100,
             decoration: BoxDecoration(
-              color:Colors.grey[100],
+              color: Colors.grey[100],
               borderRadius: BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -707,8 +903,8 @@ class _TimerPageState extends State<TimerPage> {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child:Container(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Container(
                       height: 50,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -746,7 +942,6 @@ class _TimerPageState extends State<TimerPage> {
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -759,15 +954,11 @@ class _TimerPageState extends State<TimerPage> {
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
-
                     ),
-
                   ),
                   child: TextButton(
-                    onPressed: (){
-                      setState(() {
-
-                      });
+                    onPressed: () {
+                      setState(() {});
                     },
                     child: Text(
                       'Done',
@@ -777,7 +968,6 @@ class _TimerPageState extends State<TimerPage> {
                 ),
               ),
             ),
-
           ],
         );
       },
@@ -786,15 +976,10 @@ class _TimerPageState extends State<TimerPage> {
 
   int? _additionalTimer;
 
-  void _startAdditionalTimer() {
-
-
-  }
+  void _startAdditionalTimer() {}
 
   void _pauseAdditionalTimer() {
-      setState(() {
-
-      });
+    setState(() {});
   }
 
   void _showPersistentMusicBottomSheet(BuildContext context) {
@@ -869,6 +1054,7 @@ class _TimerPageState extends State<TimerPage> {
       },
     );
   }
+
   void _showInvitationCodePopupToEnterCurrentPage(BuildContext context) {
     showDialog(
       context: context,
@@ -919,12 +1105,14 @@ class _TimerPageState extends State<TimerPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if(int.parse(_currentPage.text)>widget.book.totalPage){
+                    if (int.parse(_currentPage.text) > widget.book.totalPage) {
                       _currentPage.clear();
-                      Fluttertoast.showToast(msg: "The number is greater than the total page of the book!");
-                    }else{
-
-                      updatePageNumber(widget.book,int.parse(_currentPage.text));
+                      Fluttertoast.showToast(
+                          msg:
+                              "The number is greater than the total page of the book!");
+                    } else {
+                      updatePageNumber(
+                          widget.book, int.parse(_currentPage.text));
                       _currentPage.clear();
                     }
 
@@ -932,9 +1120,17 @@ class _TimerPageState extends State<TimerPage> {
                   },
                   child: Container(
                       width: 120,
-                      child: Center(child: Text("Update",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                      child: Center(
+                          child: Text(
+                        "Update",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                      ))),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -949,6 +1145,7 @@ class _TimerPageState extends State<TimerPage> {
       },
     );
   }
+
   void updatePageNumber(DetailBook book, int newPageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -979,6 +1176,7 @@ class _TimerPageState extends State<TimerPage> {
       print('Error updating page number: $e');
     }
   }
+
   Future<void> updateStrikeInFirestore() async {
     try {
       // Get the current user
@@ -998,7 +1196,6 @@ class _TimerPageState extends State<TimerPage> {
           DateTime lastStrikeTimestamp =
               (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
           if (DateTime.now().difference(lastStrikeTimestamp).inHours >= 12) {
-
             await FirebaseFirestore.instance
                 .collection('users')
                 .doc(uid)
@@ -1015,7 +1212,6 @@ class _TimerPageState extends State<TimerPage> {
             print('Cannot add a new strike within 24 hours.');
           }
         } else {
-
           await FirebaseFirestore.instance
               .collection('users')
               .doc(uid)
@@ -1035,6 +1231,7 @@ class _TimerPageState extends State<TimerPage> {
       print('Error updating strike in Firestore: $e');
     }
   }
+
   void _handleTimerButtonPressed() {
     setState(() {
       _isRunning = !_isRunning;
@@ -1068,8 +1265,10 @@ class _TimerPageState extends State<TimerPage> {
 
     try {
       // Retrieve the stored time from Firestore
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc(_auth.currentUser?.uid).get();
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
 
       if (userDoc.exists) {
         // Get the stored time values
@@ -1081,7 +1280,10 @@ class _TimerPageState extends State<TimerPage> {
         int updatedSeconds = storedSeconds + elapsedSeconds;
 
         // Update the Firestore document with the new values
-        await _firestore.collection('users').doc(_auth.currentUser?.uid).update({
+        await _firestore
+            .collection('users')
+            .doc(_auth.currentUser?.uid)
+            .update({
           'currentTime': currentTime,
           'totalTimeMin': updatedMinutes,
           'totalTimeSec': updatedSeconds,
@@ -1090,28 +1292,36 @@ class _TimerPageState extends State<TimerPage> {
         print('Data updated for user with ID: ${_auth.currentUser?.uid}');
       }
     } catch (error) {
-      print('Error updating data for user with ID: ${_auth.currentUser?.uid} - $error');
+      print(
+          'Error updating data for user with ID: ${_auth.currentUser?.uid} - $error');
     }
   }
 
   Future<void> _storeCurrentTimeOnFinished() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
-      await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'currentTime':0});
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .update({'currentTime': 0});
       print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
     } catch (error) {
-      print('Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
+      print(
+          'Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
       // Handle the error (e.g., show an error message)
     }
   }
-  void addNote(DetailBook book, String newNote,String pageNumber) async {
+
+  void addNote(DetailBook book, String newNote, String pageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         String uid = user.uid;
 
-        CollectionReference myBooksRef =
-        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
 
         // Update the notes in the Firestore document
         await myBooksRef.doc(book.documentId).update({
@@ -1133,18 +1343,23 @@ class _TimerPageState extends State<TimerPage> {
       print('Error adding note: $e');
     }
   }
-  void addQuote(DetailBook book, String newQuote ,String pageNumber) async {
+
+  void addQuote(DetailBook book, String newQuote, String pageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         String uid = user.uid;
 
-        CollectionReference myBooksRef =
-        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
 
         // Update the notes in the Firestore document
         await myBooksRef.doc(book.documentId).update({
-          'quotes': FieldValue.arrayUnion([   {'quote': newQuote, 'pageNumber': pageNumber}]),
+          'quotes': FieldValue.arrayUnion([
+            {'quote': newQuote, 'pageNumber': pageNumber}
+          ]),
         });
 
         // Update the local state with the new notes
@@ -1160,19 +1375,22 @@ class _TimerPageState extends State<TimerPage> {
       print('Error adding note: $e');
     }
   }
+
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-     twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-     twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     // log(twoDigitMinutes.toString()+twoDigitSeconds);
     return '$twoDigitMinutes:$twoDigitSeconds';
   }
-    int finalTime=0;
+
+  int finalTime = 0;
+
   Future<void> _retrieveStoredTime() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await FirebaseFirestore.instance
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+          .instance
           .collection('users')
           .doc(_auth.currentUser?.uid)
           .get();
@@ -1184,7 +1402,7 @@ class _TimerPageState extends State<TimerPage> {
           // _duration = storedTime;
           currentTime = storedTime;
           _duration = int.parse(storedTime2);
-          finalTime = currentTime==0? _duration * 60 :currentTime;
+          finalTime = currentTime == 0 ? _duration * 60 : currentTime;
         });
         // if (_duration > 0) {
         //   _controller.resume();
@@ -1194,9 +1412,9 @@ class _TimerPageState extends State<TimerPage> {
       print('Error retrieving stored time: $error');
     }
   }
+
   void _showAddNotesDialog(DetailBook book) {
     showDialog(
-
       context: context,
       builder: (BuildContext context) {
         TextEditingController notesController = TextEditingController();
@@ -1205,14 +1423,14 @@ class _TimerPageState extends State<TimerPage> {
         return AlertDialog(
           backgroundColor: Color(0xffFEEAD4),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+            borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
           ),
           title: Text('Notes'),
-
           content: Container(
             height: 50,
             decoration: BoxDecoration(
-              color:Colors.grey[100],
+              color: Colors.grey[100],
               borderRadius: BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -1221,31 +1439,25 @@ class _TimerPageState extends State<TimerPage> {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: TextField(
                       controller: notesController,
-                      onChanged: (value) {
-
-                      },
+                      onChanged: (value) {},
                       cursorColor: Color(0xFFD9D9D9),
                       decoration: InputDecoration(
                         hintText: 'Write your note',
                         hintStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
-
                       ),
-
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
           actions: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
                 Center(
                   child: Padding(
@@ -1255,16 +1467,14 @@ class _TimerPageState extends State<TimerPage> {
                         color: Color(0xFF283E50),
                         borderRadius: BorderRadius.all(
                           Radius.circular(10),
-
                         ),
-
                       ),
                       child: TextButton(
-                        onPressed: (){
+                        onPressed: () {
                           setState(() {
                             String newNote = notesController.text.trim();
                             if (newNote.isNotEmpty) {
-                              addNote(book, newNote,pageNumberController.text);
+                              addNote(book, newNote, pageNumberController.text);
                               notesController.clear();
                               Fluttertoast.showToast(
                                 msg: "Note added successfully!",
@@ -1289,59 +1499,53 @@ class _TimerPageState extends State<TimerPage> {
                   height: 50,
                   width: 50,
                   decoration: BoxDecoration(
-                    color:Colors.grey[100],
+                    color: Colors.grey[100],
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
                     ),
                   ),
                   child: Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left:8.0),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: TextField(
                         controller: pageNumberController,
-                        onChanged: (value) {
-
-                        },
+                        onChanged: (value) {},
                         cursorColor: Color(0xFFD9D9D9),
                         decoration: InputDecoration(
                           hintText: '0',
                           hintStyle: TextStyle(color: Colors.grey),
                           border: InputBorder.none,
-
                         ),
-
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-
           ],
         );
       },
     );
   }
+
   void _showAddQuotesDialog(DetailBook book) {
     showDialog(
-
       context: context,
       builder: (BuildContext context) {
-
         TextEditingController quotesController = TextEditingController();
         TextEditingController pageNumberController = TextEditingController();
 
         return AlertDialog(
           backgroundColor: Color(0xffFEEAD4),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+            borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
           ),
           title: Text('Quotes'),
-
           content: Container(
             height: 50,
             decoration: BoxDecoration(
-              color:Colors.grey[100],
+              color: Colors.grey[100],
               borderRadius: BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -1350,24 +1554,19 @@ class _TimerPageState extends State<TimerPage> {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: TextField(
                       controller: quotesController,
-                      onChanged: (value) {
-
-                      },
+                      onChanged: (value) {},
                       cursorColor: Color(0xFFD9D9D9),
                       decoration: InputDecoration(
                         hintText: 'Write your Quote',
                         hintStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
-
                       ),
-
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -1380,16 +1579,14 @@ class _TimerPageState extends State<TimerPage> {
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
-
                     ),
-
                   ),
                   child: TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       setState(() {
                         String newQuote = quotesController.text.trim();
                         if (newQuote.isNotEmpty) {
-                          addQuote(book, newQuote,pageNumberController.text);
+                          addQuote(book, newQuote, pageNumberController.text);
                           quotesController.clear();
                           Fluttertoast.showToast(
                             msg: "Quote added successfully!",
@@ -1412,34 +1609,29 @@ class _TimerPageState extends State<TimerPage> {
                   height: 50,
                   width: 50,
                   decoration: BoxDecoration(
-                    color:Colors.grey[100],
+                    color: Colors.grey[100],
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
                     ),
                   ),
                   child: Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left:8.0),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: TextField(
                         controller: pageNumberController,
-                        onChanged: (value) {
-
-                        },
+                        onChanged: (value) {},
                         cursorColor: Color(0xFFD9D9D9),
                         decoration: InputDecoration(
                           hintText: '0',
                           hintStyle: TextStyle(color: Colors.grey),
                           border: InputBorder.none,
-
                         ),
-
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-
           ],
         );
       },
@@ -1447,13 +1639,13 @@ class _TimerPageState extends State<TimerPage> {
   }
 }
 
-
 class CustomAlertDialog extends StatefulWidget {
   DetailBook book;
   final int totalPage;
   final int currentPage;
 
-  CustomAlertDialog({required this.book,required this.totalPage,required this.currentPage});
+  CustomAlertDialog(
+      {required this.book, required this.totalPage, required this.currentPage});
 
   @override
   _CustomAlertDialogState createState() => _CustomAlertDialogState();
@@ -1461,6 +1653,7 @@ class CustomAlertDialog extends StatefulWidget {
 
 class _CustomAlertDialogState extends State<CustomAlertDialog> {
   int selectedNumber = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -1477,13 +1670,21 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       ),
       title: Column(
         children: [
-          Text('Done Reading?',style: TextStyle(color:  Color(0xff283E50)),),
+          Text(
+            'Done Reading?',
+            style: TextStyle(color: Color(0xff283E50)),
+          ),
           Divider(
             color: Colors.grey,
             thickness: 1,
           ),
-
-          Text('Update your Progress',style: TextStyle(fontSize: 14,color: Color(0xff686868), ),),
+          Text(
+            'Update your Progress',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xff686868),
+            ),
+          ),
         ],
       ),
       content: Container(
@@ -1517,9 +1718,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                           width: 50,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color:number == selectedNumber
-                                ?Color(0xffD9D9D9)
-                                : Colors.transparent ,
+                            color: number == selectedNumber
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
                             border: Border.all(
                               color: number == selectedNumber
                                   ? Color(0xffD9D9D9)
@@ -1565,10 +1766,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                     onPressed: () {
                       updateStatusOfBook('COMPLETED');
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReviewPage(book: widget.book,)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ReviewPage(
+                                    book: widget.book,
+                                  )));
                       // Navigator.pop(context);
-
-
                     },
                     child: Text(
                       'Finish',
@@ -1590,15 +1794,12 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                       Radius.circular(10),
                     ),
                   ),
-
                   child: TextButton(
                     onPressed: () {
-                      updatePageNumber(widget.book,selectedNumber);
+                      updatePageNumber(widget.book, selectedNumber);
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
                     child: Text(
                       'Save',
@@ -1612,27 +1813,31 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             ),
           ],
         ),
-
       ],
     );
   }
-  void updateStatusOfBook(String status)async{
 
+  void updateStatusOfBook(String status) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid;
 
 // Reference to the 'myBooks' collection with the UID as the document ID
-    CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+    CollectionReference myBooksRef = FirebaseFirestore.instance
+        .collection('myBooks')
+        .doc(uid)
+        .collection('books');
 
 // Specify the ID of the book you want to update
-    String bookIdToUpdate = widget.book.documentId; // Replace with the actual ID
+    String bookIdToUpdate =
+        widget.book.documentId; // Replace with the actual ID
 
 // Fetch the specific book document
     DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
 
     if (bookSnapshot.exists) {
       // Access the document data
-      Map<String, dynamic> bookData = bookSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> bookData =
+          bookSnapshot.data() as Map<String, dynamic>;
 
       // Print the current status for reference
       print('Current Status: ${bookData['status']}');
@@ -1640,14 +1845,354 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       // Update the status to 'CURRENTLY READING'
       await myBooksRef.doc(bookIdToUpdate).update({'status': status});
 
+      print('Status updated successfully');
+    } else {
+      // Handle the case where the specified book does not exist
+      print('Book with ID $bookIdToUpdate does not exist.');
+    }
+  }
+
+  void updatePageNumber(DetailBook book, int newPageNumber) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
+
+        // Update the page number in the Firestore document
+        await myBooksRef
+            .doc(book.documentId)
+            .update({'currentPage': newPageNumber});
+
+        // Update the local state with the new page number
+        setState(() {
+          book.currentPage = newPageNumber;
+        });
+
+        print('Page number updated successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error updating page number: $e');
+    }
+  }
+}
+
+class CustomAlertForStartDateDialog extends StatefulWidget {
+  DetailBook book;
+  List<int> year;
+  List<int> days;
+  List<String> month;
+
+  CustomAlertForStartDateDialog(
+      {required this.book,
+      required this.year,
+      required this.days,
+      required this.month});
+
+  @override
+  _CustomAlertForStartDateDialogState createState() =>
+      _CustomAlertForStartDateDialogState();
+}
+
+class _CustomAlertForStartDateDialogState
+    extends State<CustomAlertForStartDateDialog> {
+  int selectedNumber = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Done Reading?',
+            style: TextStyle(color: Color(0xff283E50)),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+          Text(
+            'Update your Progress',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xff686868),
+            ),
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.year.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = widget.year[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedNumber = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedNumber
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedNumber
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.month.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String number = widget.month[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            // selectedNumber = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedNumber
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedNumber
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.days.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = index + 1;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedNumber = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedNumber
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedNumber
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+                      updateStatusOfBook('COMPLETED');
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ReviewPage(
+                                    book: widget.book,
+                                  )));
+                      // Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Finish',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      updatePageNumber(widget.book, selectedNumber);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void updateStatusOfBook(String status) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+
+// Reference to the 'myBooks' collection with the UID as the document ID
+    CollectionReference myBooksRef = FirebaseFirestore.instance
+        .collection('myBooks')
+        .doc(uid)
+        .collection('books');
+
+// Specify the ID of the book you want to update
+    String bookIdToUpdate =
+        widget.book.documentId; // Replace with the actual ID
+
+// Fetch the specific book document
+    DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
+
+    if (bookSnapshot.exists) {
+      // Access the document data
+      Map<String, dynamic> bookData =
+          bookSnapshot.data() as Map<String, dynamic>;
+
+      // Print the current status for reference
+      print('Current Status: ${bookData['status']}');
+
+      // Update the status to 'CURRENTLY READING'
+      await myBooksRef.doc(bookIdToUpdate).update({'status': status});
 
       print('Status updated successfully');
     } else {
       // Handle the case where the specified book does not exist
       print('Book with ID $bookIdToUpdate does not exist.');
     }
-
   }
+
   void updatePageNumber(DetailBook book, int newPageNumber) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
