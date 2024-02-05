@@ -514,208 +514,10 @@ userName  = preferences.getString("userName")!;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _retrieveStoredTimeDetail(); // Retrieve stored time when the widget is loaded
     });
-    // Future.delayed(Duration(seconds: 1), ()async{
-    //   SharedPreferences preferences = await SharedPreferences.getInstance();
-    //   preferences.getBool('firstTime')==false?
-    //   '':_showTutorialCoachMark();
-    // });
+  
 
   }
-// void _showTutorialCoachMark()async{
-//     SharedPreferences preferences = await SharedPreferences.getInstance();
-//     preferences.setBool("firstTime", false);
-//     _initTarget();
-//     tutorialCoachMark = TutorialCoachMark(
-//       targets: targets,
-//
-//     )..show(context: context);
-// }
-//   void _initTarget() {
-//     targets = [
-//       TargetFocus(
-//         identify: 'streaks',
-//         keyTarget: streakRowKey,
-//         contents: [
-//           TargetContent(
-//             builder: (context, controller) {
-//               return Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [SizedBox(height: 20,),
-//                   Container(
-//                       height: 150,
-//                       width: 200,
-//                       padding: EdgeInsets.all(8),
-//                       decoration: BoxDecoration(
-//                         color: Color(0xFFD9D9D9),
-//                         borderRadius: BorderRadius.circular(20.0),
-//                       ),
-//                       child: Column(
-//                         crossAxisAlignment:CrossAxisAlignment.end,
-//                         children: [
-//                           Text("Here you can find the streaks , \n The streak counts increases as per you complete \n your daily goal of reading."),
-//                           ElevatedButton(
-//                             onPressed: () {
-//                               controller.next();
-//                             },
-//                             child: Text("Next"),
-//                             style: ButtonStyle(
-//                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-//                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                                 RoundedRectangleBorder(
-//                                   borderRadius: BorderRadius.circular(15.0),
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       )),
-//
-//                 ],
-//               );
-//             },
-//             align: ContentAlign.bottom,
-//           ),
-//         ],
-//       ),
-//       TargetFocus(
-//         identify: 'time',
-//         keyTarget: timeKey,
-//         contents: [
-//           TargetContent(
-//             builder: (context, controller) {
-//               return Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [SizedBox(height: 20,),
-//                   Container(
-//                       height: 150,
-//                       width: 200,
-//                       padding: EdgeInsets.all(8),
-//                       decoration: BoxDecoration(
-//                         color: Color(0xFFD9D9D9),
-//                         borderRadius: BorderRadius.circular(20.0),
-//                       ),
-//                       child: Column(
-//                         crossAxisAlignment:CrossAxisAlignment.end,
-//                         children: [
-//                           Text("Here you can find the times of your daily goal, \n and the total time you have spent reading."),
-//                           ElevatedButton(
-//                             onPressed: () {
-//                               controller.next();
-//                             },
-//                             child: Text("Next"),
-//                             style: ButtonStyle(
-//                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-//                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                                 RoundedRectangleBorder(
-//                                   borderRadius: BorderRadius.circular(15.0),
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       )),
-//
-//                 ],
-//               );
-//             },
-//             align: ContentAlign.bottom,
-//           ),
-//         ],
-//       ),
-//       // TargetFocus(
-//       //   identify: 'read',
-//       //   keyTarget: readKey,
-//       //   contents: [
-//       //     TargetContent(
-//       //       builder: (context, controller) {
-//       //         return Column(
-//       //           crossAxisAlignment: CrossAxisAlignment.start,
-//       //           children: [SizedBox(height: 20,),
-//       //             Container(
-//       //                 height: 150,
-//       //                 width: 200,
-//       //                 padding: EdgeInsets.all(8),
-//       //                 decoration: BoxDecoration(
-//       //                   color: Color(0xFFD9D9D9),
-//       //                   borderRadius: BorderRadius.circular(20.0),
-//       //                 ),
-//       //                 child: Column(
-//       //                   crossAxisAlignment:CrossAxisAlignment.end,
-//       //                   children: [
-//       //                     Text("Here you can find the latest books and can \n add them into your reading list."),
-//       //                     ElevatedButton(
-//       //                       onPressed: () {
-//       //                         controller.next();
-//       //                       },
-//       //                       child: Text("Next"),
-//       //                       style: ButtonStyle(
-//       //                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-//       //                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//       //                           RoundedRectangleBorder(
-//       //                             borderRadius: BorderRadius.circular(15.0),
-//       //                           ),
-//       //                         ),
-//       //                       ),
-//       //                     ),
-//       //                   ],
-//       //                 )),
-//       //
-//       //           ],
-//       //         );
-//       //       },
-//       //       align: ContentAlign.bottom,
-//       //     ),
-//       //   ],
-//       // ),
-//       TargetFocus(
-//         identify: 'more',
-//         keyTarget: moreKey,
-//         contents: [
-//           TargetContent(
-//             builder: (context, controller) {
-//               return Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [SizedBox(height: 20,),
-//                   Container(
-//                       height: 150,
-//                       width: 200,
-//                       padding: EdgeInsets.all(8),
-//                       decoration: BoxDecoration(
-//                         color: Color(0xFFD9D9D9),
-//                         borderRadius: BorderRadius.circular(20.0),
-//                       ),
-//                       child: Column(
-//                         crossAxisAlignment:CrossAxisAlignment.end,
-//                         children: [
-//                           Text("Here you can find the all the books and can \n add them into your reading list."),
-//                           ElevatedButton(
-//                             onPressed: () {
-//                               controller.next();
-//                             },
-//                             child: Text("Next"),
-//                             style: ButtonStyle(
-//                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-//                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                                 RoundedRectangleBorder(
-//                                   borderRadius: BorderRadius.circular(15.0),
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       )),
-//
-//                 ],
-//               );
-//             },
-//             align: ContentAlign.bottom,
-//           ),
-//         ],
-//       ),
-//     ];
-//   }
-
-
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -918,107 +720,7 @@ userName  = preferences.getString("userName")!;
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text("My Reads",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
-                          // Expanded(
-                          //   flex: 1,
-                          //   child: myBooksMyReads.isEmpty?
-                          //   Container(
-                          //       height: 100,
-                          //       child: Center(child: Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.center,
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
-                          //           SizedBox(height: 10,),
-                          //           GestureDetector(
-                          //             onTap: (){
-                          //               Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
-                          //             },
-                          //             child: Row(
-                          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //               children: [
-                          //                 Image.asset('assets/self.png'),
-                          //                 Image.asset('assets/self.png'),
-                          //                 Image.asset('assets/self.png'),
-                          //                 Image.asset('assets/self.png'),
-                          //                 Image.asset('assets/self.png'),
-                          //               ],
-                          //             ),
-                          //           )
-                          //         ],
-                          //       )))
-                          //       : ListView.builder(
-                          //     scrollDirection: Axis.horizontal,
-                          //     itemCount: myBooksMyReads.length,
-                          //     itemBuilder: (context, index) {
-                          //       return GestureDetector(
-                          //         onTap: (){
-                          //           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
-                          //         },
-                          //         child:Padding(
-                          //           padding: const EdgeInsets.only(top:10.0),
-                          //           child: Container(
-                          //             width: 200,
-                          //             height: 300,
-                          //
-                          //             margin: EdgeInsets.symmetric(horizontal: 10.0),
-                          //             child: Stack(
-                          //               alignment: Alignment.topCenter,
-                          //               children: [
-                          //                 Positioned(
-                          //                   top: 120,
-                          //                   child: Container(
-                          //                     height: 300,
-                          //                     width: 250,
-                          //                     padding: EdgeInsets.all(8),
-                          //                     decoration: BoxDecoration(
-                          //                       color: Color(0xFFD9D9D9),
-                          //                       borderRadius: BorderRadius.circular(20.0),
-                          //                     ),
-                          //                     child: Column(
-                          //                       children: [
-                          //                         SizedBox(height: 8),
-                          //                         Container(
-                          //                           height: 200,
-                          //                           width: 200,
-                          //                           child: Padding(
-                          //                             padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
-                          //                             child: Text(
-                          //                               myBooksMyReads[index].description,
-                          //                               textAlign: TextAlign.left,
-                          //                               maxLines: 6,
-                          //
-                          //                               style: TextStyle(
-                          //                                 color: Colors.black,
-                          //                                 fontSize: 13
-                          //                               ),
-                          //                             ),
-                          //                           ),
-                          //                         ),
-                          //                         SizedBox(height: 20,),
-                          //
-                          //                       ],
-                          //                     ),
-                          //                   ),
-                          //                 ),
-                          //                 Padding(
-                          //                   padding: const EdgeInsets.all(8.0),
-                          //                   child: Image.network(
-                          //                     myBooksMyReads[index].imageLink,
-                          //                     height: 150,
-                          //                     width: 150,
-                          //                   ),
-                          //                 ),
-                          //               ],
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
-                          //
-                          // SizedBox(height: 10),
+                        
                           Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
                           myBooks.isEmpty?
                           Container(
@@ -1063,103 +765,7 @@ userName  = preferences.getString("userName")!;
                                               Stack(
                                                 alignment: Alignment.topLeft,
                                                 children: [
-                                                  // Positioned(
-                                                  //   top: 0,
-                                                  //   left: 30,
-                                                  //   child: Container(
-                                                  //     height: 250,
-                                                  //     width: 250,
-                                                  //     padding: const EdgeInsets.all(8),
-                                                  //     decoration: BoxDecoration(
-                                                  //       color: const Color(0xFFD9D9D9),
-                                                  //       borderRadius: BorderRadius.circular(20.0),
-                                                  //     ),
-                                                  //     child: Column(
-                                                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                                                  //       children: [
-                                                  //         const SizedBox(height: 8),
-                                                  //         Container(
-                                                  //           height: 150,
-                                                  //           // Set a fixed height for description
-                                                  //           child: Column(
-                                                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                                                  //             children: [
-                                                  //               Padding(
-                                                  //                 padding: const EdgeInsets.only(top: 10.0),
-                                                  //                 child: Text(
-                                                  //                   "Currently Reading",
-                                                  //                   textAlign: TextAlign.center,
-                                                  //                   style: const TextStyle(
-                                                  //                       color: Color(0xFF283E50),
-                                                  //                       fontWeight: FontWeight.bold,
-                                                  //                       fontSize: 14),
-                                                  //                 ),
-                                                  //               ),
-                                                  //               SingleChildScrollView(
-                                                  //                 child: Padding(
-                                                  //                   padding:
-                                                  //                       const EdgeInsets.only(top: 5.0),
-                                                  //                   child: Text(
-                                                  //                     myBooks[index].author,
-                                                  //                     textAlign: TextAlign.center,
-                                                  //                     style: const TextStyle(
-                                                  //                         color: Color(0xFF686868),
-                                                  //                         fontSize: 12,
-                                                  //                         fontWeight: FontWeight.w500),
-                                                  //                   ),
-                                                  //                 ),
-                                                  //               ),
-                                                  //             ],
-                                                  //           ),
-                                                  //         ),
-                                                  //       ],
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
-                                                  // Positioned(
-                                                  //   top: 105,
-                                                  //   right: 10,
-                                                  //   child: Column(
-                                                  //     children: [
-                                                  //       Stack(
-                                                  //         children: [
-                                                  //           CircularProgressIndicator(
-                                                  //             value: calculatePercentage() / 100,
-                                                  //             strokeWidth: 5.0,
-                                                  //             backgroundColor: Colors.black12,
-                                                  //             // Adjust the stroke width as needed
-                                                  //             valueColor: AlwaysStoppedAnimation<Color>(
-                                                  //               Color(0xFF283E50),
-                                                  //             ), // Adjust the color as needed
-                                                  //           ),
-                                                  //           Positioned(
-                                                  //             top: 10,
-                                                  //             left: 5,
-                                                  //             child: Text(
-                                                  //               "${calculatePercentage().toStringAsFixed(1)}%",
-                                                  //               style: TextStyle(
-                                                  //                   color: Color(0xFF283E50),
-                                                  //                   fontWeight: FontWeight.bold,
-                                                  //                   fontSize: 11),
-                                                  //             ),
-                                                  //           ),
-                                                  //         ],
-                                                  //       ),
-                                                  //       SizedBox(
-                                                  //         height: 10,
-                                                  //       ),
-                                                  //       Text(
-                                                  //         "Progress",
-                                                  //         style: TextStyle(
-                                                  //             color: Color(0xFF686868), fontSize: 14),
-                                                  //       ),
-                                                  //       SizedBox(
-                                                  //         height: 20,
-                                                  //       ),
-                                                  //
-                                                  //     ],
-                                                  //   ),
-                                                  // ),
+                                             
                                                   Padding(
                                                     padding: const EdgeInsets.only(top:30.0),
                                                     child: Column(
@@ -1445,29 +1051,45 @@ userName  = preferences.getString("userName")!;
                                               width: MediaQuery.of(context).size.width,
                                               padding: const EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                color: const Color(0xFFD9D9D9),
+
                                                 borderRadius: BorderRadius.circular(20.0),
                                               ),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    // crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: myBooks[index].notes.map((note) {
-                                                      return Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 8),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          children: [
-                                                            Text(
-                                                              '-'+note['note'],
-                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                      return Card(
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                        ),
+                                                        color: const Color(0xFFD9D9D9),
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Container(
+                                                              width: MediaQuery.of(context).size.width,
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    note['note'],
+                                                                    style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width/1.2),
+                                                                    child: Text(
+                                                                      'Page -'+note['pageNumber'],
+
+                                                                      style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                            Text(
-                                                              'Page -'+note['pageNumber'],
-                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
-                                                            ),
-                                                          ],
+                                                          ),
                                                         ),
                                                       );
                                                     }).toList(),
@@ -1514,40 +1136,75 @@ userName  = preferences.getString("userName")!;
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
+                                              // height: 250,
                                               width: MediaQuery.of(context).size.width,
+                                              padding: const EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
-                                                color: Color(0xFFD9D9D9),
+
+                                                borderRadius: BorderRadius.circular(20.0),
                                               ),
-                                              padding: EdgeInsets.all(12),
                                               child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    // crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: myBooks[index].quotes.map((quotes) {
-                                                      return Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 8),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          children: [
-                                                            Text(
-                                                              '-'+quotes['quote'],
-                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                      return Card(
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                        ),
+                                                        color: const Color(0xFFD9D9D9),
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Container(
+                                                              width: MediaQuery.of(context).size.width,
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(
+                                                                    quotes['quote'],
+                                                                    style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width/1.2),
+                                                                    child: Text(
+                                                                      'Page -'+quotes['pageNumber'],
+
+                                                                      style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                            Text(
-                                                              'Page -'+quotes['pageNumber'],
-                                                              style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
-                                                            ),
-                                                          ],
+                                                          ),
                                                         ),
                                                       );
                                                     }).toList(),
                                                   ),
+                                                  // Padding(
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(top: 5.0),
+                                                  //   child: Text(
+                                                  //     myBooks[index].description,
+                                                  //     textAlign: TextAlign.center,
+                                                  //     maxLines: 12, // Adjust the number of lines as needed
+                                                  //     overflow: TextOverflow.ellipsis,
+                                                  //     style: const TextStyle(
+                                                  //       color: Color(0xFF686868),
+                                                  //       fontSize: 12,
+                                                  //       fontWeight: FontWeight.w500,
+                                                  //     ),
+                                                  //   )
+                                                  //
+                                                  // ),
 
                                                 ],
                                               ),
                                             ),
                                           ),
+
                                         ],
                                       ),
                                     ),
