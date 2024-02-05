@@ -1989,6 +1989,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                     onPressed: () {
                       updateStatusOfBook('COMPLETED');
                       Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReviewPage(book: widget.book,)));
                       // Navigator.pop(context);
 
 
@@ -2062,7 +2063,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
 
       // Update the status to 'CURRENTLY READING'
       await myBooksRef.doc(bookIdToUpdate).update({'status': status});
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReviewPage(book: widget.book,)));
+
 
       print('Status updated successfully');
     } else {
