@@ -1071,19 +1071,26 @@ userName  = preferences.getString("userName")!;
                                                             padding: const EdgeInsets.all(8.0),
                                                             child: Container(
                                                               width: MediaQuery.of(context).size.width,
-                                                              child: Column(
+                                                              child: Row(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                 children: [
-                                                                  Text(
-                                                                    note['note'],
-                                                                    style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width/1.2),
+                                                                  Expanded(
+                                                                    flex:5,
                                                                     child: Text(
-                                                                      'Page -'+note['pageNumber'],
-
+                                                                      note['note'],
                                                                       style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex:1,
+                                                                    child: Padding(
+                                                                      padding:  EdgeInsets.only(top: 30),
+                                                                      child: Text(
+                                                                        'Page -'+note['pageNumber'],
+
+                                                                        style: TextStyle(fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ],
@@ -1160,19 +1167,26 @@ userName  = preferences.getString("userName")!;
                                                             padding: const EdgeInsets.all(8.0),
                                                             child: Container(
                                                               width: MediaQuery.of(context).size.width,
-                                                              child: Column(
+                                                              child:  Row(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                 children: [
-                                                                  Text(
-                                                                    quotes['quote'],
-                                                                    style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width/1.2),
+                                                                  Expanded(
+                                                                    flex:5,
                                                                     child: Text(
-                                                                      'Page -'+quotes['pageNumber'],
-
+                                                                      quotes['quote'],
                                                                       style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex:1,
+                                                                    child: Padding(
+                                                                      padding:  EdgeInsets.only(top: 30),
+                                                                      child: Text(
+                                                                        'Page -'+quotes['pageNumber'],
+
+                                                                        style: TextStyle(fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ],
