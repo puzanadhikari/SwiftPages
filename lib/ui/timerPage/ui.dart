@@ -1987,10 +1987,10 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   // Add your action widgets here
                   child: TextButton(
                     onPressed: () {
-                      // updateStatusOfBook('COMPLETED');
+                      updateStatusOfBook('COMPLETED');
                       Navigator.pop(context);
                       // Navigator.pop(context);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ReviewPage(book: widget.book,)));
+
 
                     },
                     child: Text(
