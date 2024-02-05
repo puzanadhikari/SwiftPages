@@ -14,6 +14,8 @@ import '../homePage.dart';
 import '../myBooks.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
+import '../reviewPage.dart';
+
 
 class Music {
   final String title;
@@ -1985,9 +1987,11 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   // Add your action widgets here
                   child: TextButton(
                     onPressed: () {
-                      updateStatusOfBook('COMPLETED');
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                      // updateStatusOfBook('COMPLETED');
+                      Navigator.pop(context);
+                      // Navigator.pop(context);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ReviewPage(book: widget.book,)));
+
                     },
                     child: Text(
                       'Finish',
@@ -2058,6 +2062,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
 
       // Update the status to 'CURRENTLY READING'
       await myBooksRef.doc(bookIdToUpdate).update({'status': status});
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReviewPage(book: widget.book,)));
 
       print('Status updated successfully');
     } else {

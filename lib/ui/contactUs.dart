@@ -37,8 +37,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
         email.clear();
         name.clear();
         msg.clear();
-
-
         log('Form data stored successfully!');
       }} catch (e) {
       log('Error storing form data data: $e'); // Add this line to print the error
