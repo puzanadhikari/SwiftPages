@@ -355,21 +355,37 @@ class _BookCardState extends State<BookCard> {
                           ),
                         ),
                         SizedBox(height: 10,),
-                        if (widget.bookData['userId'] == FirebaseAuth.instance.currentUser?.uid)
-                          ElevatedButton(
-                            onPressed: () {
-                              _showDeletePostDialog(widget.documentId);
-                            },
-                            child: Text("Delete"),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top:15.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.run_circle_outlined,color:Color(0xFF283E50) ,),
+                                SizedBox(width: 5,),
+                                Text(widget.bookData['pace'] ?? '',style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold),),
+                              ],
+                            ),
+                          ),
+                          if (widget.bookData['userId'] == FirebaseAuth.instance.currentUser?.uid)
+                            ElevatedButton(
+                              onPressed: () {
+                                _showDeletePostDialog(widget.documentId);
+                              },
+                              child: Text("Delete"),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                        ],)
+
                         // GestureDetector(
                         //     onTap: (){
                         //       _showConfirmationDialogToSave(context);
