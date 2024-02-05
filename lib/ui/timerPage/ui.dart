@@ -1765,8 +1765,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   // Add your action widgets here
                   child: TextButton(
                     onPressed: () {
-                      // updateStatusOfBook('COMPLETED');
-                      // addFinishedDate(widget.book.documentId);
+                      updateStatusOfBook('COMPLETED');
+                      addFinishedDate(widget.book.documentId);
                       Navigator.pop(context);
                       Navigator.push(
                           context,

@@ -76,7 +76,7 @@ String selectedMood = '';
                       int? result = await showDialog<int>(
                         context: context,
                         builder: (BuildContext context) {
-                          return CustomAlertDialog(book:widget.book,totalPage: widget.book.totalPage,currentPage: widget.book.currentPage,newReview: reviewController.text.toString(),selectedPace: selectedPace,rating: rating,);
+                          return CustomAlertDialog(book:widget.book,totalPage: widget.book.totalPage,currentPage: widget.book.currentPage,newReview: reviewController.text.toString(),selectedPace: selectedPace,rating: rating,genre: selectedGenre,mood: selectedMood,);
                         },
                       );
 
@@ -539,8 +539,10 @@ class CustomAlertDialog extends StatefulWidget {
   String newReview;
   String selectedPace;
   double rating;
+  String genre;
+  String mood;
 
-  CustomAlertDialog({required this.book,required this.totalPage,required this.currentPage,required this.newReview,required this.selectedPace,required this.rating});
+  CustomAlertDialog({required this.book,required this.totalPage,required this.currentPage,required this.newReview,required this.selectedPace,required this.rating,required this.genre,required this.mood});
 
   @override
   _CustomAlertDialogState createState() => _CustomAlertDialogState();
@@ -567,7 +569,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           'reviews': FieldValue.arrayUnion([
             {'review': newReview,
               'pace':widget.selectedPace,
-              'rating':widget.rating
+              'rating':widget.rating,
+              'genre':widget.genre,
+              'mood':widget.mood
             }
           ]),
         });
@@ -603,7 +607,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           'avatarUrl': user.photoURL ?? '',
           'userId':uid,
           'rating':widget.rating,
-          'pace':widget.selectedPace
+          'pace':widget.selectedPace,
+          'genre':widget.genre,
+          'mood':widget.mood
           // Add other fields as needed
         });
 
