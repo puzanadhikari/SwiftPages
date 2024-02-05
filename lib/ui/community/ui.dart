@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -71,7 +72,7 @@ class _CommunityState extends State<Community> {
                       var bookData =
                           bookDocuments[index].data() as Map<String, dynamic>;
                       var documentId = bookDocuments[index].id;
-                      log(bookDocuments[index].id.toString());
+
 
                       return BookCard(
                         bookData: bookData,
@@ -308,7 +309,27 @@ class _BookCardState extends State<BookCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+                        Row(
+                          children: [
+                            RatingBar.builder(
+                              initialRating: widget.bookData['rating']==null?0:widget.bookData['rating'],
+                              minRating: 0,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 20,
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (value) {
 
+                              },
+                            ),
+                            Text("${widget.bookData['rating']==null?0:widget.bookData['rating']}/5 stars")
+                          ],
+                        ),
+                        SizedBox(height: 10,),
                         Container(
                           height: 120,
                           width: 200,
