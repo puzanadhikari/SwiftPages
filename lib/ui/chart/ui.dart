@@ -46,6 +46,9 @@ class _GraphPageState extends State<GraphPage> {
   int mediumPaceCount = 0;
   int fastPaceCount = 0;
   int slowPaceCount = 0;
+  double mediumPaceCountPer = 0;
+  double fastPaceCountPer = 0;
+  double slowPaceCountPer = 0;
   Future<void> fetchBooksForPace() async {
     try {
       // Get the current authenticated user
@@ -93,12 +96,15 @@ class _GraphPageState extends State<GraphPage> {
                   switch (review['pace']) {
                     case 'Medium':
                       mediumPaceCount++;
+                      mediumPaceCountPer = (mediumPaceCount/double.parse(completedLength))*100;
                       break;
                     case 'Fast':
                       fastPaceCount++;
+                      fastPaceCountPer = (fastPaceCount/double.parse(completedLength))*100;
                       break;
                     case 'Slow':
                       slowPaceCount++;
+                      slowPaceCountPer = (slowPaceCount/double.parse(completedLength))*100;
                       break;
                   }
                 }
@@ -492,78 +498,84 @@ class _GraphPageState extends State<GraphPage> {
                   ],
                 ),
               ),
-              Container(
-                width: 300,
-                height: MediaQuery.of(context).size.height/4,
-                decoration: BoxDecoration(
-                  color: Color(0xffD9D9D9),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0,right: 30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height/4,
+                  decoration: BoxDecoration(
+                    color: Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
 
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Book Pace",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xff283E50),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Book Pace",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(0xff283E50),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top:20,left: 30.0,right: 30),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundColor: Color(0xFFFF997A),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(mediumPaceCount.toString(),style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                  Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:  EdgeInsets.only(top:40.0),
-                              child: CircleAvatar(
-                                radius: 45,
-                                backgroundColor: Color(0xff283E50),
+                        Padding(
+                          padding: const EdgeInsets.only(top:20,left: 30.0,right: 30),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Color(0xFFFF997A),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(fastPaceCount.toString(),style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
-                                    Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
+                                    Text(mediumPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
+                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
                                   ],
                                 ),
                               ),
-                            ),
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundColor:Color(0xffFEEAD4),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(slowPaceCount.toString(),style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 14),),
-                                    Text("Slow",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 14),),
-                                  ],
+                              Padding(
+                                padding:  EdgeInsets.only(top:40.0),
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Color(0xff283E50),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(fastPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
+                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 13),),
+                                    ],
+                                  ),
                                 ),
-                            ),
-                          ],
-                        ),
-                      )
+                              ),
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor:Color(0xffFEEAD4),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(slowPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 12),),
+                                      Text("Slow",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 13),),
+                                    ],
+                                  ),
+                              ),
+                            ],
+                          ),
+                        )
 
 
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
