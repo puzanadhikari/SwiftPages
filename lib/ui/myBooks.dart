@@ -441,9 +441,9 @@ class DetailBook {
   final String startingDate;
   int currentPage;
   int totalPage;
-  List<Map<String, dynamic>> notes; // Updated to list of maps
+  List<Map<String, dynamic>> notes;
   List<Map<String, dynamic>> quotes;
-  List<Map<String, double>> review;
+  List<Map<String, dynamic>> reviews; // Updated to list of maps
 
   DetailBook({
     required this.author,
@@ -455,9 +455,9 @@ class DetailBook {
     required this.startingDate,
     this.currentPage = 0,
     this.totalPage = 0,
-    this.notes = const [], // Initialize notes as an empty list of maps
+    this.notes = const [],
     this.quotes = const [],
-    this.review = const [],
+    this.reviews = const [], // Initialize reviews as an empty list of maps
   });
 
   factory DetailBook.fromMap(String documentId, Map<String, dynamic>? map) {
@@ -485,7 +485,7 @@ class DetailBook {
       totalPage: map['totalPageCount'] ?? 0,
       notes: List<Map<String, dynamic>>.from(map['notes'] ?? []),
       quotes: List<Map<String, dynamic>>.from(map['quotes'] ?? []),
-      review: List<Map<String, double>>.from(map['reviews'] ?? []),
+      reviews: List<Map<String, dynamic>>.from(map['reviews'] ?? []),
     );
   }
 }

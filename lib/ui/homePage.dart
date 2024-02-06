@@ -73,6 +73,7 @@ class _HomePageState extends State<HomePage> {
   }
   String twoDigitMinutes='';
   String twoDigitSeconds='';
+  String completedLength='';
   Future fetchBooks() async {
     try {
       // Get the current authenticated user
@@ -96,17 +97,29 @@ class _HomePageState extends State<HomePage> {
               .toList();
           // print('Books: $myBooks'); // Check the console for the list of books
         });
-
         QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
+
 
         // Access the documents in the query snapshot
         List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
         setState(() {
+          completedLength=querySnapshotMyReads.docs.length.toString();
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          // print('Books: $myBooksMyReads'); // Check the console for the list of books
+          // print('Books: $myBooks'); // Check the console for the list of books
         });
+
+        // QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
+        //
+        // // Access the documents in the query snapshot
+        // List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
+        // setState(() {
+        //   myBooksMyReads = bookDocumentsMyReads
+        //       .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
+        //       .toList();
+        //   // print('Books: $myBooksMyReads'); // Check the console for the list of books
+        // });
 
 
         QuerySnapshot querySnapshotToBeRead = await myBooksRef.where('status', isEqualTo: 'TO BE READ').get();
@@ -117,7 +130,7 @@ class _HomePageState extends State<HomePage> {
           myBooksToBeRead = bookDocumentsToBeRead
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
-          // print('Books: $myBooksToBeRead'); // Check the console for the list of books
+
         });
 
         for (DocumentSnapshot doc in bookDocumentsToBeRead) {
@@ -661,7 +674,7 @@ userName  = preferences.getString("userName")!;
                             ),
                             const SizedBox(height: 5,),
                             Text(
-                              "Completed: ${myBooksMyReads.length} books",
+                              "Completed: ${completedLength} books",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFF686868),
