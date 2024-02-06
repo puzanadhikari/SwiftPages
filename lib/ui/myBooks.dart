@@ -315,6 +315,105 @@ class _MyBooksState extends State<MyBooks> {
                       },
                     ),
                   ),
+                  // Text("My Reads",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: myBooksMyReads.isEmpty?
+                  //   Container(
+                  //       height: 100,
+                  //       child: Center(child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text("You don't have any book in your list",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                  //           SizedBox(height: 10,),
+                  //           GestureDetector(
+                  //             onTap: (){
+                  //               Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                  //             },
+                  //             child: Row(
+                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //               children: [
+                  //                 Image.asset('assets/self.png'),
+                  //                 Image.asset('assets/self.png'),
+                  //                 Image.asset('assets/self.png'),
+                  //                 Image.asset('assets/self.png'),
+                  //                 Image.asset('assets/self.png'),
+                  //               ],
+                  //             ),
+                  //           )
+                  //         ],
+                  //       )))
+                  //       : ListView.builder(
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemCount: myBooksMyReads.length,
+                  //     itemBuilder: (context, index) {
+                  //       return GestureDetector(
+                  //         onTap: (){
+                  //           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
+                  //         },
+                  //         child:Padding(
+                  //           padding: const EdgeInsets.only(top:10.0),
+                  //           child: Container(
+                  //             width: 200,
+                  //             height: 300,
+                  //
+                  //             margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  //             child: Stack(
+                  //               alignment: Alignment.topCenter,
+                  //               children: [
+                  //                 Positioned(
+                  //                   top: 120,
+                  //                   child: Container(
+                  //                     height: 300,
+                  //                     width: 250,
+                  //                     padding: EdgeInsets.all(8),
+                  //                     decoration: BoxDecoration(
+                  //                       color: Color(0xFFD9D9D9),
+                  //                       borderRadius: BorderRadius.circular(20.0),
+                  //                     ),
+                  //                     child: Column(
+                  //                       children: [
+                  //                         SizedBox(height: 8),
+                  //                         Container(
+                  //                           height: 200,
+                  //                           width: 200,
+                  //                           child: Padding(
+                  //                             padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
+                  //                             child: Text(
+                  //                               myBooksMyReads[index].description,
+                  //                               textAlign: TextAlign.left,
+                  //                               maxLines: 6,
+                  //
+                  //                               style: TextStyle(
+                  //                                 color: Colors.black,
+                  //                                 fontSize: 13
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //                         SizedBox(height: 20,),
+                  //
+                  //                       ],
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //                 Padding(
+                  //                   padding: const EdgeInsets.all(8.0),
+                  //                   child: Image.network(
+                  //                     myBooksMyReads[index].imageLink,
+                  //                     height: 150,
+                  //                     width: 150,
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             ),

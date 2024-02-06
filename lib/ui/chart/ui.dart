@@ -510,7 +510,6 @@ class _GraphPageState extends State<GraphPage> {
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
