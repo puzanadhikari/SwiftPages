@@ -536,22 +536,8 @@ class ChatListItem extends StatelessWidget {
 
 
 
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    if (lastSenderName['sender'] != _auth.currentUser?.displayName)
 
-                                      Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
-                                      ),
-                                      child: Text(
-                                        unreadCount > 0 ? unreadCount.toString() : '',
-                                        style: TextStyle(fontSize: 12, color: Colors.white,fontFamily: 'font',),
-                                      ),
-                                    ),
+
 
                                   ],
                                 ),
@@ -560,11 +546,29 @@ class ChatListItem extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Text(
-                          _formatTimestamp(lastMessageTimestamp),
-                          textAlign: TextAlign.end,
-                          style: TextStyle( fontSize: 12,fontFamily: 'font',color:  Color(0xff283E50)),
+                        Column(
+                          children: [
+                            Text(
+                              _formatTimestamp(lastMessageTimestamp),
+                              textAlign: TextAlign.end,
+                              style: TextStyle( fontSize: 12,fontFamily: 'font',color:  Color(0xff283E50)),
+                            ),
+                            if (lastSenderName['sender'] != _auth.currentUser?.displayName)
+
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
+                                ),
+                                child: Text(
+                                  unreadCount > 0 ? unreadCount.toString() : '',
+                                  style: TextStyle(fontSize: 12, color: Colors.white,fontFamily: 'font',),
+                                ),
+                              ),
+                          ],
                         ),
+
                       ],
                     ),
                     onTap: () {
