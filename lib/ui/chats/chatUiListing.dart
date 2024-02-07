@@ -553,7 +553,7 @@ class ChatListItem extends StatelessWidget {
                               textAlign: TextAlign.end,
                               style: TextStyle( fontSize: 12,fontFamily: 'font',color:  Color(0xff283E50)),
                             ),
-                            if (lastSenderName['sender'] != _auth.currentUser?.displayName)
+                            if (lastSenderName['sender'] != _auth.currentUser?.displayName&&unreadCount!=0)
 
                               Container(
                                 padding: EdgeInsets.all(5),
@@ -562,7 +562,7 @@ class ChatListItem extends StatelessWidget {
                                   color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
                                 ),
                                 child: Text(
-                                  unreadCount > 0 ? unreadCount.toString() : '',
+                                  unreadCount > 9 ?'9+' :unreadCount.toString() ,
                                   style: TextStyle(fontSize: 12, color: Colors.white,fontFamily: 'font',),
                                 ),
                               ),
