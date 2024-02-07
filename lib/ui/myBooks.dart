@@ -280,7 +280,7 @@ class _MyBooksState extends State<MyBooks> {
                   child: Text(
                     "My Books",
                     style: const TextStyle(
-                      fontFamily: "Abhaya Libre ExtraBold",
+                      fontFamily: "font",
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
                       color: Color(0xfffeead4),
@@ -300,7 +300,7 @@ class _MyBooksState extends State<MyBooks> {
                           "My Reads",
 
                           style: TextStyle(
-                            fontFamily: "Abhaya Libre ExtraBold",
+                            fontFamily: "font",
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
                             color: Color(0xfffeead4),
@@ -364,6 +364,7 @@ class _MyBooksState extends State<MyBooks> {
                                                       textAlign: TextAlign.center,
                                                       style: TextStyle(
                                                         color: Colors.black,
+                                                        fontFamily: 'font'
                                                       ),
                                                     ),
                                                   ),
@@ -377,7 +378,7 @@ class _MyBooksState extends State<MyBooks> {
                                                     onPressed: () {
                                                       _showRemoveBookDialog(myBooksMyReads[index]);
                                                     },
-                                                    child: Text("Remove"),
+                                                    child: Text("Remove",style: TextStyle(  fontFamily: 'font'),),
                                                     style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -392,7 +393,7 @@ class _MyBooksState extends State<MyBooks> {
                                                       shareBookDetailsForComplete(myBooksMyReads[index],myBooksMyReads[index].reviews[0]['review'],myBooksMyReads[index].reviews[0]['rating'],myBooksMyReads[index].reviews[0]['pace'],myBooksMyReads[index].reviews[0]['genre'],myBooksMyReads[index].reviews[0]['mood'],);
                                                       _showAddNotesDialog(myBooksMyReads[index]);
                                                     },
-                                                    child: Text("Share"),
+                                                    child: Text("Share",style: TextStyle(  fontFamily: 'font'),),
                                                     style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                                                       // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
@@ -429,12 +430,11 @@ class _MyBooksState extends State<MyBooks> {
                           "To Be Read",
 
                           style: TextStyle(
-                            fontFamily: "Abhaya Libre ExtraBold",
+                            fontFamily: "font",
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
                             color: Color(0xFF283E50),
                             height: 29 / 20,
-
                           ),
                         ),
                         Container(
@@ -479,6 +479,7 @@ class _MyBooksState extends State<MyBooks> {
                                                       textAlign: TextAlign.center,
                                                       style: TextStyle(
                                                         color: Colors.black,
+                                                          fontFamily: 'font'
                                                       ),
                                                     ),
                                                   ),
@@ -497,7 +498,7 @@ class _MyBooksState extends State<MyBooks> {
 
                                                     });
                                                     },
-                                                    child: Text("Read"),
+                                                    child: Text("Read",style: TextStyle(    fontFamily: 'font'),),
                                                     style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                                                       minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
@@ -512,7 +513,7 @@ class _MyBooksState extends State<MyBooks> {
                                                     onPressed: () {
                                                       _showRemoveBookDialog(myBooksToBeRead[index]);
                                                     },
-                                                    child: Text("Remove"),
+                                                    child: Text("Remove",style: TextStyle(    fontFamily: 'font'),),
                                                     style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -526,7 +527,7 @@ class _MyBooksState extends State<MyBooks> {
                                                     onPressed: () {
                                                       _showAddNotesDialog(myBooksToBeRead[index]);
                                                     },
-                                                    child: Text("Share"),
+                                                    child: Text("Share",style: TextStyle(    fontFamily: 'font'),),
                                                     style: ButtonStyle(
                                                       backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                                                       // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
@@ -610,7 +611,7 @@ class _MyBooksState extends State<MyBooks> {
         TextEditingController notesController = TextEditingController();
 
         return AlertDialog(
-          title: Text('Add Notes'),
+          title: Text('Add Notes',style: TextStyle(fontFamily: 'font'),),
           content: TextField(
             controller: notesController,
             maxLines: null,
@@ -624,7 +625,7 @@ class _MyBooksState extends State<MyBooks> {
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: Text('Cancel',style: TextStyle(fontFamily: 'font'),),
             ),
             TextButton(
               onPressed: () {
@@ -634,12 +635,12 @@ class _MyBooksState extends State<MyBooks> {
                   Navigator.pop(context); // Close the dialog
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Book shared successfully!'),
+                      content: Text('Book shared successfully!',style: TextStyle(fontFamily: 'font'),),
                     ),
                   );
                 }
               },
-              child: Text('Save'),
+              child: Text('Save',style: TextStyle(fontFamily: 'font'),),
             ),
           ],
         );
@@ -653,14 +654,14 @@ class _MyBooksState extends State<MyBooks> {
         TextEditingController notesController = TextEditingController();
 
         return AlertDialog(
-          title: Text('Remove Book'),
-          content: Text("Are you sure wantt to remove the book from your read list?"),
+          title: Text('Remove Book',style: TextStyle(fontFamily: 'font'),),
+          content: Text("Are you sure wantt to remove the book from your read list?",style: TextStyle(fontFamily: 'font'),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: Text('Cancel',style: TextStyle(fontFamily: 'font'),),
             ),
             TextButton(
               onPressed: () {
@@ -670,7 +671,7 @@ class _MyBooksState extends State<MyBooks> {
                 });
                 Navigator.pop(context);
               },
-              child: Text('Remove'),
+              child: Text('Remove',style: TextStyle(fontFamily: 'font'),),
             ),
           ],
         );

@@ -409,7 +409,7 @@ userName  = preferences.getString("userName")!;
   //                 'Which page currently are you in?',
   //                 style: TextStyle(
   //                   fontSize: 18.0,
-  //                   fontWeight: FontWeight.bold,
+  //                   fontWeight: FontWeight.bold,fontFamily:'font',
   //                   color: Color(0xFF283E50),
   //                 ),
   //               ),
@@ -451,7 +451,7 @@ userName  = preferences.getString("userName")!;
   //                 },
   //                 child: Container(
   //                     width: 120,
-  //                     child: Center(child: Text("Update",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+  //                     child: Center(child: Text("Update",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
   //                 style: ButtonStyle(
   //                   backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
   //                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -622,7 +622,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color:  Color(0xff283E50),
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
                                 ),
                               ),
                               const SizedBox(height: 5,),
@@ -632,7 +632,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w500,fontFamily:'font',
                                 ),
                               ),
                               const SizedBox(height: 5,),
@@ -642,7 +642,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w500,fontFamily:'font',
                                 ),
                               ),
                             ],
@@ -672,7 +672,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color: Color(0xFF283E50),
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
                                 ),
                               ),
                               const SizedBox(height: 5,),
@@ -682,7 +682,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w500,fontFamily:'font',
                                 ),
                               ),
                               const SizedBox(height: 5,),
@@ -692,7 +692,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w500,fontFamily:'font',
                                 ),
                               ),
                             ],
@@ -715,7 +715,7 @@ userName  = preferences.getString("userName")!;
                       const Text(
                         "Home",
                         style: TextStyle(
-                          fontFamily: "Abhaya Libre ExtraBold",
+                          fontFamily: 'font',
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
                           color: Color(0xfffeead4),
@@ -729,6 +729,7 @@ userName  = preferences.getString("userName")!;
                       ),
                       Text("${strikesCount}", style: TextStyle(
                         fontSize: 14,
+                        fontFamily: "font",
                         color: Color(0xfffeead4),
                       )),
 
@@ -747,7 +748,7 @@ userName  = preferences.getString("userName")!;
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                           
-                            Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold),),
+                            Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily:'font', ),),
                             myBooks.isEmpty?
                             Container(
                                 height: 100,
@@ -844,7 +845,7 @@ userName  = preferences.getString("userName")!;
                                                                 padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
                                                                 child:Text(
                                                                   'Start',
-                                                                  style: TextStyle(fontSize: 16.0),
+                                                                  style: TextStyle(fontSize: 16.0,fontFamily: 'font'),
                                                                 ),
                                                               ),
                                                             ),
@@ -867,7 +868,7 @@ userName  = preferences.getString("userName")!;
                                                             style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Color(0xff686868),
-                                                                fontWeight: FontWeight.bold
+                                                                fontWeight: FontWeight.bold,fontFamily: 'font'
                                                             ),),
                                                         ),
                                                         SizedBox(height: 16,),
@@ -895,7 +896,7 @@ userName  = preferences.getString("userName")!;
                                                                         style: TextStyle(
                                                                             fontSize: 14,
                                                                             color: Color(0xff283E50),
-                                                                            fontWeight: FontWeight.bold
+                                                                            fontWeight: FontWeight.bold,fontFamily: 'font'
                                                                         ),
                                                                       ),
                                                                       Text(
@@ -903,7 +904,7 @@ userName  = preferences.getString("userName")!;
                                                                         style: TextStyle(
                                                                             fontSize: 14,
                                                                             color: Color(0xff686868),
-                                                                            fontWeight: FontWeight.bold
+                                                                            fontWeight: FontWeight.bold,fontFamily: 'font'
                                                                         ),
                                                                       ),
                                                                     ],
@@ -955,7 +956,7 @@ userName  = preferences.getString("userName")!;
                                                                       style: TextStyle(
                                                                           fontSize: 14,
                                                                           color: Color(0xff283E50),
-                                                                          fontWeight: FontWeight.bold
+                                                                          fontWeight: FontWeight.bold,fontFamily: 'font'
                                                                       ),
                                                                     ),
                                                                     Text(
@@ -963,7 +964,7 @@ userName  = preferences.getString("userName")!;
                                                                       style: TextStyle(
                                                                           fontSize: 14,
                                                                           color: Color(0xff686868),
-                                                                          fontWeight: FontWeight.bold
+                                                                          fontWeight: FontWeight.bold,fontFamily: 'font'
                                                                       ),
                                                                     ),
                                                                   ],
@@ -996,7 +997,7 @@ userName  = preferences.getString("userName")!;
                                                                         style: TextStyle(
                                                                             fontSize: 14,
                                                                             color: Color(0xff283E50),
-                                                                            fontWeight: FontWeight.bold
+                                                                            fontWeight: FontWeight.bold,fontFamily: 'font'
                                                                         ),
                                                                       ),
                                                                       Text(
@@ -1004,7 +1005,7 @@ userName  = preferences.getString("userName")!;
                                                                         style: TextStyle(
                                                                             fontSize: 14,
                                                                             color: Color(0xff686868),
-                                                                            fontWeight: FontWeight.bold
+                                                                            fontWeight: FontWeight.bold,fontFamily: 'font'
                                                                         ),
                                                                       ),
                                                                     ],
@@ -1060,7 +1061,7 @@ userName  = preferences.getString("userName")!;
                                                 children: [
                                                   Text("Notes",  style: const TextStyle(
                                                       color: Color(0xFF283E50),
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,fontFamily:'font',
                                                       fontSize: 20),),
                                                   GestureDetector(
                                                       onTap: (){
@@ -1105,7 +1106,7 @@ userName  = preferences.getString("userName")!;
                                                                       flex:5,
                                                                       child: Text(
                                                                         note['note'],
-                                                                        style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                        style: TextStyle(fontFamily: 'font',fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
                                                                       ),
                                                                     ),
                                                                     Expanded(
@@ -1115,7 +1116,7 @@ userName  = preferences.getString("userName")!;
                                                                         child: Text(
                                                                           'Page -'+note['pageNumber'],
 
-                                                                          style: TextStyle(fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                                          style: TextStyle(fontFamily: 'font',fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -1138,7 +1139,7 @@ userName  = preferences.getString("userName")!;
                                                     //     style: const TextStyle(
                                                     //       color: Color(0xFF686868),
                                                     //       fontSize: 12,
-                                                    //       fontWeight: FontWeight.w500,
+                                                    //       fontWeight: FontWeight.w500,fontFamily:'font',
                                                     //     ),
                                                     //   )
                                                     //
@@ -1156,7 +1157,7 @@ userName  = preferences.getString("userName")!;
                                                 children: [
                                                   Text("Quotes",  style: const TextStyle(
                                                       color: Color(0xFF283E50),
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,fontFamily:'font',
                                                       fontSize: 20),),
                                                   GestureDetector(
                                                       onTap: (){
@@ -1201,7 +1202,7 @@ userName  = preferences.getString("userName")!;
                                                                       flex:5,
                                                                       child: Text(
                                                                         quotes['quote'],
-                                                                        style: TextStyle(fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
+                                                                        style: TextStyle(fontFamily: 'font',fontSize: 14, color: Color(0xFF283E50),fontWeight: FontWeight.bold),
                                                                       ),
                                                                     ),
                                                                     Expanded(
@@ -1211,7 +1212,7 @@ userName  = preferences.getString("userName")!;
                                                                         child: Text(
                                                                           'Page -'+quotes['pageNumber'],
 
-                                                                          style: TextStyle(fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
+                                                                          style: TextStyle(fontFamily: 'font',fontSize: 10, color: Color(0xff686868),fontWeight: FontWeight.bold),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -1234,7 +1235,7 @@ userName  = preferences.getString("userName")!;
                                                     //     style: const TextStyle(
                                                     //       color: Color(0xFF686868),
                                                     //       fontSize: 12,
-                                                    //       fontWeight: FontWeight.w500,
+                                                    //       fontWeight: FontWeight.w500,fontFamily:'font',
                                                     //     ),
                                                     //   )
                                                     //
@@ -1452,7 +1453,7 @@ userName  = preferences.getString("userName")!;
                         },
                         child: Text(
                           'Done',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white,fontFamily: 'font'),
                         ),
                       ),
                     ),
@@ -1832,7 +1833,7 @@ userName  = preferences.getString("userName")!;
                     Text("Looks like you haven’t signed in yet.",style: TextStyle(
                       color: Color(0xFF686868),
                       fontSize: 14,
-                      fontFamily: 'Abhaya Libre',
+                      fontFamily: 'font',
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
@@ -1840,7 +1841,7 @@ userName  = preferences.getString("userName")!;
                     Text("To access this exciting feature, please sign in to your account. Join our community to interact with fellow readers, share your thoughts, and discover more.",style: TextStyle(
                       color: Color(0xFF686868),
                       fontSize: 14,
-                      fontFamily: 'Abhaya Libre',
+                      fontFamily: 'font',
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
@@ -1868,7 +1869,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color:   Color(0xFF283E50),
                                   fontSize: 14,
-                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontFamily: 'font',
                                   fontWeight: FontWeight.w800,
                                   height: 0,
                                 ),
@@ -1899,7 +1900,7 @@ userName  = preferences.getString("userName")!;
                                 style: TextStyle(
                                   color: Color(0xFFFF997A),
                                   fontSize: 16,
-                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontFamily: 'font',
                                   fontWeight: FontWeight.w800,
                                   height: 0,
                                 ),

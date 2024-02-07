@@ -104,6 +104,7 @@ class _ChatListState extends State<ChatList> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search users...',
+                      hintStyle: TextStyle(fontFamily: 'font',),
                       prefixIcon: Icon(Icons.search),
                       border: InputBorder.none, // Remove the default border
                     ),
@@ -118,7 +119,7 @@ class _ChatListState extends State<ChatList> {
                       stream: _usersStream,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return Text('No users available');
+                          return Text('No users available',style: TextStyle(fontFamily: 'font',),);
                         }
 
                         _users = snapshot.data!;
@@ -147,7 +148,7 @@ class _ChatListState extends State<ChatList> {
                                         radius: 20,
                                         backgroundColor: Color(0xFF283E50),
                                       ),
-                                      Text(username),
+                                      Text(username,style: TextStyle(fontFamily: 'font',),),
                                     ],
                                   ),
                                   onTap: () {
@@ -198,6 +199,7 @@ class _ChatListState extends State<ChatList> {
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search users...',
+                  hintStyle: TextStyle(fontFamily: 'font',),
                   prefixIcon: Icon(Icons.search),
                   border: InputBorder.none, // Remove the default border
                 ),
@@ -212,7 +214,7 @@ class _ChatListState extends State<ChatList> {
                   stream: _usersStream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text('No users available');
+                      return Text('No users available',style: TextStyle(fontFamily: 'font',),);
                     }
                     _users = snapshot.data!;
                     return Visibility(
@@ -459,14 +461,14 @@ class ChatListItem extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Delete Message'),
-                        content: Text("Are you sure you want to delete this message and the entire chat?"),
+                        title: Text('Delete Message',style: TextStyle(fontFamily: 'font',),),
+                        content: Text("Are you sure you want to delete this message and the entire chat?",style: TextStyle(fontFamily: 'font',),),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context); // Close the dialog
                             },
-                            child: Text('Cancel'),
+                            child: Text('Cancel',style: TextStyle(fontFamily: 'font',),),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -477,7 +479,7 @@ class ChatListItem extends StatelessWidget {
                               await _firestore.collection('chats').doc('${currentUserId+'_'+participantId}').delete();
                               await _firestore.collection('chats').doc('${participantId+'_'+currentUserId}').delete();
                             },
-                            child: Text('Delete'),
+                            child: Text('Delete',style: TextStyle(fontFamily: 'font',),),
                           ),
                         ],
                       );
@@ -507,7 +509,7 @@ class ChatListItem extends StatelessWidget {
                             Text(
                               participantUsername,
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontWeight: FontWeight.bold,fontFamily: 'font',),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -518,7 +520,7 @@ class ChatListItem extends StatelessWidget {
                                       : lastMessageText,
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 16.0,
+                                    fontSize: 16.0,fontFamily: 'font',
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
@@ -529,7 +531,7 @@ class ChatListItem extends StatelessWidget {
                                 ),
                                 Text(
                                   _formatTimestamp(lastMessageTimestamp),
-                                  style: TextStyle( fontSize: 12),
+                                  style: TextStyle( fontSize: 12,fontFamily: 'font',),
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -544,7 +546,7 @@ class ChatListItem extends StatelessWidget {
                                   ),
                                   child: Text(
                                     unreadCount > 0 ? unreadCount.toString() : '',
-                                    style: TextStyle(fontSize: 12, color: Colors.white),
+                                    style: TextStyle(fontSize: 12, color: Colors.white,fontFamily: 'font',),
                                   ),
                                 ),
 

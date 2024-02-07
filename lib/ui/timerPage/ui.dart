@@ -338,7 +338,7 @@ class _TimerPageState extends State<TimerPage> {
                         },
                         child: Text(
                           'Done',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white,fontFamily: 'font'),
                         ),
                       ),
                     ),
@@ -353,7 +353,7 @@ class _TimerPageState extends State<TimerPage> {
                       style: TextStyle(
                           color: Color(0xff686868),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,fontFamily: 'font'),
                     )),
                   ),
                   Align(
@@ -466,12 +466,12 @@ class _TimerPageState extends State<TimerPage> {
                                         child: Text(
                                           "Started",
                                           style: TextStyle(
-                                              color: Color(0xff686868)),
+                                              color: Color(0xff686868),fontFamily: 'font'),
                                         )),
                                     Text(
                                       widget.book.startingDate==null?'-':widget.book.startingDate,
                                       style:
-                                          TextStyle(color: Color(0xff686868),fontSize: 12),
+                                          TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
                                     ),
                                   ],
                                 ),
@@ -482,7 +482,7 @@ class _TimerPageState extends State<TimerPage> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                       color: Color(0xff686868),
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.bold,fontFamily:'font',
                                       fontSize: 16),
                                     )),
                                 Text(
@@ -491,7 +491,7 @@ class _TimerPageState extends State<TimerPage> {
                                       : widget.book.status == 'TO BE READ'
                                           ? 'Pending'
                                           : 'Finished',
-                                  style: TextStyle(color: Color(0xff686868),fontSize: 12),
+                                  style: TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
                                 ),
                               ],
                             ),
@@ -515,7 +515,7 @@ class _TimerPageState extends State<TimerPage> {
                                         style: TextStyle(
                                             color: Color(0xff283E50),
                                             fontSize: 24,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
                                       )),
                                   GestureDetector(
                                       onTap: () {
@@ -526,14 +526,14 @@ class _TimerPageState extends State<TimerPage> {
                                         style: TextStyle(
                                             color: Color(0xff283E50),
                                             fontSize: 24,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
                                       )),
                                   Text(
                                     'Page',
                                     style: TextStyle(
                                         color: Color(0xff283E50),
                                         fontSize: 24,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,fontFamily: 'font'),
                                   ),
                                 ],
                               ),
@@ -561,7 +561,7 @@ class _TimerPageState extends State<TimerPage> {
                                             style: TextStyle(
                                               fontSize: 30,
                                               color: Color(0xff686868),
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.bold,fontFamily:'font',
                                             ),
                                           );
                                         },
@@ -597,7 +597,7 @@ class _TimerPageState extends State<TimerPage> {
                                         style: TextStyle(
                                           color: Color(0xff283E50),
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.bold,fontFamily:'font',
                                         ),
                                       ),
                                     ],
@@ -609,7 +609,7 @@ class _TimerPageState extends State<TimerPage> {
                                         style: TextStyle(
                                             color: Color(0xff686868),
                                             fontSize: 30,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
                                       ),
                                       SizedBox(
                                         height: 5,
@@ -619,7 +619,7 @@ class _TimerPageState extends State<TimerPage> {
                                         style: TextStyle(
                                             color: Color(0xff283E50),
                                             fontSize: 16,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
                                       ),
                                     ],
                                   ),
@@ -644,7 +644,7 @@ class _TimerPageState extends State<TimerPage> {
                                   // Adjust the padding as needed
                                   child: Text(
                                     _isRunning ? 'Pause' : 'Start',
-                                    style: TextStyle(fontSize: 16.0),
+                                    style: TextStyle(fontSize: 16.0,fontFamily: 'font'),
                                   ),
                                 ),
                               ),
@@ -657,7 +657,7 @@ class _TimerPageState extends State<TimerPage> {
                               "Notes",
                               style: const TextStyle(
                                   color: Color(0xFF283E50),
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
                                   fontSize: 20),
                             ),
                             SizedBox(
@@ -708,7 +708,7 @@ class _TimerPageState extends State<TimerPage> {
                                                           color:
                                                               Color(0xff686868),
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                              FontWeight.bold,fontFamily: 'font'),
                                                     ),
                                                   ),
                                                   Expanded(
@@ -725,7 +725,7 @@ class _TimerPageState extends State<TimerPage> {
                                                                 0xff686868),
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .bold),
+                                                                    .bold,fontFamily: 'font'),
                                                       ),
                                                     ),
                                                   ),
@@ -748,7 +748,7 @@ class _TimerPageState extends State<TimerPage> {
                                   //     style: const TextStyle(
                                   //       color: Color(0xFF686868),
                                   //       fontSize: 12,
-                                  //       fontWeight: FontWeight.w500,
+                                  //       fontWeight: FontWeight.w500,fontFamily:'font',
                                   //     ),
                                   //   )
                                   //
@@ -764,7 +764,7 @@ class _TimerPageState extends State<TimerPage> {
                               "Quotes",
                               style: const TextStyle(
                                   color: Color(0xFF283E50),
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
                                   fontSize: 20),
                             ),
                             SizedBox(
@@ -815,7 +815,7 @@ class _TimerPageState extends State<TimerPage> {
                                                           color:
                                                               Color(0xff686868),
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                              FontWeight.bold,fontFamily: 'font'),
                                                     ),
                                                   ),
                                                   Expanded(
@@ -833,7 +833,7 @@ class _TimerPageState extends State<TimerPage> {
                                                                 0xff686868),
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .bold),
+                                                                    .bold,fontFamily: 'font'),
                                                       ),
                                                     ),
                                                   ),
@@ -859,7 +859,7 @@ class _TimerPageState extends State<TimerPage> {
                                   //     style: const TextStyle(
                                   //       color: Color(0xFF686868),
                                   //       fontSize: 12,
-                                  //       fontWeight: FontWeight.w500,
+                                  //       fontWeight: FontWeight.w500,fontFamily:'font',
                                   //     ),
                                   //   )
                                   //
@@ -935,7 +935,7 @@ class _TimerPageState extends State<TimerPage> {
                                 '$number',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
                                 ),
                               ),
                             ),
@@ -965,7 +965,7 @@ class _TimerPageState extends State<TimerPage> {
                     },
                     child: Text(
                       'Done',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white,fontFamily: 'font'),
                     ),
                   ),
                 ),
@@ -1079,7 +1079,7 @@ class _TimerPageState extends State<TimerPage> {
                   'Which page currently are you in?',
                   style: TextStyle(
                     fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,fontFamily:'font',
                     color: Color(0xFF283E50),
                   ),
                 ),
@@ -1128,7 +1128,7 @@ class _TimerPageState extends State<TimerPage> {
                         "Update",
                         style: TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.bold,fontFamily:'font',
                             fontSize: 14),
                       ))),
                   style: ButtonStyle(
@@ -1449,7 +1449,7 @@ class _TimerPageState extends State<TimerPage> {
                       cursorColor: Color(0xFFD9D9D9),
                       decoration: InputDecoration(
                         hintText: 'Write your note',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
                         border: InputBorder.none,
                       ),
                     ),
@@ -1492,7 +1492,7 @@ class _TimerPageState extends State<TimerPage> {
                         },
                         child: Text(
                           'Done',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white,fontFamily: 'font'),
                         ),
                       ),
                     ),
@@ -1516,7 +1516,7 @@ class _TimerPageState extends State<TimerPage> {
                         cursorColor: Color(0xFFD9D9D9),
                         decoration: InputDecoration(
                           hintText: '0',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
                           border: InputBorder.none,
                         ),
                       ),
@@ -1564,7 +1564,7 @@ class _TimerPageState extends State<TimerPage> {
                       cursorColor: Color(0xFFD9D9D9),
                       decoration: InputDecoration(
                         hintText: 'Write your Quote',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
                         border: InputBorder.none,
                       ),
                     ),
@@ -1604,7 +1604,7 @@ class _TimerPageState extends State<TimerPage> {
                     },
                     child: Text(
                       'Done',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white,fontFamily: 'font'),
                     ),
                   ),
                 ),
@@ -1626,7 +1626,7 @@ class _TimerPageState extends State<TimerPage> {
                         cursorColor: Color(0xFFD9D9D9),
                         decoration: InputDecoration(
                           hintText: '0',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
                           border: InputBorder.none,
                         ),
                       ),
@@ -1675,7 +1675,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         children: [
           Text(
             'Done Reading?',
-            style: TextStyle(color: Color(0xff283E50)),
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
           Divider(
             color: Colors.grey,
@@ -1685,7 +1685,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             'Update your Progress',
             style: TextStyle(
               fontSize: 14,
-              color: Color(0xff686868),
+              color: Color(0xff686868),fontFamily: 'font'
             ),
           ),
         ],
@@ -1734,7 +1734,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                         '$number',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.bold,fontFamily:'font',
                         ),
                       ),
                     ),
@@ -1779,7 +1779,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                     child: Text(
                       'Finish',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.white,fontFamily: 'font'
                       ),
                     ),
                   ),
@@ -1808,7 +1808,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                     child: Text(
                       'Save',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.white,fontFamily: 'font'
                       ),
                     ),
                   ),
@@ -1954,7 +1954,7 @@ class _CustomAlertForStartDateDialogState
         children: [
           Text(
             'Started Date',
-            style: TextStyle(color: Color(0xff283E50)),
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
           Divider(
             color: Colors.grey,
@@ -2012,7 +2012,7 @@ class _CustomAlertForStartDateDialogState
                             '$number',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color: Color(0xff686868),
                             ),
                           ),
@@ -2058,7 +2058,7 @@ class _CustomAlertForStartDateDialogState
                             '$number',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color: Color(0xff686868),
                             ),
                           ),
@@ -2104,7 +2104,7 @@ class _CustomAlertForStartDateDialogState
                             '$number',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color: Color(0xff686868),
                             ),
                           ),
@@ -2145,7 +2145,7 @@ class _CustomAlertForStartDateDialogState
                 child: Text(
                   'Update',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.white,fontFamily: 'font'
                   ),
                 ),
               ),

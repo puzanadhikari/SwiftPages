@@ -117,11 +117,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                            color: Color(0xffFF997A),
                                            borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                          ),
-                                         child: Center(child: Text(widget.book.publishedDate.substring(0,4).toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                         child: Center(child: Text(widget.book.publishedDate.substring(0,4).toString(),style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                        ),
                                        SizedBox(height: 5,),
-                                       Text("Date",style: TextStyle(color:Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
+                                       Text("Date",style: TextStyle(color:Color(0xffD9D9D9),    fontFamily: 'font',fontSize: 14,fontWeight: FontWeight.bold),)
                                      ],
                                    ),
                                    Column(
@@ -133,11 +133,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                            color: Color(0xffFF997A),
                                            borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                          ),
-                                         child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                         child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                        ),
                                        SizedBox(height: 5,),
-                                       Text("Rating",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
+                                       Text("Rating",style: TextStyle(color: Color(0xffD9D9D9),    fontFamily: 'font',fontSize: 14,fontWeight: FontWeight.bold),)
                                      ],
                                    ),
                                    Column(
@@ -149,11 +149,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                            color: Color(0xffFF997A),
                                            borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                                          ),
-                                         child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                         child: Center(child: Text(widget.book.pageCount.toString(),style: TextStyle(    fontFamily: 'font',color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
 
                                        ),
                                        SizedBox(height: 5,),
-                                       Text("Pages",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold),)
+                                       Text("Pages",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontWeight: FontWeight.bold,    fontFamily: 'font'),)
                                      ],
                                    ),
 
@@ -169,14 +169,14 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                thickness: 1,
                              ),
                              SizedBox(height: 10,),
-                             Text("About",style: TextStyle(color: Color(0xffD9D9D9),fontSize: 20,fontWeight: FontWeight.bold),),
+                             Text("About",style: TextStyle(fontFamily: 'font',color: Color(0xffD9D9D9),fontSize: 20,fontWeight: FontWeight.bold),),
 
                              SizedBox(height: 10,),
                              Padding(
                                padding: const EdgeInsets.all(8.0),
                                child: Text(
 
-                                 widget.book.description,style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14),
+                                 widget.book.description,style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontFamily: 'font'),
                                  textAlign: TextAlign.center,),
                              ),
 
@@ -206,7 +206,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                  child:Text(
                                    widget.book.title,
                                    textAlign: TextAlign.center,
-                                   style: TextStyle(color: Color(0xffD9D9D9),fontWeight: FontWeight.bold,fontSize: 16),)
+                                   style: TextStyle(color: Color(0xffD9D9D9),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),)
                                ),
                              ),
                            ],
@@ -223,7 +223,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                          _showInvitationCodePopup(); // Example values, replace with your data
 
                        },
-                       child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
+                       child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),),
                        style: ButtonStyle(
                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -264,7 +264,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                   'Add To Self ?',
                   style: TextStyle(
                     fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,fontFamily:'font',
                     color: Color(0xFF283E50),
                   ),
                 ),
@@ -285,7 +285,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                       },
                       child: Container(
                           // width: 70,
-                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -302,7 +302,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                       },
                       child: Container(
                           // width: 70,
-                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -321,7 +321,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                   },
                   child: Container(
                         width: 120,
-                      child: Center(child: Text("To Be Read",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                      child: Center(child: Text("To Be Read",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -337,7 +337,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 ElevatedButton(
                   onPressed: () {},
                   child: Container(
-                      child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                      child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -355,7 +355,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 //
                 //   },
                 //   child: Container(
-                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
                 //   style: ButtonStyle(
                 //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                 //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(

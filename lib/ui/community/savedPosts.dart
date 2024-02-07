@@ -154,7 +154,7 @@ class _BookCardState extends State<BookCard> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text(widget.bookData['postedBy'] ?? 'Anonymous'),
+                        Text(widget.bookData['postedBy'] ?? 'Anonymous',style: TextStyle(fontFamily: 'font',),),
 
                       ],
                     ),
@@ -196,7 +196,7 @@ class _BookCardState extends State<BookCard> {
                               style: const TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,fontFamily:'font'),
                             ),
                           ),
                         ),
@@ -205,7 +205,7 @@ class _BookCardState extends State<BookCard> {
                         onPressed: () {
                           _showDeletePostDialog(widget.savedId);
                         },
-                        child: Text("Delete"),
+                        child: Text("Delete",style: TextStyle(fontFamily: 'font',),),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -435,7 +435,7 @@ class _CommentPageState extends State<CommentPage> {
               child: Text(
                 "Comments",
                 style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),

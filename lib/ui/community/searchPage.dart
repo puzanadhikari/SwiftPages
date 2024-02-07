@@ -349,7 +349,7 @@ class _SearchPageState extends State<SearchPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
                                 Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
                               ],
                             ),
@@ -648,7 +648,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                               style: const TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,fontFamily:'font'),
                             ),
                           ),
                         ),
@@ -736,7 +736,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
                                 Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
                               ],
                             ),

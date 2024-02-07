@@ -129,7 +129,6 @@ class _MainPageState extends State<MainPage> {
           HomePage(),
           MyBooks(),
           GraphPage(),
-
           ProfilePage(),
 
         ],

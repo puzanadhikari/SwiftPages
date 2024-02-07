@@ -102,7 +102,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("ABOUT US",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 30),),
+                          Text("ABOUT US",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 30),),
 
                           Row(
                             children: [
@@ -137,7 +137,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: Text(data,style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                            child: Text(data,style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
                           ),
 
                         ),
@@ -161,7 +161,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUsPage()));
                           },
-                          child: Text("Contact Us",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 18),),
+                          child: Text("Contact Us",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(

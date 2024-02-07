@@ -88,7 +88,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                       "Choose Your Avatar!!",
                       style: TextStyle(
                         fontSize: 25,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.bold,fontFamily:'font',
                         color: Color(0xFF283E50),
                       ),
                     ),
@@ -181,7 +181,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                             style: TextStyle(
                               color: selectedAvatar != null ? Color(0xfffeead4) : Color(0xFF283E50),
                               fontSize: 25,
-                              fontFamily: 'Abhaya Libre ExtraBold',
+                              fontFamily: 'font',
                               height: 0,
                             ),
                           ),
@@ -234,9 +234,9 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                             "Daily Goal in minutes",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -263,9 +263,9 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                             "Yearly Goal for number of books",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -311,7 +311,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                               style: TextStyle(
                                 color:   Color(0xFF283E50),
                                 fontSize: 14,
-                                fontFamily: 'Abhaya Libre ExtraBold',
+                                fontFamily: 'font',
                                 fontWeight: FontWeight.w800,
                                 height: 0,
                               ),

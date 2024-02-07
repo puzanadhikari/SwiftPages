@@ -63,7 +63,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               child: const Text(
                 "Contact Us",
                 style: TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -101,8 +101,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               style: TextStyle(
                                 color: Color(0xFF283E50),
                                 fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Abhaya Libre ExtraBold",
+                                fontWeight: FontWeight.bold,fontFamily:'font',
+
                               ),
                             ),
                           ),
@@ -111,9 +111,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               "If you have any feedbacks,suggestions or any type of bug report please don't hesitate to contact us. We want what's best for the app and our users!!",
                               style: TextStyle(
                                 color: Color(0xFF686868),
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.bold,fontFamily:'font',
                                 fontSize: 14,
-                                fontFamily: "Abhaya Libre ExtraBold",
+
                               ),
                               textAlign: TextAlign.center),
                           SizedBox(height: 40),
@@ -131,7 +131,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 decoration: InputDecoration(
                                   hintText: 'Full Name',
                                   hintStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.bold,fontFamily:'font',
                                       fontSize: 15),
                                   border: InputBorder.none,
                                 ),
@@ -153,7 +153,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 decoration: InputDecoration(
                                   hintText: 'Email',
                                   hintStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.bold,fontFamily:'font',
                                       fontSize: 15),
                                   border: InputBorder.none,
                                 ),
@@ -177,7 +177,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                   decoration: InputDecoration(
                                     hintText: 'Message',
                                     hintStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.bold,fontFamily:'font',
                                         fontSize: 15),
                                     border: InputBorder.none,
                                   ),
@@ -198,7 +198,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                   "Submit",
                                   style: TextStyle(
                                       color: Color(0xffFEEAD4),
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.bold,fontFamily:'font',
                                       fontSize: 18),
                                 ),
                               ),

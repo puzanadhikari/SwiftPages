@@ -248,7 +248,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                                 ),
                                 SizedBox(height: 10,),
                                 Container(
-                                    child:Text(widget.book.author,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)
+                                    child:Text(widget.book.author,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),)
                                 ),
 
                               ],
@@ -270,7 +270,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                                 _showInvitationCodePopup(); // Example values, replace with your data
 
                               },
-                              child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
+                              child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -288,7 +288,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                                 _showInvitationCodePopupToRemove(); // Example values, replace with your data
 
                               },
-                              child: Text("Remove",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 18),),
+                              child: Text("Remove",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -333,7 +333,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                   'Add To Self ?',
                   style: TextStyle(
                     fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,fontFamily:'font',
                     color: Color(0xFF283E50),
                   ),
                 ),
@@ -354,7 +354,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                       },
                       child: Container(
                         // width: 70,
-                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                          child: Center(child: Text("Currently Reading",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -371,7 +371,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                       },
                       child: Container(
                         // width: 70,
-                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                          child: Center(child: Text("Already Read",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -390,7 +390,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                   },
                   child: Container(
                       width: 120,
-                      child: Center(child: Text("To Be Read",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                      child: Center(child: Text("To Be Read",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -407,7 +407,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                 //
                 //   },
                 //   child: Container(
-                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),))),
+                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
                 //   style: ButtonStyle(
                 //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
                 //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -445,7 +445,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                   'Are you Sure want to remove the book from Self?',
                   style: TextStyle(
                     fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,fontFamily:'font',
                     color: Color(0xFF283E50),
                   ),
                 ),
@@ -464,7 +464,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                       },
                       child: Container(
                         // width: 70,
-                          child: Center(child: Text("No",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                          child: Center(child: Text("No",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -481,7 +481,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                       },
                       child: Container(
                         // width: 70,
-                          child: Center(child: Text("Yes",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontSize: 12),))),
+                          child: Center(child: Text("Yes",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(

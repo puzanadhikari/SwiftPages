@@ -103,7 +103,7 @@ class _ActivityListState extends State<ActivityList> {
               child: Text(
                 "Notification",
                 style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -158,7 +158,7 @@ class _ActivityListState extends State<ActivityList> {
                                           backgroundColor: Color(0xfffeead4),
                                         ),
                                         SizedBox(width: 5,),
-                                        Text("${activity['activityBy']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
+                                        Text("${activity['activityBy']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
 
                                       ],
                                     ),
@@ -197,7 +197,7 @@ class _ActivityListState extends State<ActivityList> {
                                             activity['type'] == 'Liked'
                                                 ? ' liked your post'
                                                 : ' disliked' +
-                                                ' your post',style: TextStyle(color: Color(0xff283E50)),)),
+                                                ' your post',style: TextStyle(color: Color(0xff283E50),fontFamily: 'font',),)),
                                     Visibility(
                                         visible: activity['type'] ==
                                             'Comment'
@@ -206,8 +206,8 @@ class _ActivityListState extends State<ActivityList> {
                                         child: Text(activity['type'] ==
                                             'Comment'
                                             ? ' commented your post'
-                                            : '',style: TextStyle(color: Color(0xff283E50)),)),
-                                    Text(  '${timeFormatter.format(activity['time'].toDate())}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 12),),
+                                            : '',style: TextStyle(color: Color(0xff283E50),fontFamily: 'font',),)),
+                                    Text(  '${timeFormatter.format(activity['time'].toDate())}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),),
                           ]),
                         ) );
 

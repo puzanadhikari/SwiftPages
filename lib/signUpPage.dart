@@ -86,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(
                         color: Color(0xFF283E50),
                         fontSize: 32,
-                        fontFamily: 'Abhaya Libre ExtraBold',
+                        fontFamily: 'font',
                         fontWeight: FontWeight.w800,
                         height: 0,
                       ),
@@ -121,9 +121,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             "Email",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -152,9 +152,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             "Username",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -182,9 +182,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             "Password",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -238,7 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
-                                fontFamily: 'Abhaya Libre ExtraBold',
+                                fontFamily: 'font',
                                 fontWeight: FontWeight.w800,
                                 height: 0,
                               ),
@@ -267,7 +267,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       //         style: TextStyle(
                       //           color: Color(0xFF283E50),
                       //           fontSize: 20,
-                      //           fontFamily: 'Abhaya Libre ExtraBold',
+                      //           fontFamily: 'font',
                       //           fontWeight: FontWeight.w800,
                       //           height: 0,
                       //         ),
@@ -298,7 +298,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               " Login",
                               style: TextStyle(
                                 color: Color(0xFF686868),
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.bold,fontFamily:'font',
                                 fontSize: 15,
                                 decoration: TextDecoration.underline,),
 

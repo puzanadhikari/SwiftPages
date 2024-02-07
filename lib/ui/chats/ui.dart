@@ -89,7 +89,7 @@ class _ChatPageState extends State<ChatPage> {
               child:  Text(
                 'Chat Box',
                 style: TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -117,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
                     backgroundImage: NetworkImage(widget.recipientAvatar),
                   ),
                   SizedBox(width: 10,),
-                  Text(widget.recipientUsername,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),)
+                  Text(widget.recipientUsername,style: TextStyle(fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 20,color: Colors.white),)
                 ],
               ),
             ),
@@ -139,7 +139,7 @@ class _ChatPageState extends State<ChatPage> {
                       //     'Unread Messages: $unreadMessagesCount',
                       //     style: TextStyle(
                       //       fontSize: 16.0,
-                      //       fontWeight: FontWeight.bold,
+                      //       fontWeight: FontWeight.bold,fontFamily:'font',
                       //       color: Colors.black,
                       //     ),
                       //   ),
@@ -186,7 +186,7 @@ class _ChatPageState extends State<ChatPage> {
                                                   message['text'],
                                                   style: TextStyle(
                                                     color: isCurrentUser ? Colors.white : Colors.black,
-                                                    fontSize: 14.0,
+                                                    fontSize: 14.0,fontFamily: 'font'
                                                   ),
                                                 ),
                                                 SizedBox(height: 5,),
@@ -199,7 +199,7 @@ class _ChatPageState extends State<ChatPage> {
                                                       _formatTimestamp(message['timestamp']),
                                                       style: TextStyle(
                                                         color: isCurrentUser ? Colors.white : Colors.black,
-                                                        fontSize: 8.0,
+                                                        fontSize: 8.0,fontFamily: 'font'
                                                       ),
                                                     ),
                                                     SizedBox(width: 5,),
@@ -254,7 +254,7 @@ class _ChatPageState extends State<ChatPage> {
                                     cursorColor: Color(0xFF283E50),
                                     decoration: InputDecoration(
                                         hintText: 'Type your message...',
-                                        hintStyle: TextStyle(color: Colors.grey)
+                                        hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font')
                                     ),
                                   ),
                                 ),
@@ -274,7 +274,7 @@ class _ChatPageState extends State<ChatPage> {
                                     },
                                     child: Text(
                                       'Send',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.white,fontFamily: 'font'),
                                     ),
                                   ),
                                 ),

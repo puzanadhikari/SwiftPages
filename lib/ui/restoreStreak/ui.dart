@@ -86,7 +86,7 @@ Future<void> loadQr() async {
               child: const Text(
                 "Restore Streak",
                 style: TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -145,7 +145,7 @@ Future<void> loadQr() async {
                                     style: TextStyle(
                                       color: Color(0xFF283E50),
                                       fontSize: 20,
-                                      fontFamily: 'Abhaya Libre ExtraBold',
+                                      fontFamily: 'font',
                                       fontWeight: FontWeight.w800,
                                       height: 0,
                                     ),

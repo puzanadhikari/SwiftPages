@@ -244,7 +244,7 @@ class _GraphPageState extends State<GraphPage> {
                       child: const Text(
                         "My Stats",
                         style: TextStyle(
-                          fontFamily: "Abhaya Libre ExtraBold",
+                          fontFamily: "font",
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
                           color: Color(0xfffeead4),
@@ -285,7 +285,7 @@ class _GraphPageState extends State<GraphPage> {
                                   style: TextStyle(
                                       color: Color(0xff283E50),
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold
+                                      fontWeight: FontWeight.bold,fontFamily: 'font',
                                   ),
                                 ),
                                 const SizedBox(height: 5,),
@@ -305,12 +305,12 @@ class _GraphPageState extends State<GraphPage> {
                                             Text(
                                             lastStrikeTime==null?'': lastStrikeTime!.toDate().toLocal().toString().split(' ')[0],
                                               style: TextStyle(      fontSize: 14,
-                                                fontWeight: FontWeight.bold,   color: Color(0xff283E50),),
+                                                fontWeight: FontWeight.bold,fontFamily:'font',   color: Color(0xff283E50),),
                                             ),
                                             Text(
                                               lastStrikeTime==null?'':lastStrikeTime!.toDate().toLocal().toString().split(' ')[1].substring(0, 5),
                                               style: TextStyle(      fontSize: 14,
-                                                fontWeight: FontWeight.bold,   color: Color(0xff283E50),),
+                                                fontWeight: FontWeight.bold,fontFamily:'font',   color: Color(0xff283E50),),
                                             ),
                                           ],
                                         ),
@@ -323,12 +323,12 @@ class _GraphPageState extends State<GraphPage> {
                                         Text(
                                    'Last Streak: '+ lastStreak.toString(),
                                           style: TextStyle(  color: Color(0xff283E50),      fontSize: 14,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold,fontFamily: 'font',),
                                         ),
                                         Text(
                                           'Current Streak: '+ streak.toString(),
                                           style: TextStyle(      fontSize: 14,
-                                              fontWeight: FontWeight.bold,  color: Color(0xff283E50),),
+                                              fontWeight: FontWeight.bold,fontFamily:'font',  color: Color(0xff283E50),),
                                         ),
                                       ],
                                     ),
@@ -372,7 +372,7 @@ class _GraphPageState extends State<GraphPage> {
                                               backgroundColor: Color(0xffD9D9D9),
                                               child: Text(completedLength.toString(),  style: TextStyle(
                                                   color: Color(0xff283E50),
-                                                  fontSize: 14,
+                                                  fontSize: 14,fontFamily: 'font',
                                                   fontWeight: FontWeight.bold
                                               )),
                                             ),
@@ -381,7 +381,7 @@ class _GraphPageState extends State<GraphPage> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   color: Color(0xff283E50),
-                                                  fontSize: 14,
+                                                  fontSize: 14,fontFamily: 'font',
                                                   fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -410,7 +410,7 @@ class _GraphPageState extends State<GraphPage> {
                                               backgroundColor: Color(0xffD9D9D9),
                                               child: Text(finalRating.toStringAsFixed(1)+'/5',  style: TextStyle(
                                                   color: Color(0xff283E50),
-                                                  fontSize: 14,
+                                                  fontSize: 14,fontFamily: 'font',
                                                   fontWeight: FontWeight.bold
                                               ),),
                                             ),
@@ -419,7 +419,7 @@ class _GraphPageState extends State<GraphPage> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   color: Color(0xffD9D9D9),
-                                                  fontSize: 14,
+                                                  fontSize: 14,fontFamily: 'font',
                                                   fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -457,7 +457,7 @@ class _GraphPageState extends State<GraphPage> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   color: Color(0xff283E50),
-                                                  fontSize: 14,
+                                                  fontSize: 14,fontFamily: 'font',
                                                   fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -490,7 +490,7 @@ class _GraphPageState extends State<GraphPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Color(0xff283E50),
-                                            fontSize: 20,
+                                            fontSize: 20,fontFamily: 'font',
                                             fontWeight: FontWeight.bold
                                         ),
                                       ),
@@ -517,7 +517,7 @@ class _GraphPageState extends State<GraphPage> {
                                               '${(percentage).toStringAsFixed(0)}%',
                                               style: TextStyle(
                                                 fontSize: 24.0, // Adjust the font size for desired size
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.bold,fontFamily:'font',
                                               ),
                                             ),
                                           ),
@@ -560,7 +560,7 @@ class _GraphPageState extends State<GraphPage> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color(0xff283E50),
-                                fontSize: 20,
+                                fontSize: 20,fontFamily: 'font',
                                 fontWeight: FontWeight.bold
                             ),
                           ),
@@ -578,8 +578,8 @@ class _GraphPageState extends State<GraphPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(mediumPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
+                                    Text(mediumPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),),
+                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),),
                                   ],
                                 ),
                               ),
@@ -592,8 +592,8 @@ class _GraphPageState extends State<GraphPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text(fastPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 13),),
+                                      Text(fastPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),),
+                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 13),),
                                     ],
                                   ),
                                 ),
@@ -605,8 +605,8 @@ class _GraphPageState extends State<GraphPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text(slowPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 12),),
-                                      Text("Slow",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 13),),
+                                      Text(slowPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),),
+                                      Text("Slow",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 13),),
                                     ],
                                   ),
                               ),

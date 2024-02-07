@@ -83,7 +83,7 @@ class _TopNavigationState extends State<TopNavigation> {
               child: const Text(
                 "Community",
                 style: TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -230,7 +230,7 @@ class TopNavigationBar extends StatelessWidget {
               children: [
                 TabBar(
                   tabs: [
-                    Tab(text: 'Activity'),
+                    Tab(text: 'Activity',),
                     Tab(text: 'My Post'),
                     Tab(text: 'Saved'),
                     Tab(text: 'Chats'),
@@ -238,6 +238,7 @@ class TopNavigationBar extends StatelessWidget {
                   labelColor: Color(0xFF283E50),
                   indicatorPadding: EdgeInsets.all(2),
                   indicatorColor: Color(0xFF283E50),
+                  labelStyle: TextStyle(fontFamily: 'font',),
                 ),
                 Expanded(
                   child: TabBarView(

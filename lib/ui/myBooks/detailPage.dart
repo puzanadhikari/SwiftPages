@@ -193,7 +193,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                 child: const Text(
                   "My books",
                   style: TextStyle(
-                    fontFamily: "Abhaya Libre ExtraBold",
+                    fontFamily: "font",
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
                     color: Color(0xfffeead4),
@@ -255,7 +255,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                             color: Color(0xFF283E50),
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.bold,fontFamily:'font',
                                             fontSize: 24),
                                       ),
                                     ),
@@ -268,7 +268,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                                           style: const TextStyle(
                                               color: Color(0xFF686868),
                                               fontSize: 16,
-                                              fontWeight: FontWeight.w500),
+                                              fontWeight: FontWeight.w500,fontFamily:'font'),
                                         ),
                                       ),
                                     ),
@@ -301,7 +301,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                                     "${calculatePercentage().toStringAsFixed(1)}%",
                                     style: TextStyle(
                                         color: Color(0xFF283E50),
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.bold,fontFamily:'font',
                                         fontSize: 11),
                                   ),
                                 ),

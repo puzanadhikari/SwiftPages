@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                         color: Color(0xFF283E50),
                         fontSize: 32,
-                        fontFamily: 'Abhaya Libre ExtraBold',
+                        fontFamily: 'font',
                         fontWeight: FontWeight.w800,
                         height: 0,
                       ),
@@ -102,9 +102,9 @@ class _LoginPageState extends State<LoginPage> {
                             "Email",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -132,9 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                             "Password",
                             style: TextStyle(
                               fontSize:14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
-                              fontFamily: 'Abhaya Libre',
+
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
-                                fontFamily: 'Abhaya Libre ExtraBold',
+                                fontFamily: 'font',
                                 fontWeight: FontWeight.w800,
                                 height: 0,
                               ),
@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                               " Signup",
                               style: TextStyle(
                                 color: Color(0xFF686868),
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.bold,fontFamily:'font',
                                 fontSize: 15,
                                 decoration: TextDecoration.underline,),
 
@@ -261,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
             //               "LOGIN",
             //               style: TextStyle(
             //                   fontSize: 30,
-            //                   fontWeight: FontWeight.bold,
+            //                   fontWeight: FontWeight.bold,fontFamily:'font',
             //                   color: Colors.green),
             //             ),
             //             SizedBox(height: 40),
@@ -336,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
             //                     "    Sign Up",
             //                     style: TextStyle(
             //                         color: Colors.green,
-            //                         fontWeight: FontWeight.bold,
+            //                         fontWeight: FontWeight.bold,fontFamily:'font',
             //                         fontSize: 15),
             //                   ),
             //                 )

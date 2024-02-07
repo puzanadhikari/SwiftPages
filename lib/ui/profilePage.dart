@@ -169,14 +169,14 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Your Invitation Code'),
-          content: Text(_invitationCode),
+          title: Text('Your Invitation Code',style: TextStyle(fontFamily: 'font',),),
+          content: Text(_invitationCode,style: TextStyle(fontFamily: 'font',),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: Text('Close',style: TextStyle(fontFamily: 'font',),),
             ),
           ],
         );
@@ -189,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter Your Invitation Code'),
+          title: Text('Enter Your Invitation Code',style: TextStyle(fontFamily: 'font',),),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -202,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   _validateInvitationCode();
                 },
-                child: Text('Submit'),
+                child: Text('Submit',style: TextStyle(fontFamily: 'font',),),
               ),
             ],
           ),
@@ -211,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: Text('Close',style: TextStyle(fontFamily: 'font',),),
             ),
           ],
         );
@@ -364,7 +364,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: const Text(
                 "Profile",
                 style: TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -422,7 +422,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Text(
                                       '${guestLogin==true?'GUEST':userName.toUpperCase()}',
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: 'font',
                                           color: Colors.black,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -436,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       style: TextStyle(
                                         color: Color(0xFF686868),
                                         fontSize: 12,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w500,fontFamily:'font',
                                         decoration: TextDecoration.underline,
                                       ),
                                     ),
@@ -459,7 +459,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               "Account",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
+                                  fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 20),
                             ),
                             SizedBox(height: 20,),
                             Row(
@@ -471,7 +471,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onTap: (){
                                       guestLogin==true?_showPersistentBottomSheet( context):   _showEditDisplayNameDialog();
                                     },
-                                    child: Text("Change Username",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: Text("Change Username",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
                             SizedBox(height: 20,),
@@ -484,7 +484,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   onTap: (){
                                     guestLogin==true?_showPersistentBottomSheet( context):   _showEditPasswordDialog();
                                   },
-                                    child: Text("Change Password",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: Text("Change Password",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
                             SizedBox(height: 20,),
@@ -497,7 +497,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onTap: (){
                                       guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
                                     },
-                                    child: Text("Change Time Goal",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: Text("Change Time Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
                              Divider(
@@ -507,7 +507,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               "Book Settings",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                                  fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
                             SizedBox(height: 20,),
                             GestureDetector(
@@ -520,7 +520,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   Image.asset("assets/envelope.png",height: 15,),
                                   SizedBox(width: 15,),
-                                  Text("Invite a Friend",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
+                                  Text("Invite a Friend",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
                               ),
                             ),
@@ -535,7 +535,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   Image.asset("assets/envelope.png",height: 15,),
                                   SizedBox(width: 15,),
-                                  Text("Redeem",style: TextStyle(fontSize: 16,color:  Color(0xFF686868),),),
+                                  Text("Redeem",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
                               ),
                             ),
@@ -546,7 +546,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               "Social",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                                  fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
                             SizedBox(height: 20,),
                             Row(
@@ -559,7 +559,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onTap: (){
                                       guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>TopNavigation(false)));
                                     },
-                                    child: Text("Community",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                                    child: Text("Community",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
                             Divider(
@@ -570,7 +570,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               "Streak Setting",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                                  fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
                             SizedBox(height: 20,),
                             Row(
@@ -583,7 +583,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onTap: (){
                                       guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
                                     },
-                                    child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
+                                    child: Text("Restore Streaks",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
 
@@ -596,7 +596,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               "Profile Setting",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                                  fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
                             SizedBox(height: 20,),
                            Row(
@@ -607,7 +607,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                    onTap: (){
                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsPage()));
                                    },
-                                   child: Text("About us",style: TextStyle(fontSize: 16,color:   Color(0xFF686868)),)),
+                                   child: Text("About us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
                              ],
                            ),
                             SizedBox(height: 20,),
@@ -619,7 +619,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onTap: (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUsPage()));
                                     },
-                                    child: Text("Contact us",style: TextStyle(fontSize: 16,color:   Color(0xFF686868)),)),
+                                    child: Text("Contact us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
                               ],
                             )
                           ],
@@ -662,20 +662,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     SvgPicture.asset('assets/oops.svg',
                    ),
-                    Text("OOPS!!!",style: TextStyle(fontSize: 30,   color: Color(0xFF686868),),),
+                    Text("OOPS!!!",style: TextStyle(fontFamily: 'font',fontSize: 30,   color: Color(0xFF686868),),),
                     SizedBox(height: 30,),
                     Text("Looks like you haven’t signed in yet.",style: TextStyle(
                       color: Color(0xFF686868),
                       fontSize: 14,
-                      fontFamily: 'Abhaya Libre',
+                      fontFamily: 'font',
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
                     SizedBox(height: 50,),
-                    Text("To access this exciting feature, please sign in to your account. Join our community to interact with fellow readers, share your thoughts, and discover more.",style: TextStyle(
+                    Text("To access this exciting feature, please sign in to your account. Join our community to interact with fellow readers, share your thoughts, and discover more.",style: TextStyle(fontFamily: 'font',
                       color: Color(0xFF686868),
                       fontSize: 14,
-                      fontFamily: 'Abhaya Libre',
+
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
@@ -703,7 +703,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style: TextStyle(
                                   color:   Color(0xFF283E50),
                                   fontSize: 14,
-                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontFamily: 'font',
                                   fontWeight: FontWeight.w800,
                                   height: 0,
                                 ),
@@ -734,7 +734,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style: TextStyle(
                                   color: Color(0xFFFF997A),
                                   fontSize: 16,
-                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontFamily: 'font',
                                   fontWeight: FontWeight.w800,
                                   height: 0,
                                 ),
@@ -761,13 +761,13 @@ class _ProfilePageState extends State<ProfilePage> {
         return AlertDialog(
           title: Text(
             "Edit User Name",
-            style: TextStyle(color: Colors.blue), // Set title text color
+            style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
           ),
           content: TextField(
             controller: _textFieldController,
             decoration: InputDecoration(
               hintText: "Enter new User Name",
-              hintStyle: TextStyle(color: Colors.grey), // Set hint text color
+              hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
             ),
           ),
           actions: <Widget>[
@@ -777,7 +777,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "Cancel",
-                style: TextStyle(color: Colors.red), // Set cancel text color
+                style: TextStyle(fontFamily: 'font',color: Colors.red), // Set cancel text color
               ),
             ),
             TextButton(
@@ -790,7 +790,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "Save",
-                style: TextStyle(color: Colors.green), // Set save text color
+                style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
               ),
             ),
           ],
@@ -806,13 +806,13 @@ class _ProfilePageState extends State<ProfilePage> {
         return AlertDialog(
           title: Text(
             "Edit Goal Time",
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(fontFamily: 'font',color: Colors.blue),
           ),
           content: TextField(
             controller: newGoal,
             decoration: InputDecoration(
               hintText: "Enter new goal Time",
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey),
             ),
           ),
           actions: <Widget>[
@@ -822,7 +822,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "Cancel",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(fontFamily: 'font',color: Colors.red),
               ),
             ),
             TextButton(
@@ -832,7 +832,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "Save",
-                style: TextStyle(color: Colors.green),
+                style: TextStyle(fontFamily: 'font',color: Colors.green),
               ),
             ),
           ],
@@ -849,9 +849,9 @@ class _ProfilePageState extends State<ProfilePage> {
         return AlertDialog(
           title: Text(
             "Edit User Name",
-            style: TextStyle(color: Colors.blue), // Set title text color
+            style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
           ),
-          content: Text("Are you sure want to change your password?"),
+          content: Text("Are you sure want to change your password?",style: TextStyle(fontFamily: 'font',),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -859,7 +859,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "No",
-                style: TextStyle(color: Colors.red), // Set cancel text color
+                style: TextStyle(fontFamily: 'font',color: Colors.red), // Set cancel text color
               ),
             ),
             TextButton(
@@ -869,7 +869,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "Yes",
-                style: TextStyle(color: Colors.green), // Set save text color
+                style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
               ),
             ),
           ],

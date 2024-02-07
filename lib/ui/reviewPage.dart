@@ -176,7 +176,7 @@ String selectedMood = '';
                         ),
                         Container(
                             // width: 200,
-                            child: Center(child: Text(widget.book.author,style: TextStyle(color: Color(0xff686868),fontWeight: FontWeight.bold,fontSize: 16),))),
+                            child: Center(child: Text(widget.book.author,style: TextStyle(color: Color(0xff686868),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),))),
 
                         RatingBar.builder(
                           initialRating: rating,
@@ -226,7 +226,7 @@ String selectedMood = '';
 
                         Text("Review",  style: const TextStyle(
                             color: Color(0xFF283E50),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.bold,fontFamily:'font',
                             fontSize: 20),),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -254,7 +254,7 @@ String selectedMood = '';
                         SizedBox(height: 20,),
                         Text("Pace of the Book",  style: const TextStyle(
                             color: Color(0xFF283E50),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.bold,fontFamily:'font',
                             fontSize: 24),),
                         SizedBox(height: 20,),
                         Container(
@@ -304,7 +304,7 @@ String selectedMood = '';
                         SizedBox(height: 20,),
                         Text("Genre Tags",  style: const TextStyle(
                             color: Color(0xFF283E50),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.bold,fontFamily:'font',
                             fontSize: 24),),
                         SizedBox(height: 20,),
 
@@ -351,7 +351,7 @@ String selectedMood = '';
                                           width: 200,
                                           height: 100,
                                           color: isSelected ? Color(0xFF283E50): Color(0xFFFEEAD4),
-                                          child: Center(child: Text(names[index],style: TextStyle(fontWeight: FontWeight.bold,color: isSelected?Color(0xFFFEEAD4):Color(0xFF283E50)),))),
+                                          child: Center(child: Text(names[index],style: TextStyle(fontWeight: FontWeight.bold,fontFamily:'font',color: isSelected?Color(0xFFFEEAD4):Color(0xFF283E50)),))),
                                     ),
                                   );
                                 },
@@ -362,7 +362,7 @@ String selectedMood = '';
                         SizedBox(height: 20,),
                         Text("Mood Tags",  style: const TextStyle(
                             color: Color(0xFF283E50),
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.bold,fontFamily:'font',
                             fontSize: 24),),
                         SizedBox(height: 20,),
 
@@ -409,7 +409,7 @@ String selectedMood = '';
                                           width: 200,
                                           height: 100,
                                           color: isSelected ? Color(0xFF283E50): Color(0xFFFEEAD4),
-                                          child: Center(child: Text(names[index],style: TextStyle(fontWeight: FontWeight.bold,color: isSelected?Color(0xFFFEEAD4):Color(0xFF283E50)),))),
+                                          child: Center(child: Text(names[index],style: TextStyle(fontWeight: FontWeight.bold,fontFamily:'font',color: isSelected?Color(0xFFFEEAD4):Color(0xFF283E50)),))),
                                     ),
                                   );
                                 },

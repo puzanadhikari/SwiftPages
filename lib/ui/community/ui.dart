@@ -197,7 +197,7 @@ class _BookCardState extends State<BookCard> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text(widget.bookData['username'] ?? 'Anonymous'),
+                        Text(widget.bookData['username'] ?? 'Anonymous',style: TextStyle(fontFamily: 'font',),),
                       ],
                     ),
                   ),
@@ -240,7 +240,7 @@ class _BookCardState extends State<BookCard> {
                       Text(
                         '${comments.length} ',
                         style: TextStyle(
-                          color: Color(0xFF283E50),
+                          color: Color(0xFF283E50),fontFamily: 'font',
                         ),
                       ),
                       GestureDetector(
@@ -299,7 +299,7 @@ class _BookCardState extends State<BookCard> {
                       Text(
                         ' ${likes}',
                         style: TextStyle(
-                          color: Color(0xFF283E50),
+                          color: Color(0xFF283E50),fontFamily: 'font',
                         ),
                       ),
                     ],
@@ -349,7 +349,7 @@ class _BookCardState extends State<BookCard> {
                                 style: const TextStyle(
                                     color: Color(0xFF686868),
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w500),
+                                    fontWeight: FontWeight.w500,fontFamily:'font'),
                               ),
                             ),
                           ),
@@ -365,7 +365,7 @@ class _BookCardState extends State<BookCard> {
                               children: [
                                 Icon(Icons.run_circle_outlined,color:Color(0xFF283E50) ,),
                                 SizedBox(width: 5,),
-                                Text(widget.bookData['pace'] ?? '',style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold),),
+                                Text(widget.bookData['pace'] ?? '',style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontWeight: FontWeight.bold),),
                               ],
                             ),
                           ),
@@ -523,8 +523,8 @@ class _BookCardState extends State<BookCard> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
-                                Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
+                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
+                                Text("${userData['email']}",style: TextStyle(fontFamily: 'font',color: Color(0xff283E50),fontSize: 14),),
                               ],
                             ),
 
@@ -540,7 +540,7 @@ class _BookCardState extends State<BookCard> {
                             ),
                             Text(userData['strikes'].toString(), style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,
+                              color: Colors.black,fontFamily: 'font',
                             )),
                           ],
                         ),
@@ -566,7 +566,7 @@ class _BookCardState extends State<BookCard> {
                         ),
                         primary:  Color(0xff283E50),// Set your desired button color
                       ),
-                      child: Text("Chat"),
+                      child: Text("Chat",style: TextStyle(fontFamily: 'font',),),
                     ),
 
                     Divider(
@@ -623,7 +623,7 @@ class _BookCardState extends State<BookCard> {
         return AlertDialog(
           title: Text(
             "Swift Pages user detail",
-            style: TextStyle(color: Colors.black), // Set title text color
+            style: TextStyle(color: Colors.black,fontFamily: 'font',), // Set title text color
           ),
           actions: <Widget>[
             Card(
@@ -663,7 +663,7 @@ class _BookCardState extends State<BookCard> {
                         ),
                         Text(strikes.toString(), style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black,
+                          color: Colors.black,fontFamily: 'font',
                         )),
                       ],
                     ),
@@ -692,9 +692,9 @@ class _BookCardState extends State<BookCard> {
         return AlertDialog(
           title: Text(
             "Save post",
-            style: TextStyle(color: Colors.blue), // Set title text color
+            style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
           ),
-          content: Text("Are you sure want to save this post?"),
+          content: Text("Are you sure want to save this post?",style: TextStyle(fontFamily: 'font',),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -702,7 +702,7 @@ class _BookCardState extends State<BookCard> {
               },
               child: Text(
                 "No",
-                style: TextStyle(color: Colors.red), // Set cancel text color
+                style: TextStyle(fontFamily: 'font',color: Colors.red), // Set cancel text color
               ),
             ),
             TextButton(
@@ -717,7 +717,7 @@ class _BookCardState extends State<BookCard> {
               },
               child: Text(
                 "Yes",
-                style: TextStyle(color: Colors.green), // Set save text color
+                style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
               ),
             ),
           ],
@@ -887,7 +887,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(widget.bookData['username'] ?? 'Anonymous'),
+                      Text(widget.bookData['username'] ?? 'Anonymous',style: TextStyle(fontFamily: 'font',),),
                     ],
                   ),
                 ),
@@ -928,7 +928,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                     Text(
                       '${comments.length} ',
                       style: TextStyle(
-                        color: Color(0xFF283E50),
+                        color: Color(0xFF283E50),fontFamily: 'font',
                       ),
                     ),
                     GestureDetector(
@@ -987,7 +987,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                     Text(
                       ' ${likes}',
                       style: TextStyle(
-                        color: Color(0xFF283E50),
+                        color: Color(0xFF283E50),fontFamily: 'font',
                       ),
                     ),
                   ],
@@ -1017,7 +1017,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                               style: const TextStyle(
                                   color: Color(0xFF686868),
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,fontFamily:'font'),
                             ),
                           ),
                         ),
@@ -1105,8 +1105,8 @@ class _BookCardSheetState extends State<BookCardSheet> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontSize: 16),),
-                                Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
+                                Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
+                                Text("${userData['email']}",style: TextStyle(fontFamily: 'font',color: Color(0xff283E50),fontSize: 14),),
                               ],
                             ),
 
@@ -1122,7 +1122,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                             ),
                             Text(userData['strikes'].toString(), style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,
+                              color: Colors.black,fontFamily: 'font',
                             )),
                           ],
                         ),
@@ -1184,7 +1184,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
         return AlertDialog(
           title: Text(
             "Swift Pages user detail",
-            style: TextStyle(color: Colors.black), // Set title text color
+            style: TextStyle(fontFamily: 'font',color: Colors.black), // Set title text color
           ),
           actions: <Widget>[
             Card(
@@ -1224,7 +1224,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
                         ),
                         Text(strikes.toString(), style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black,
+                          color: Colors.black,fontFamily: 'font',
                         )),
                       ],
                     ),
@@ -1253,9 +1253,9 @@ class _BookCardSheetState extends State<BookCardSheet> {
         return AlertDialog(
           title: Text(
             "Save post",
-            style: TextStyle(color: Colors.blue), // Set title text color
+            style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
           ),
-          content: Text("Are you sure want to save this post?"),
+          content: Text("Are you sure want to save this post?",style: TextStyle(fontFamily: 'font',),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -1263,7 +1263,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
               },
               child: Text(
                 "No",
-                style: TextStyle(color: Colors.red), // Set cancel text color
+                style: TextStyle(fontFamily: 'font',color: Colors.red), // Set cancel text color
               ),
             ),
             TextButton(
@@ -1278,7 +1278,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
               },
               child: Text(
                 "Yes",
-                style: TextStyle(color: Colors.green), // Set save text color
+                style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
               ),
             ),
           ],
@@ -1421,10 +1421,10 @@ class CommentWidget extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text( username.toUpperCase(),style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
+                        Text( username.toUpperCase(),style: TextStyle(fontFamily: 'font',fontSize: 12,fontWeight: FontWeight.bold),),
                         Container(
                             width: 210,
-                            child: Text(comment,style: TextStyle(fontSize: 14),)),
+                            child: Text(comment,style: TextStyle(fontFamily: 'font',fontSize: 14),)),
                       ],
                     ),
                   ],
@@ -1516,7 +1516,7 @@ class _CommentPageState extends State<CommentPage> {
               child: Text(
                 "Comments",
                 style: const TextStyle(
-                  fontFamily: "Abhaya Libre ExtraBold",
+                  fontFamily: "font",
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: Color(0xfffeead4),
@@ -1668,7 +1668,7 @@ class _CommentPageState extends State<CommentPage> {
                                               style: const TextStyle(
                                                   color: Color(0xFF686868),
                                                   fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
+                                                  fontWeight: FontWeight.w500,fontFamily:'font'),
                                             ),
                                           ),
                                         ),

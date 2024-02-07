@@ -41,7 +41,7 @@ class _ChoosePageState extends State<ChoosePage> {
                       style: TextStyle(
                         color: Color(0xFFFEEAD4),
                         fontSize: 18,
-                        fontFamily: 'Abhaya Libre',
+                        fontFamily: 'font',
                         fontWeight: FontWeight.w700,
                         height: 0,
                       ),
@@ -68,7 +68,7 @@ class _ChoosePageState extends State<ChoosePage> {
                           style: TextStyle(
                             color: Color(0xFF283E50),
                             fontSize: 20,
-                            fontFamily: 'Abhaya Libre ExtraBold',
+                            fontFamily: 'font',
                             fontWeight: FontWeight.w800,
                             height: 0,
                           ),
@@ -96,7 +96,7 @@ class _ChoosePageState extends State<ChoosePage> {
                           style: TextStyle(
                             color: Color(0xFF283E50),
                             fontSize: 20,
-                            fontFamily: 'Abhaya Libre ExtraBold',
+                            fontFamily: 'font',
                             fontWeight: FontWeight.w800,
                             height: 0,
                           ),
@@ -124,7 +124,7 @@ class _ChoosePageState extends State<ChoosePage> {
                           style: TextStyle(
                             color: Color(0xFF283E50),
                             fontSize: 20,
-                            fontFamily: 'Abhaya Libre ExtraBold',
+                            fontFamily: 'font',
                             fontWeight: FontWeight.w800,
                             height: 0,
                           ),
@@ -173,7 +173,7 @@ class _ChoosePageState extends State<ChoosePage> {
                       child: Text("Discover more with a more personalized experience!! Unlock exclusive features and join our community for a richer experience!",style: TextStyle(
                         color: Color(0xFF686868),
                         fontSize: 14,
-                        fontFamily: 'Abhaya Libre',
+                        fontFamily: 'font',
                         fontWeight: FontWeight.w700,
                         height: 0,
 
@@ -183,7 +183,7 @@ class _ChoosePageState extends State<ChoosePage> {
                     Text("Are you sure you wanna log in as a guest instead of signing up?",style: TextStyle(
                       color: Color(0xFF686868),
                       fontSize: 14,
-                      fontFamily: 'Abhaya Libre',
+                      fontFamily: 'font',
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
@@ -213,7 +213,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                 style: TextStyle(
                                   color:   Color(0xFF283E50),
                                   fontSize: 14,
-                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontFamily: 'font',
                                   fontWeight: FontWeight.w800,
                                   height: 0,
                                 ),
@@ -242,7 +242,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                 style: TextStyle(
                                   color: Color(0xFFFF997A),
                                   fontSize: 16,
-                                  fontFamily: 'Abhaya Libre ExtraBold',
+                                  fontFamily: 'font',
                                   fontWeight: FontWeight.w800,
                                   height: 0,
                                 ),

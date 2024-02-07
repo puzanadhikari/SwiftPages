@@ -86,7 +86,7 @@ class _AllBooksState extends State<AllBooks> {
                           hintStyle: TextStyle(
                             color: Color(0xFF283E50),
                             fontSize: 18,
-                            fontFamily: 'Abhaya Libre',
+                            fontFamily: 'font',
                             fontWeight: FontWeight.w700,
                           ),
                           suffixIcon: Icon(
@@ -97,7 +97,7 @@ class _AllBooksState extends State<AllBooks> {
                         style: TextStyle(
                           color: Color(0xFF686868),
                           fontSize: 18,
-                          fontFamily: 'Abhaya Libre',
+                          fontFamily: 'font',
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -225,7 +225,7 @@ class _AllBooksState extends State<AllBooks> {
                   style: TextStyle(
                     color: Color(0xFF283E50),
                     fontSize: 12,
-                    fontFamily: 'Abhaya Libre',
+                    fontFamily: 'font',
                     fontWeight: FontWeight.w700,
                   ),
                 ),
