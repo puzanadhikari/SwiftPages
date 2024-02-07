@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:swiftpages/ui/homePage.dart';
 import 'package:swiftpages/ui/myBooks.dart';
 import 'package:swiftpages/ui/profilePage.dart';
@@ -145,10 +146,22 @@ class _MainPageState extends State<MainPage> {
             onTap: _onTabTapped,
             currentIndex: _currentIndex,
             items: [
-              FloatingNavbarItem(icon: Icons.home, title: '',customWidget:Image.asset('assets/home.png')),
-              FloatingNavbarItem(icon: Icons.book, title: '',customWidget:Image.asset('assets/myBooks.png')),
-              FloatingNavbarItem(icon: Icons.auto_graph, title: '',customWidget:Image.asset('assets/graph.png')),
-              FloatingNavbarItem(icon: Icons.person, title: '',customWidget:Image.asset('assets/profile.png')),
+              FloatingNavbarItem(icon: Icons.home, title: '',customWidget: SvgPicture.asset('assets/home.svg',
+        height: 30,
+        color: Color(0xffFF997A),
+      ),),
+              FloatingNavbarItem(icon: Icons.book, title: '',customWidget: SvgPicture.asset('assets/myBooks.svg',
+                height: 30,
+                color: Color(0xffFF997A),
+              ),),
+              FloatingNavbarItem(icon: Icons.auto_graph, title: '',customWidget: SvgPicture.asset('assets/graph.svg',
+                height: 30,
+                color: Color(0xffFF997A),
+              ),),
+              FloatingNavbarItem(icon: Icons.person_2_outlined, title: '',customWidget: SvgPicture.asset('assets/person.svg',
+                height: 30,
+                color: Color(0xffFF997A),
+              ),),
             ],
           ),
           // AnimatedPositioned(
