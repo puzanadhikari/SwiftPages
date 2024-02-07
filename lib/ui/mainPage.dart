@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -60,11 +61,34 @@ class _MainPageState extends State<MainPage> {
       }
     }
   }
-
+  String home = '';
+  String myBooks = '';
+  String graph = '';
+  String profile = '';
+  // Future<void> loadIcons() async {
+  //   try {
+  //     Reference homeIcon = FirebaseStorage.instance.ref().child('assets/home.png');
+  //     Reference myBooksIcon = FirebaseStorage.instance.ref().child('assets/myBooks.png');
+  //     Reference graphIcon = FirebaseStorage.instance.ref().child('assets/graph.png');
+  //     Reference profileIcon = FirebaseStorage.instance.ref().child('assets/profile.png');
+  //     home = await homeIcon.getDownloadURL();
+  //     myBooks = await myBooksIcon.getDownloadURL();
+  //     graph = await graphIcon.getDownloadURL();
+  //     profile = await profileIcon.getDownloadURL();
+  //
+  //     setState(() {
+  //
+  //     });
+  //     //log('Download URL: $avatarUrls');
+  //   } catch (e) {
+  //     //log('Error fetching QR image: $e');
+  //   }
+  // }
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    // loadIcons();
     updateStrikeIfNeeded();
     _auth.authStateChanges().listen((event) {
       setState(() {
@@ -121,11 +145,10 @@ class _MainPageState extends State<MainPage> {
             onTap: _onTabTapped,
             currentIndex: _currentIndex,
             items: [
-              FloatingNavbarItem(icon: Icons.home, title: ''),
-              FloatingNavbarItem(icon: Icons.book, title: ''),
-              FloatingNavbarItem(icon: Icons.auto_graph, title: ''),
-
-              FloatingNavbarItem(icon: Icons.person, title: ''),
+              FloatingNavbarItem(icon: Icons.home, title: '',customWidget:Image.asset('assets/home.png')),
+              FloatingNavbarItem(icon: Icons.book, title: '',customWidget:Image.asset('assets/myBooks.png')),
+              FloatingNavbarItem(icon: Icons.auto_graph, title: '',customWidget:Image.asset('assets/graph.png')),
+              FloatingNavbarItem(icon: Icons.person, title: '',customWidget:Image.asset('assets/profile.png')),
             ],
           ),
           // AnimatedPositioned(
