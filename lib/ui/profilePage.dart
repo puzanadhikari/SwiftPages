@@ -94,12 +94,51 @@ class _ProfilePageState extends State<ProfilePage> {
       print("Error updating display name: $e");
          }
   }
-  Future<void> _changeGoal() async {
+  Future<void> _changeGoal(bool reduce) async {
 
       final FirebaseAuth _auth = FirebaseAuth.instance;
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
+      int storedTime = userDoc.get('currentTime') ?? 0;
+      String dailyGoal = userDoc.get('dailyGoal') ?? 0;
+      int valueForDailyGoal = int.parse(dailyGoal)+int.parse(newGoal.text);
       try {
-        await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
-        print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+       if(storedTime!=0){
+         if(reduce==true){
+           if(int.parse(newGoal.text)!=int.parse(dailyGoal)){
+                if(int.parse(newGoal.text)<int.parse(dailyGoal)){
+                  await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
+
+                }else{
+                  Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+                }
+                  }else{
+             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+           }
+         }else{
+           await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
+         }
+       }else{
+         if(reduce==true){
+           if(int.parse(newGoal.text)!=int.parse(dailyGoal)){
+             if(int.parse(newGoal.text)<int.parse(dailyGoal)){
+               await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
+
+             }else{
+               Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+             }
+           }else{
+             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+           }
+         }else{
+           await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
+         }
+       }
+
+            print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
       } catch (error) {
         print('Error increasing strikes for user with ID: ${_auth.currentUser
             ?.uid} - $error');
@@ -818,20 +857,21 @@ class _ProfilePageState extends State<ProfilePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                _changeGoal( true);
                 Navigator.pop(context);
               },
               child: Text(
-                "Cancel",
+                "Reduce",
                 style: TextStyle(fontFamily: 'font',color: Colors.red),
               ),
             ),
             TextButton(
               onPressed: () {
-                _changeGoal();
+                _changeGoal(false);
                 Navigator.pop(context);
               },
               child: Text(
-                "Save",
+                "Increase",
                 style: TextStyle(fontFamily: 'font',color: Colors.green),
               ),
             ),
