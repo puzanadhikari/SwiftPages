@@ -575,7 +575,7 @@ userName  = preferences.getString("userName")!;
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color(0xffFEEAD4),
-                        fontSize: 16,
+                        fontSize: 16,fontFamily: 'font',
                         fontWeight: FontWeight.bold
                     ),
                   ),

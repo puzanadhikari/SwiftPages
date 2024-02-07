@@ -106,7 +106,7 @@ flutter:
   fonts:
     - family: font
       fonts:
-        - asset: assets/font.ttf
+        - asset: assets/font2.ttf
 #  fonts:
 #  #   - family: Schyler
 #      fonts:

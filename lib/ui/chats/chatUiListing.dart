@@ -81,218 +81,221 @@ class _ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _firestore
-          .collection('chats')
-          .where('users', arrayContains: currentUserId)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Column(
-              children: [
-                // _buildUserDropdown(),
-                // _buildUserSearch(),
-                SizedBox(height: 10,),
-                Container(
-                  height: 50,
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.0),
-                    color: Colors.grey[200], // Change the color as needed
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search users...',
-                      hintStyle: TextStyle(fontFamily: 'font',),
-                      prefixIcon: Icon(Icons.search),
-                      border: InputBorder.none, // Remove the default border
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: _firestore
+            .collection('chats')
+            .where('users', arrayContains: currentUserId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Column(
+                children: [
+                  // _buildUserDropdown(),
+                  // _buildUserSearch(),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 50,
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50.0),
+                      color: Colors.grey[200], // Change the color as needed
                     ),
-                    onChanged: _onSearchChanged,
-                  ),
-                ),
-
-                Visibility(
-                  visible: _searchController.text.isEmpty?false:true,
-                  child: Expanded(
-                    child: StreamBuilder<List<Map<String, dynamic>>>(
-                      stream: _usersStream,
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return Text('No users available',style: TextStyle(fontFamily: 'font',),);
-                        }
-
-                        _users = snapshot.data!;
-
-                        return Visibility(
-                          visible: _searchController.text.isEmpty?false:true,
-                          child: Card(
-                            color: Colors.white,
-                            elevation: 8,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0), // Set the border radius
-                            ),
-                            child: ListView.builder(
-                              itemCount: _users.length,
-                              itemBuilder: (context, index) {
-                                var user = _users[index];
-                                var userId = user['userId'];
-                                var username = user['username'];
-                                var avatar = user['avatar'];
-
-                                return ListTile(
-                                  title: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(avatar),
-                                        radius: 20,
-                                        backgroundColor: Color(0xFF283E50),
-                                      ),
-                                      Text(username,style: TextStyle(fontFamily: 'font',),),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          recipientUserId: userId,
-                                          recipientUsername: username,
-                                          recipientAvatar: avatar,
-                                        ),
-                                      ),
-                                    );
-                                    setState(() {
-                                      _searchController.clear();
-                                    });
-                                    //log('Selected User: $userId');
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-
-              ],
-            );
-        }
-
-        var chatDocs = snapshot.data!.docs;
-
-        return Column(
-          children: [
-            // _buildUserDropdown(),
-            // _buildUserSearch(),
-            SizedBox(height: 10,),
-            Container(
-              height: 50,
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50.0),
-                color: Colors.grey[200], // Change the color as needed
-              ),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search users...',
-                  hintStyle: TextStyle(fontFamily: 'font',),
-                  prefixIcon: Icon(Icons.search),
-                  border: InputBorder.none, // Remove the default border
-                ),
-                onChanged: _onSearchChanged,
-              ),
-            ),
-
-            Visibility(
-              visible: _searchController.text.isEmpty?false:true,
-              child: Expanded(
-                child: StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: _usersStream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text('No users available',style: TextStyle(fontFamily: 'font',),);
-                    }
-                    _users = snapshot.data!;
-                    return Visibility(
-                      visible: _searchController.text.isEmpty?false:true,
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0), // Set the border radius
-                        ),
-                        child: ListView.builder(
-                          itemCount: _users.length,
-                          itemBuilder: (context, index) {
-                            var user = _users[index];
-                            var userId = user['userId'];
-                            var username = user['username'];
-                            var avatar = user['avatar'];
-
-                            return ListTile(
-                              title: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(avatar),
-                                    radius: 20,
-                                    backgroundColor: Color(0xFF283E50),
-                                  ),
-                                  Text(username),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatPage(
-                                      recipientUserId: userId,
-                                      recipientUsername: username,
-                                      recipientAvatar: avatar,
-                                    ),
-                                  ),
-                                );
-                                setState(() {
-                                  _searchController.clear();
-                                });
-                                //log('Selected User: $userId');
-                              },
-                            );
-                          },
-                        ),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search users...',
+                        hintStyle: TextStyle(fontFamily: 'font',),
+                        prefixIcon: Icon(Icons.search),
+                        border: InputBorder.none, // Remove the default border
                       ),
+                      onChanged: _onSearchChanged,
+                    ),
+                  ),
+
+                  Visibility(
+                    visible: _searchController.text.isEmpty?false:true,
+                    child: Expanded(
+                      child: StreamBuilder<List<Map<String, dynamic>>>(
+                        stream: _usersStream,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return Text('No users available',style: TextStyle(fontFamily: 'font',),);
+                          }
+
+                          _users = snapshot.data!;
+
+                          return Visibility(
+                            visible: _searchController.text.isEmpty?false:true,
+                            child: Card(
+                              color: Colors.white,
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0), // Set the border radius
+                              ),
+                              child: ListView.builder(
+                                itemCount: _users.length,
+                                itemBuilder: (context, index) {
+                                  var user = _users[index];
+                                  var userId = user['userId'];
+                                  var username = user['username'];
+                                  var avatar = user['avatar'];
+
+                                  return ListTile(
+                                    title: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(avatar),
+                                          radius: 20,
+                                          backgroundColor: Color(0xFF283E50),
+                                        ),
+                                        Text(username,style: TextStyle(fontFamily: 'font',),),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage(
+                                            recipientUserId: userId,
+                                            recipientUsername: username,
+                                            recipientAvatar: avatar,
+                                          ),
+                                        ),
+                                      );
+                                      setState(() {
+                                        _searchController.clear();
+                                      });
+                                      //log('Selected User: $userId');
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                ],
+              );
+          }
+
+          var chatDocs = snapshot.data!.docs;
+
+          return Column(
+            children: [
+              // _buildUserDropdown(),
+              // _buildUserSearch(),
+              SizedBox(height: 10,),
+              Container(
+                height: 50,
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50.0),
+                  color: Colors.grey[200], // Change the color as needed
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search users...',
+                    hintStyle: TextStyle(fontFamily: 'font',),
+                    prefixIcon: Icon(Icons.search),
+                    border: InputBorder.none, // Remove the default border
+                  ),
+                  onChanged: _onSearchChanged,
+                ),
+              ),
+
+              Visibility(
+                visible: _searchController.text.isEmpty?false:true,
+                child: Expanded(
+                  child: StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: _usersStream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Text('No users available',style: TextStyle(fontFamily: 'font',),);
+                      }
+                      _users = snapshot.data!;
+                      return Visibility(
+                        visible: _searchController.text.isEmpty?false:true,
+                        child: Card(
+                          color: Colors.white,
+                          elevation: 8,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0), // Set the border radius
+                          ),
+                          child: ListView.builder(
+                            itemCount: _users.length,
+                            itemBuilder: (context, index) {
+                              var user = _users[index];
+                              var userId = user['userId'];
+                              var username = user['username'];
+                              var avatar = user['avatar'];
+
+                              return ListTile(
+                                title: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(avatar),
+                                      radius: 20,
+                                      backgroundColor: Color(0xFF283E50),
+                                    ),
+                                    Text(username),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        recipientUserId: userId,
+                                        recipientUsername: username,
+                                        recipientAvatar: avatar,
+                                      ),
+                                    ),
+                                  );
+                                  setState(() {
+                                    _searchController.clear();
+                                  });
+                                  //log('Selected User: $userId');
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 20,),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: chatDocs.length,
+                  itemBuilder: (context, index) {
+                    var chatDoc = chatDocs[index];
+                    var participants = chatDoc['users'] as List<dynamic>;
+                    // log(participants[0].toString());
+
+                    // Exclude the current user from the participants
+                    participants.remove(currentUserId);
+
+                    return ChatListItem(
+                      participantId: participants[0],
+                      currentUserId: currentUserId,
+                      unreadCount: unreadCounts[participants[0]] ?? 0,
                     );
                   },
                 ),
               ),
-            ),
-
-            SizedBox(height: 20,),
-            Expanded(
-              child: ListView.builder(
-                itemCount: chatDocs.length,
-                itemBuilder: (context, index) {
-                  var chatDoc = chatDocs[index];
-                  var participants = chatDoc['users'] as List<dynamic>;
-                  // log(participants[0].toString());
-
-                  // Exclude the current user from the participants
-                  participants.remove(currentUserId);
-
-                  return ChatListItem(
-                    participantId: participants[0],
-                    currentUserId: currentUserId,
-                    unreadCount: unreadCounts[participants[0]] ?? 0,
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      },
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -496,64 +499,71 @@ class ChatListItem extends StatelessWidget {
                   child: ListTile(
                     title: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(participantAvatar),
-                          radius: 20,
-                          backgroundColor: Color(0xFF283E50),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              participantUsername,
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold,fontFamily: 'font',),
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(participantAvatar),
+                              radius: 20,
+                              backgroundColor: Color(0xFF283E50),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  lastMessageText.length > 20
-                                      ? '${lastMessageText.substring(0, 20)}...'
-                                      : lastMessageText,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,fontFamily: 'font',
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                                  participantUsername,
+                                  style: TextStyle(color:  Color(0xff283E50),
+                                      fontSize: 16, fontWeight: FontWeight.bold,fontFamily: 'font',),
                                 ),
+                                SizedBox(height: 2,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      lastMessageText.length > 20
+                                          ? '${lastMessageText.substring(0, 20)}...'
+                                          : lastMessageText,
+                                      style: TextStyle(
+                                        color: Color(0xffFEEAD4).withOpacity(0.8),
+                                        fontSize: 12.0,fontFamily: 'font',
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
 
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  _formatTimestamp(lastMessageTimestamp),
-                                  style: TextStyle( fontSize: 12,fontFamily: 'font',),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                if (lastSenderName['sender'] != _auth.currentUser?.displayName)
 
-                                  Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
-                                  ),
-                                  child: Text(
-                                    unreadCount > 0 ? unreadCount.toString() : '',
-                                    style: TextStyle(fontSize: 12, color: Colors.white,fontFamily: 'font',),
-                                  ),
+
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    if (lastSenderName['sender'] != _auth.currentUser?.displayName)
+
+                                      Container(
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: unreadCount > 0 ? Color(0xFF283E50) : Colors.transparent,
+                                      ),
+                                      child: Text(
+                                        unreadCount > 0 ? unreadCount.toString() : '',
+                                        style: TextStyle(fontSize: 12, color: Colors.white,fontFamily: 'font',),
+                                      ),
+                                    ),
+
+                                  ],
                                 ),
 
                               ],
                             ),
-
                           ],
+                        ),
+                        Text(
+                          _formatTimestamp(lastMessageTimestamp),
+                          textAlign: TextAlign.end,
+                          style: TextStyle( fontSize: 12,fontFamily: 'font',color:  Color(0xff283E50)),
                         ),
                       ],
                     ),
