@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../homePage.dart';
 import '../myBooks.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -25,7 +26,9 @@ class _GraphPageState extends State<GraphPage> {
   List<DetailBook> myBooksToBeRead = [];
   List<DetailBook> myBooksMyReads = [];
   String updatedTime='';
-  String completedLength='';
+  int completedLength=0;
+
+  double ratingTotal =0.0;
   @override
   void initState() {
     super.initState();
@@ -49,6 +52,7 @@ class _GraphPageState extends State<GraphPage> {
   double mediumPaceCountPer = 0;
   double fastPaceCountPer = 0;
   double slowPaceCountPer = 0;
+  double finalRating = 0;
   Future<void> fetchBooksForPace() async {
     try {
       // Get the current authenticated user
@@ -92,19 +96,24 @@ class _GraphPageState extends State<GraphPage> {
 
                 // Check if the review has a 'pace' value
                 if (review.containsKey('pace')) {
+
+                  double ratings = review['rating'];
+                   ratingTotal += ratings;
+                  finalRating = ratingTotal/completedLength;
+                  log(ratingTotal.toString());
                   // Increment the corresponding pace count based on the 'pace' value
                   switch (review['pace']) {
                     case 'Medium':
                       mediumPaceCount++;
-                      mediumPaceCountPer = (mediumPaceCount/double.parse(completedLength))*100;
+                      mediumPaceCountPer = (mediumPaceCount/completedLength)*100;
                       break;
                     case 'Fast':
                       fastPaceCount++;
-                      fastPaceCountPer = (fastPaceCount/double.parse(completedLength))*100;
+                      fastPaceCountPer = (fastPaceCount/completedLength)*100;
                       break;
                     case 'Slow':
                       slowPaceCount++;
-                      slowPaceCountPer = (slowPaceCount/double.parse(completedLength))*100;
+                      slowPaceCountPer = (slowPaceCount/completedLength)*100;
                       break;
                   }
                 }
@@ -115,7 +124,7 @@ class _GraphPageState extends State<GraphPage> {
 
       }
     } catch (e) {
-      print('Error fetching books: $e');
+      print('Error fetching books first: $e');
     }
   }
 
@@ -139,8 +148,8 @@ class _GraphPageState extends State<GraphPage> {
         // Access the documents in the query snapshot
         List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
         setState(() {
-          completedLength=querySnapshotMyReads.docs.length.toString();
-          calculate();
+          completedLength=querySnapshotMyReads.docs.length;
+         completedLength ==''?'': calculate();
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, double>?)) // Use Map<String, dynamic>
               .toList();
@@ -156,8 +165,8 @@ class _GraphPageState extends State<GraphPage> {
       // print('Error fetching books: $e');
     }
   }
-  int yearlyGoal=0;
-  double percentage = 0;
+
+  double percentage = 10.0;
   Future<void> fetchData() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -175,7 +184,7 @@ class _GraphPageState extends State<GraphPage> {
           lastStrikeTime = userDoc.get('lastStrikeTimestamp') ?? 0;
           lastStreak = userDoc.get("lastStrike") ?? 0;
           streak = userDoc.get("strikes") ?? 0;
-          yearlyGoal = userDoc.get('yearlyGoal') ?? 0;
+
         });
 
         int totalHours = totalTimeMin ~/ 60; // Convert total minutes to total hours
@@ -185,14 +194,20 @@ class _GraphPageState extends State<GraphPage> {
         updatedTime = '$totalHours:${additionalMinutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
       }
     } catch (error) {
-      print('Error fetching data: $error');
+      print('Error fetching data second: $error');
     }
   }
 
-  void calculate(){
-    percentage = ((double.parse(completedLength))/yearlyGoal)*100;
-    log(percentage.toString());
+  void calculate() {
+    if (yearlyGoal != 0) {
+      percentage = (completedLength / yearlyGoal) * 100;
+      log(percentage.toString());
+    } else {
+      percentage = 0; // or any other default value you prefer
+      log("Yearly goal is zero");
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -379,9 +394,27 @@ class _GraphPageState extends State<GraphPage> {
                                       child: Padding(
                                         padding:
                                         const EdgeInsets.all( 10.0),
-                                        child: CircleAvatar(
-                                          radius: 30,
-                                          backgroundColor: Color(0xffD9D9D9),
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: Color(0xffD9D9D9),
+                                              child: Text(finalRating.toStringAsFixed(1)+'/5',  style: TextStyle(
+                                                  color: Color(0xff283E50),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold
+                                              ),),
+                                            ),
+                                            Text(
+                                              "Ratings",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Color(0xffD9D9D9),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),

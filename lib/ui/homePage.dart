@@ -23,6 +23,7 @@ import 'books/allBooks.dart';
 import 'books/detailEachForBookStatus.dart';
 import 'myBooks.dart';
 int currentTimeCount = 0;
+int yearlyGoal=0;
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   int strikesCount = 0;
   int totalTimeMin=0;
   int totalTimeSec=0;
-  int yearlyGoal=0;
+
   int _currentIndex = 0;
   Future<void> fetchBooksFromGoogle() async {
     final String apiKey = "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0";
