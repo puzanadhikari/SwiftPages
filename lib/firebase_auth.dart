@@ -62,7 +62,7 @@ class FirebaseAuthService {
       return userCredential.user;
     } catch (e) {
       // If there's an error during registration, handle it here.
-      log("Error during registration: $e");
+      //log("Error during registration: $e");
       Fluttertoast.showToast(
           msg: 'Signup Failed',
           backgroundColor: Colors.green,
@@ -98,9 +98,9 @@ class FirebaseAuthService {
 
         await userRef.set(userData);
 
-        log('User data stored successfully!');
+        //log('User data stored successfully!');
       }} catch (e) {
-      log('Error storing user data: $e'); // Add this line to print the error
+      //log('Error storing user data: $e'); // Add this line to print the error
     }
   }
   // Future addUserDetail(String email,String username,String password,String avatar)async{

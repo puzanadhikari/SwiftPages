@@ -40,7 +40,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
         urls.add(imageUrl);
       }
     } catch (e) {
-      log('Error fetching avatar URLs: $e');
+      //log('Error fetching avatar URLs: $e');
     }
 
     setState(() {
@@ -116,7 +116,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                             setState(() {
                                 selectedAvatar = avatarUrls[index];
                                 _avatarColor = selectedAvatar == avatarUrls[index] ? index % 2 == 0 ? Color(0xfffeead4): Color(0xFF283E50) : Colors.transparent;
-                                log(_avatarColor.toString());
+                                //log(_avatarColor.toString());
                               });
                             },
                             child: Container(
@@ -152,7 +152,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                       onPressed: () async {
                         if (selectedAvatar != null) {
                           _showPersistentBottomSheet(context);
-                          log('Selected Avatar Path: $selectedAvatar');
+                          //log('Selected Avatar Path: $selectedAvatar');
                         } else {
                           // Show a message if no avatar is selected
                           ScaffoldMessenger.of(context).showSnackBar(

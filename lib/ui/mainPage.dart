@@ -10,6 +10,7 @@ import 'package:swiftpages/ui/myBooks.dart';
 import 'package:swiftpages/ui/profilePage.dart';
 
 import '../firebase_auth.dart';
+import 'chart/ui.dart';
 import 'community/ui.dart';
 
 class MainPage extends StatefulWidget {
@@ -42,11 +43,11 @@ class _MainPageState extends State<MainPage> {
       // Calculate the time difference in hours
       int timeDifferenceInSeconds = (loginTimestamp.seconds) - lastStrikeTimestamp.seconds;
       int timeDifferenceInHours = (timeDifferenceInSeconds / 3600).floor();
-      log("time diff: " + timeDifferenceInHours.toString() + " hours");
+      //log("time diff: " + timeDifferenceInHours.toString() + " hours");
 
-      log("logintime"+loginTimestamp.seconds.toString());
-        log("striktime"+lastStrikeTimestamp.seconds.toString());
-        log("time diff"+timeDifferenceInHours.toString());
+      //log("//logintime"+//loginTimestamp.seconds.toString());
+      //   log("striktime"+lastStrikeTimestamp.seconds.toString());
+      //   log("time diff"+timeDifferenceInHours.toString());
 
       if (timeDifferenceInHours > 24||timeDifferenceInHours ==24) {
         // Update the strike to 0
@@ -102,6 +103,7 @@ class _MainPageState extends State<MainPage> {
         children: [
           HomePage(),
           MyBooks(),
+          GraphPage(),
 
           ProfilePage(),
 
@@ -121,6 +123,7 @@ class _MainPageState extends State<MainPage> {
             items: [
               FloatingNavbarItem(icon: Icons.home, title: ''),
               FloatingNavbarItem(icon: Icons.book, title: ''),
+              FloatingNavbarItem(icon: Icons.auto_graph, title: ''),
 
               FloatingNavbarItem(icon: Icons.person, title: ''),
             ],

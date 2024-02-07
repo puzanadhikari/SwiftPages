@@ -125,7 +125,7 @@ class _TimerPageState extends State<TimerPage> {
         });
       }
     } catch (error) {
-      log('Error fetching data: $error');
+      //log('Error fetching data: $error');
     }
   }
 
@@ -159,19 +159,19 @@ class _TimerPageState extends State<TimerPage> {
             path: musicUrl)); // Include the path in Music object
       }
     } catch (e) {
-      log('Error fetching music URLs: $e');
+      //log('Error fetching music URLs: $e');
     }
 
     setState(() {
       musicUrls = urls;
-      log(musicUrls[0].path.toString());
+      //log(musicUrls[0].path.toString());
     });
   }
 
   Future<void> playMusic(String path) async {
     if (path.isNotEmpty) {
       try {
-        log("play func" + path.toString());
+        //log("play func" + path.toString());
         await audioPlayer.setUrl(path);
 
         await audioPlayer.play();

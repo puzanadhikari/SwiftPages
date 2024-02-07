@@ -236,7 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
         // Check if the redeeming user has already redeemed the invitation
         bool hasRedeemed = snapshot.data()?['redeemed'] ?? false;
-        log(hasRedeemed.toString());
+        //log(hasRedeemed.toString());
         if (hasRedeemed) {
           // User has already redeemed the invitation
           print('Already redeemed the invitation code!');

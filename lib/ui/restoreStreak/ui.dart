@@ -52,9 +52,9 @@ Future<void> loadQr() async {
        setState(() {
 
        });
-      log('Download URL: $avatarUrls');
+      //log('Download URL: $avatarUrls');
     } catch (e) {
-      log('Error fetching QR image: $e');
+      //log('Error fetching QR image: $e');
     }
   }
 

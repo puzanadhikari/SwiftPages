@@ -46,9 +46,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
             // Log 'yes' if within 5 minutes, otherwise log 'no'
             if (difference.inMinutes <= 5) {
-              log('yes');
+              //log('yes');
             } else {
-              log('no');
+              //log('no');
             }
           } else {
             print('The document does not contain the lastLoginTimestamp field.');

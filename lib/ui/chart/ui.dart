@@ -100,7 +100,7 @@ class _GraphPageState extends State<GraphPage> {
                   double ratings = review['rating'];
                    ratingTotal += ratings;
                   finalRating = ratingTotal/completedLength;
-                  log(ratingTotal.toString());
+                  //log(ratingTotal.toString());
                   // Increment the corresponding pace count based on the 'pace' value
                   switch (review['pace']) {
                     case 'Medium':
@@ -201,10 +201,10 @@ class _GraphPageState extends State<GraphPage> {
   void calculate() {
     if (yearlyGoal != 0) {
       percentage = (completedLength / yearlyGoal) * 100;
-      log(percentage.toString());
+      //log(percentage.toString());
     } else {
       percentage = 0; // or any other default value you prefer
-      log("Yearly goal is zero");
+      //log("Yearly goal is zero");
     }
   }
 

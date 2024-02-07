@@ -67,13 +67,13 @@ class _ChatListState extends State<ChatList> {
           }
         }
 
-        log(users[0]);
+        //log(users[0]);
         counts[users[0]] = unreadCount;
       }
 
       setState(() {
         unreadCounts = counts;
-        log(unreadCounts.toString());
+        //log(unreadCounts.toString());
       });
     });
 
@@ -164,7 +164,7 @@ class _ChatListState extends State<ChatList> {
                                     setState(() {
                                       _searchController.clear();
                                     });
-                                    log('Selected User: $userId');
+                                    //log('Selected User: $userId');
                                   },
                                 );
                               },
@@ -256,7 +256,7 @@ class _ChatListState extends State<ChatList> {
                                 setState(() {
                                   _searchController.clear();
                                 });
-                                log('Selected User: $userId');
+                                //log('Selected User: $userId');
                               },
                             );
                           },
@@ -333,7 +333,7 @@ class _ChatListState extends State<ChatList> {
                     title: Text(username),
                     onTap: () {
                       // Handle user selection
-                      log('Selected User: $userId');
+                      //log('Selected User: $userId');
                     },
                   );
                 },
@@ -454,7 +454,7 @@ class ChatListItem extends StatelessWidget {
               padding: const EdgeInsets.all(5.0),
               child: GestureDetector(
                 onLongPress: (){
-                      log(sender['sender']);
+                      //log(sender['sender']);
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -471,7 +471,7 @@ class ChatListItem extends StatelessWidget {
                           TextButton(
                             onPressed: () async {
                               FirebaseFirestore _firestore = FirebaseFirestore.instance;
-                              log(currentUserId+'_'+participantId);
+                              //log(currentUserId+'_'+participantId);
 
                               Navigator.pop(context);
                               await _firestore.collection('chats').doc('${currentUserId+'_'+participantId}').delete();

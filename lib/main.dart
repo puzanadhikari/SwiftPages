@@ -140,7 +140,7 @@ Future<void> showNotification(
     String type,
     String activityBy,
     ) async {
-  log("here" + type + activityBy);
+  //log("here" + type + activityBy);
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     'notification_swift_pages',
     'Swift Pages',
