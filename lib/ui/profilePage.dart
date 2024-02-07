@@ -399,11 +399,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: MediaQuery.of(context).size.width / 1.2,
                   decoration: BoxDecoration(
                     color: const Color(0xFFD9D9D9),
-                    borderRadius: BorderRadius.circular(46.0),
+                    borderRadius: BorderRadius.circular(40.0),
                   ),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -586,20 +586,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text("Restore Streaks",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
-                            SizedBox(height: 20,),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
 
-                              children: [
-                                Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
-                                SizedBox(width: 15,),
-                                GestureDetector(
-                                    onTap: (){
-                                      guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>GraphPage()));
-                                    },
-                                    child: Text("Chart",style: TextStyle(fontSize: 16,color:   Color(0xFF686868),),)),
-                              ],
-                            ),
+
 
                             Divider(
                               thickness: 1,
