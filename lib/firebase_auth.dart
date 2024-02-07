@@ -97,7 +97,6 @@ class FirebaseAuthService {
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
-
         await userRef.set(userData);
 
         //log('User data stored successfully!');
