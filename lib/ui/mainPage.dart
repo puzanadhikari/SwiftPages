@@ -138,6 +138,7 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: Stack(
         children: [
           FloatingNavbar(
+            padding: EdgeInsets.only(top: 10),
             borderRadius: 40.0,
             selectedBackgroundColor: Colors.transparent,
             selectedItemColor: Color(0xffFF997A),
@@ -147,19 +148,19 @@ class _MainPageState extends State<MainPage> {
             currentIndex: _currentIndex,
             items: [
               FloatingNavbarItem(icon: Icons.home, title: '',customWidget: SvgPicture.asset('assets/home.svg',
-        height: 30,
+        height: 25,
         color: Color(0xffFF997A),
       ),),
               FloatingNavbarItem(icon: Icons.book, title: '',customWidget: SvgPicture.asset('assets/myBooks.svg',
-                height: 30,
+                height: 25,
                 color: Color(0xffFF997A),
               ),),
               FloatingNavbarItem(icon: Icons.auto_graph, title: '',customWidget: SvgPicture.asset('assets/graph.svg',
-                height: 30,
+                height: 25,
                 color: Color(0xffFF997A),
               ),),
-              FloatingNavbarItem(icon: Icons.person_2_outlined, title: '',customWidget: SvgPicture.asset('assets/person.svg',
-                height: 30,
+              FloatingNavbarItem(icon: Icons.person_2_outlined, title: '',customWidget: SvgPicture.asset('assets/profile.svg',
+                height: 25,
                 color: Color(0xffFF997A),
               ),),
             ],
