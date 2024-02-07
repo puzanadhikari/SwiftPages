@@ -98,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final FirebaseAuth _auth = FirebaseAuth.instance;
       try {
-        await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text)});
+        await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
         print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
       } catch (error) {
         print('Error increasing strikes for user with ID: ${_auth.currentUser

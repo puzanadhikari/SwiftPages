@@ -534,7 +534,27 @@ userName  = preferences.getString("userName")!;
 
   Future<void> _refresh(){
     setState(() {
+      _retrieveStoredTime();
+      fetchBooks();
+      // textDataStream = getQuoteDataStream();
+      fetchData();
+      User? user = FirebaseAuth.instance.currentUser;
 
+      _isRunning = false;
+
+      _stopwatch = Stopwatch();
+
+      if (user != null) {
+        String uid = user.uid;
+        _userStream =
+            FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+        fetchStrikes();
+      }
+      fetchBooksFromGoogle();
+      fetchUserInfo();
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _retrieveStoredTimeDetail(); // Retrieve stored time when the widget is loaded
+      });
     });
     return fetchBooks();
 

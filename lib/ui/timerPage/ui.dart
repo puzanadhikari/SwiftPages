@@ -1207,6 +1207,7 @@ class _TimerPageState extends State<TimerPage> {
             int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
                 ? userDoc.get('strikes')
                 : 0;
+            log(userDoc.get('strikes'));
             await FirebaseFirestore.instance
                 .collection('users')
                 .doc(uid)
@@ -1224,6 +1225,7 @@ class _TimerPageState extends State<TimerPage> {
           int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
               ? userDoc.get('strikes')
               : 0;
+
           await FirebaseFirestore.instance
               .collection('users')
               .doc(uid)
@@ -1306,8 +1308,8 @@ class _TimerPageState extends State<TimerPage> {
       await _firestore
           .collection('users')
           .doc(_auth.currentUser?.uid)
-          .update({'currentTime': 0});
-      print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+          .update({'currentTime': 0,'increaseStrike':true});
+      print('time stored for user with ID: ${_auth.currentUser?.uid}');
     } catch (error) {
       print(
           'Error increasing strikes for user with ID: ${_auth.currentUser?.uid} - $error');
@@ -1390,6 +1392,7 @@ class _TimerPageState extends State<TimerPage> {
   int finalTime = 0;
 
   Future<void> _retrieveStoredTime() async {
+
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
       DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
@@ -1397,15 +1400,31 @@ class _TimerPageState extends State<TimerPage> {
           .collection('users')
           .doc(_auth.currentUser?.uid)
           .get();
-
+          bool increase = userDoc.get('increaseStrike') ?? false;
+      log(increase.toString());
       if (userDoc.exists) {
         int storedTime = userDoc.get('currentTime') ?? 0;
         String storedTime2 = userDoc.get('dailyGoal') ?? 0;
+        log(storedTime2.toString());
         setState(() {
           // _duration = storedTime;
           currentTime = storedTime;
           _duration = int.parse(storedTime2);
-          finalTime = currentTime == 0 ? _duration * 60 : currentTime;
+          if(increase==true){
+            setState(() {
+              finalTime=0;
+            });
+          }else if(currentTime==0){
+            setState(() {
+              finalTime = _duration*60;
+            });
+          }else{
+           setState(() {
+             finalTime= currentTime;
+           });
+          }
+          // finalTime = widget.book.increaseStrike == true ? _duration * 60 : 0;
+          // finalTime =_duration * 60 ;
         });
         // if (_duration > 0) {
         //   _controller.resume();

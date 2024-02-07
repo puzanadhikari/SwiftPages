@@ -690,11 +690,12 @@ class DetailBook {
   final String publishedDate;
   final String status;
   final String startingDate;
+  final bool increaseStrike; // Updated to bool type
   int currentPage;
   int totalPage;
   List<Map<String, dynamic>> notes;
   List<Map<String, dynamic>> quotes;
-  List<Map<String, dynamic>> reviews; // Updated to list of maps
+  List<Map<String, dynamic>> reviews;
 
   DetailBook({
     required this.author,
@@ -704,11 +705,12 @@ class DetailBook {
     required this.publishedDate,
     required this.status,
     required this.startingDate,
+    required this.increaseStrike, // Updated to bool type
     this.currentPage = 0,
     this.totalPage = 0,
     this.notes = const [],
     this.quotes = const [],
-    this.reviews = const [], // Initialize reviews as an empty list of maps
+    this.reviews = const [],
   });
 
   factory DetailBook.fromMap(String documentId, Map<String, dynamic>? map) {
@@ -721,6 +723,7 @@ class DetailBook {
         publishedDate: 'publishedDate',
         status: 'status',
         startingDate: 'startingDate',
+        increaseStrike: false, // Default value for bool
         totalPage: 100,
       );
     }
@@ -732,6 +735,7 @@ class DetailBook {
       publishedDate: map['publishedDate'] ?? '-',
       status: map['status'] ?? '-',
       startingDate: map['startingDate'] ?? '-',
+      increaseStrike: map['increaseStrike'] ?? false, // Parse as bool
       currentPage: map['currentPage'] ?? 0,
       totalPage: map['totalPageCount'] ?? 0,
       notes: List<Map<String, dynamic>>.from(map['notes'] ?? []),

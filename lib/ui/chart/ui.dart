@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../homePage.dart';
 import '../myBooks.dart';
-import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 class GraphPage extends StatefulWidget {
   @override
   _GraphPageState createState() => _GraphPageState();
@@ -27,6 +25,9 @@ class _GraphPageState extends State<GraphPage> {
   List<DetailBook> myBooksMyReads = [];
   String updatedTime='';
   int completedLength=0;
+
+  Map<String, int> moodCounts = {}; // Map to store mood counts
+
 
   double ratingTotal =0.0;
   @override
@@ -61,7 +62,7 @@ class _GraphPageState extends State<GraphPage> {
       if (user != null) {
         // User is signed in, use the UID to fetch books
         String uid = user.uid;
-
+        moodCounts.clear();
         // Reference to the 'myBooks' collection with the UID as the document ID
         CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
@@ -126,7 +127,17 @@ class _GraphPageState extends State<GraphPage> {
             }
           }
         });
+        for (var book in myBooksMyReads) {
+          for (var review in book.reviews) {
+            if (review.containsKey('mood')) {
+              String mood = review['mood'];
+              moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+            }
+          }
+        }
 
+        // Update the UI
+        setState(() {});
       }
     } catch (e) {
       print('Error fetching books first: $e');
@@ -616,6 +627,58 @@ class _GraphPageState extends State<GraphPage> {
 
 
                       ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0,right: 30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height/4,
+                  decoration: BoxDecoration(
+                    color: Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Expanded(
+                      child: BarChart(
+                        BarChartData(
+                          groupsSpace: 12,
+                          titlesData:FlTitlesData(
+                          leftTitles: AxisTitles(
+                          // sideTitles: false,
+                        ),
+                        bottomTitles: AxisTitles(
+                          // showTitles: true,
+                          // getTextStyles: (context, value) => const TextStyle(
+                          //   color: Color(0xff7589a2),
+                          //   fontWeight: FontWeight.bold,
+                          //   fontSize: 14,
+                          // ),
+                          // margin: 20,
+                          // getTitles: (double value) {
+                          //   // Dynamically generate labels for the X-axis based on moodCounts
+                          //   if (value >= 0 && value < moodCounts.length) {
+                          //     return moodCounts.keys.toList()[value.toInt()];
+                          //   }
+                          //   return '';
+                          // },
+                        ),
+                      ),
+                          borderData: FlBorderData(show: false),
+                          barGroups: List.generate(
+                            moodCounts.length,
+                                (index) => BarChartGroupData(
+                              x: index,
+                              barRods: [
+                                BarChartRodData(toY: moodCounts.values.toList()[index].toDouble()),
+                              ],
+                              showingTooltipIndicators: [0],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
