@@ -238,7 +238,7 @@ class _TimerPageState extends State<TimerPage> {
         _startAdditionalTimer();
       } else {
         _storeCurrentTime();
-        _showInvitationCodePopupToEnterCurrentPage(context);
+        // _showInvitationCodePopupToEnterCurrentPage(context);
         _controller.pause();
         _additionalController.pause();
         _pauseAdditionalTimer();

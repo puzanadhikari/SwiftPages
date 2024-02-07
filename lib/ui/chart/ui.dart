@@ -97,9 +97,7 @@ class _GraphPageState extends State<GraphPage> {
                 // Check if the review has a 'pace' value
                 if (review.containsKey('pace')) {
 
-                  double ratings = review['rating'];
-                   ratingTotal += ratings;
-                  finalRating = ratingTotal/completedLength;
+
                   //log(ratingTotal.toString());
                   // Increment the corresponding pace count based on the 'pace' value
                   switch (review['pace']) {
@@ -116,6 +114,13 @@ class _GraphPageState extends State<GraphPage> {
                       slowPaceCountPer = (slowPaceCount/completedLength)*100;
                       break;
                   }
+                  double ratings = review['rating'];
+                  ratingTotal += ratings;
+                  // log(ratingTotal.toString()+completedLength.toString());
+                  finalRating = ratingTotal/completedLength;
+                  setState(() {
+
+                  });
                 }
               }
             }
