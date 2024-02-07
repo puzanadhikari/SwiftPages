@@ -567,34 +567,34 @@ class _GraphPageState extends State<GraphPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
-                                radius: mediumPaceCountPer/1.4,
+                                radius: 40,
                                 backgroundColor: Color(0xFFFF997A),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(mediumPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
+                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
                                   ],
                                 ),
                               ),
                               Padding(
                                 padding:  EdgeInsets.only(top:40.0),
                                 child: CircleAvatar(
-                                  radius: fastPaceCountPer/1.4,
+                                  radius: 50,
                                   backgroundColor: Color(0xff283E50),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(fastPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
+                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 13),),
                                     ],
                                   ),
                                 ),
                               ),
                               CircleAvatar(
-                                radius: slowPaceCountPer==0?20:slowPaceCountPer/1.4,
+                                radius: 30,
                                 backgroundColor:Color(0xffFEEAD4),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
