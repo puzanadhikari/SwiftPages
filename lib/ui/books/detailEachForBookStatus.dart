@@ -152,7 +152,7 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                       child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         child: Container(
-                          height: MediaQuery.of(context).size.height,
+                          height: MediaQuery.of(context).size.height*2,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Color(0xFF283E50),
@@ -222,7 +222,9 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
 
-                                    widget.book.description,style: TextStyle(color: Colors.white,fontSize: 14),
+                                    widget.book.description,
+                                maxLines: 100,
+                                    style: TextStyle(color: Colors.white,fontSize: 14),
                                     textAlign: TextAlign.center,),
                                 ),
 

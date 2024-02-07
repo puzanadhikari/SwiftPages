@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 
+import 'books/detailEachForBookStatus.dart';
 import 'myBooks/detailPage.dart';
 
 class MyBooks extends StatefulWidget {
@@ -20,6 +21,41 @@ class MyBooks extends StatefulWidget {
 }
 
 class _MyBooksState extends State<MyBooks> {
+  void shareBookDetailsForComplete(DetailBook book,String note,double rating,String pace,String genre,String mood) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+        CollectionReference communityBooksRef =
+        FirebaseFirestore.instance.collection('communityBooks');
+        await communityBooksRef.add({
+          'author': book.author,
+          'imageLink': book.imageLink,
+          'currentPage': book.currentPage,
+          'notes': note,
+          'username': user.displayName ?? 'Anonymous',
+          'avatarUrl': user.photoURL ?? '',
+          'userId':uid,
+          'rating':rating,
+          'pace':pace,
+          'genre':genre,
+          'mood':mood
+          // Add other fields as needed
+        });
+
+        // Display a notification or feedback to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Book shared successfully!'),
+          ),
+        );
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error sharing book: $e');
+    }
+  }
   void shareBookDetails(DetailBook book,String note) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -280,7 +316,7 @@ class _MyBooksState extends State<MyBooks> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: books[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
 
                                 },
                                 child: Container(
@@ -303,7 +339,7 @@ class _MyBooksState extends State<MyBooks> {
                                             children: [
                                               SizedBox(height: 30,),
                                               RatingBar.builder(
-                                                initialRating: 2.5,
+                                                initialRating: myBooksMyReads[index].reviews[0]['rating'],
                                                 minRating: 1,
                                                 direction: Axis.horizontal,
                                                 allowHalfRating: true,
@@ -353,6 +389,7 @@ class _MyBooksState extends State<MyBooks> {
                                                   ),
                                                   ElevatedButton(
                                                     onPressed: () {
+                                                      shareBookDetailsForComplete(myBooksMyReads[index],myBooksMyReads[index].reviews[0]['review'],myBooksMyReads[index].reviews[0]['rating'],myBooksMyReads[index].reviews[0]['pace'],myBooksMyReads[index].reviews[0]['genre'],myBooksMyReads[index].reviews[0]['mood'],);
                                                       _showAddNotesDialog(myBooksMyReads[index]);
                                                     },
                                                     child: Text("Share"),
@@ -408,7 +445,7 @@ class _MyBooksState extends State<MyBooks> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyBooksDetailPage(book: books[index],)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksToBeRead[index],)));
 
                                 },
                                 child: Container(
@@ -430,21 +467,7 @@ class _MyBooksState extends State<MyBooks> {
                                           child: Column(
                                             children: [
                                               SizedBox(height: 30,),
-                                              RatingBar.builder(
-                                                initialRating: 2.5,
-                                                minRating: 1,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: true,
-                                                itemCount: 5,
-                                                itemSize: 20,
-                                                itemBuilder: (context, _) => Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                ),
-                                                onRatingUpdate: (rating) {
-                                                  // You can update the rating if needed
-                                                },
-                                              ),
+
                                               SizedBox(height: 8),
                                               Container(
                                                 height: 70,
@@ -607,11 +630,11 @@ class _MyBooksState extends State<MyBooks> {
               onPressed: () {
                 String newNote = notesController.text.trim();
                 if (newNote.isNotEmpty) {
-                  shareBookDetails(book,notesController.text);
+                  shareBookDetails(book, notesController.text);
                   Navigator.pop(context); // Close the dialog
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Note added successfully!'),
+                      content: Text('Book shared successfully!'),
                     ),
                   );
                 }
