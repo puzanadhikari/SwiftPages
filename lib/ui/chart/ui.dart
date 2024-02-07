@@ -298,12 +298,14 @@ class _GraphPageState extends State<GraphPage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${DateTime.now().toLocal().toString().split(' ')[0]}',
-                                              style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                            lastStrikeTime==null?'': lastStrikeTime!.toDate().toLocal().toString().split(' ')[0],
+                                              style: TextStyle(      fontSize: 14,
+                                                fontWeight: FontWeight.bold,   color: Color(0xff283E50),),
                                             ),
                                             Text(
-                                              '${DateTime.now().toLocal().toString().split(' ')[1].substring(0, 5)}',
-                                              style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                              lastStrikeTime==null?'':lastStrikeTime!.toDate().toLocal().toString().split(' ')[1].substring(0, 5),
+                                              style: TextStyle(      fontSize: 14,
+                                                fontWeight: FontWeight.bold,   color: Color(0xff283E50),),
                                             ),
                                           ],
                                         ),
@@ -315,11 +317,13 @@ class _GraphPageState extends State<GraphPage> {
                                       children: [
                                         Text(
                                    'Last Streak: '+ lastStreak.toString(),
-                                          style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                          style: TextStyle(  color: Color(0xff283E50),      fontSize: 14,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Text(
                                           'Current Streak: '+ streak.toString(),
-                                          style: TextStyle(fontSize: 16,   color: Color(0xff283E50),),
+                                          style: TextStyle(      fontSize: 14,
+                                              fontWeight: FontWeight.bold,  color: Color(0xff283E50),),
                                         ),
                                       ],
                                     ),
@@ -563,34 +567,34 @@ class _GraphPageState extends State<GraphPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
-                                radius: 40,
+                                radius: mediumPaceCountPer/1.4,
                                 backgroundColor: Color(0xFFFF997A),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(mediumPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 14),),
+                                    Text("Medium",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
                                   ],
                                 ),
                               ),
                               Padding(
                                 padding:  EdgeInsets.only(top:40.0),
                                 child: CircleAvatar(
-                                  radius: 50,
+                                  radius: fastPaceCountPer/1.4,
                                   backgroundColor: Color(0xff283E50),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(fastPaceCountPer.toStringAsFixed(2)+'%',style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
-                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 13),),
+                                      Text("Fast",style: TextStyle(color: Color(0xffFEEAD4),fontWeight: FontWeight.bold,fontSize: 12),),
                                     ],
                                   ),
                                 ),
                               ),
                               CircleAvatar(
-                                radius: 30,
+                                radius: slowPaceCountPer==0?20:slowPaceCountPer/1.4,
                                 backgroundColor:Color(0xffFEEAD4),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
