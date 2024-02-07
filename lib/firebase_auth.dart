@@ -90,8 +90,10 @@ class FirebaseAuthService {
           'dailyGoal': dailyGoal,
           'currentTime': 0,
           'avatarColor': _avatarColor.value,
-          'lastStrikeTimestamp': DateTime.april,
-          'yearlyGoal':yearlyGoal
+          'lastStrikeTimestamp': null,
+          'yearlyGoal':yearlyGoal,
+          'totalTimeMin':0,
+          'totalTimeSec':0
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
