@@ -26,51 +26,13 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-  // Get the current user ID
   String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-  // Variable to store the latest activity
   Map<String, dynamic>? latestActivity;
   Map<String, dynamic>? latestMessage;
 
-  // Variable to store the latest message
-  // Variable to store the latest message
-  // Stream<QuerySnapshot<Map<String, dynamic>>> chatStream =
-  // FirebaseFirestore.instance.collection('chats').snapshots();
-  //
-  // chatStream.listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
-  //   for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-  //     List<String> users = List.from(doc['users'] ?? []);
-  //     if (users.contains(currentUserId)) {
-  //       List<Map<String, dynamic>> messages = List.from(doc['messages'] ?? []);
-  //       if (messages.isNotEmpty) {
-  //         messages.sort((a, b) =>
-  //             (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
-  //
-  //         // Get the latest message
-  //         Map<String, dynamic> newLatestMessage = messages.first;
-  //         showNotificationChat(
-  //           flutterLocalNotificationsPlugin,
-  //           newLatestMessage['sender'],
-  //           newLatestMessage['text'],
-  //         );
-  //
-  //         latestMessage = newLatestMessage;
-  //       }
-  //     }
-  //   }
-  // });
-
-
-
-
-
-
-
-  // Flag to check if it's the initial data retrieval
   bool initialDataRetrieved = false;
 
-  // Create a stream to listen for changes in the activity collection
   Stream<List<Map<String, dynamic>>> activitiesStream =
   FirebaseFirestore.instance
       .collection('users')
