@@ -390,7 +390,7 @@ class _MyBooksState extends State<MyBooks> {
                                                   ),
                                                   ElevatedButton(
                                                     onPressed: () {
-                                                      shareBookDetailsForComplete(myBooksMyReads[index],myBooksMyReads[index].reviews[0]['review'],myBooksMyReads[index].reviews[0]['rating'],myBooksMyReads[index].reviews[0]['pace'],myBooksMyReads[index].reviews[0]['genre'],myBooksMyReads[index].reviews[0]['mood'],);
+                                                      // shareBookDetailsForComplete(myBooksMyReads[index],myBooksMyReads[index].reviews[0]['review'],myBooksMyReads[index].reviews[0]['rating'],myBooksMyReads[index].reviews[0]['pace'],myBooksMyReads[index].reviews[0]['genre'],myBooksMyReads[index].reviews[0]['mood'],);
                                                       _showAddNotesDialog(myBooksMyReads[index]);
                                                     },
                                                     child: Text("Share",style: TextStyle(  fontFamily: 'font'),),
