@@ -294,7 +294,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                           _dailyGoal.text.isNotEmpty&&_yearlyGoal.text.isNotEmpty?
                           await _auth.SignUpWithEmailAndPassword(
                               context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor,int.parse(_yearlyGoal.text)):
-                          Fluttertoast.showToast(msg: "Please enter both the values");
+                          Fluttertoast.showToast(msg: "Please enter both the values",backgroundColor: Color(0xff283E50),);
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Color(0xFFFF997A),// Background color

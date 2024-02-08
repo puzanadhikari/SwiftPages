@@ -101,10 +101,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
 
                 }else{
-                  Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+                  Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: Color(0xff283E50),);
                 }
                   }else{
-             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: Color(0xff283E50),);
            }
          }else{
            await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
@@ -115,10 +115,10 @@ class _ProfilePageState extends State<ProfilePage> {
              if(int.parse(newGoal.text)<int.parse(dailyGoal)){
                await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
              }else{
-               Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+               Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: Color(0xff283E50),);
              }
            }else{
-             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: Color(0xff283E50),);
            }
          }else{
            await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
@@ -1286,10 +1286,10 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
               await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
 
             }else{
-              Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+              Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: Color(0xff283E50),);
             }
           }else{
-            Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+            Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: Color(0xff283E50),);
           }
         }else{
           await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});

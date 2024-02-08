@@ -449,7 +449,7 @@ class _MyBooksDetailPageState extends State<MyBooksDetailPage> {
                                   msg: "Note added successfully!",
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: Colors.green,
+                                    backgroundColor: Color(0xff283E50),
                                   textColor: Colors.white,
                                 );
                               }
