@@ -20,6 +20,9 @@ import '../signUpPage.dart';
 import 'aboutUs.dart';
 import 'chart/ui.dart';
 import 'community/myPosts.dart';
+import 'myBooks.dart';
+import 'package:share/share.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -78,22 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void updateDisplayName(String newDisplayName) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
 
-      if (user != null) {
-        await user.updateDisplayName(newDisplayName);
-        _signOut();
-        print("Display name updated successfully: $newDisplayName");
-
-      } else {
-
-      }
-    } catch (e) {
-      print("Error updating display name: $e");
-         }
-  }
   Future<void> _changeGoal(bool reduce) async {
 
       final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -186,7 +174,20 @@ class _ProfilePageState extends State<ProfilePage> {
           _invitationCode = snapshot.data()?['invitationCode'] ?? '';
 
         });
-        _showInvitationCodePopup();
+        // _showInvitationCodePopup();
+        int? result = await showDialog<int>(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomAlertInvideDialog(code:_invitationCode);
+
+
+          },
+        );
+
+        if (result != null) {
+          // Do something with the selected number
+          print('Selected Number: $result');
+        }
 
       }
     }
@@ -505,8 +506,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Image.asset("assets/person.png"),
                                 SizedBox(width: 15,),
                                 GestureDetector(
-                                    onTap: (){
-                                      guestLogin==true?_showPersistentBottomSheet( context):   _showEditDisplayNameDialog();
+                                    onTap: ()async{
+
+                                      if(guestLogin==true){
+                                        _showPersistentBottomSheet( context);
+                                    }else{
+                                        int? result = await showDialog<int>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CustomAlertDialog(
+
+                                            );
+                                          },
+                                        );
+
+                                        if (result != null) {
+                                          // Do something with the selected number
+                                          print('Selected Number: $result');
+                                        }
+                                      }
+
+
+
+                                      // _showEditDisplayNameDialog();
+
                                     },
                                     child: Text("Change Username",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
@@ -518,8 +541,25 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Image.asset("assets/key.png"),
                                 SizedBox(width: 15,),
                                 GestureDetector(
-                                  onTap: (){
-                                    guestLogin==true?_showPersistentBottomSheet( context):   _showEditPasswordDialog();
+                                  onTap: ()async{
+                                    if(guestLogin==true){
+                                      _showPersistentBottomSheet( context);
+                                    }else{
+                                      int? result = await showDialog<int>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomAlertPasswordDialog(
+                                                email:email
+                                          );
+                                        },
+                                      );
+
+                                      if (result != null) {
+                                        // Do something with the selected number
+                                        print('Selected Number: $result');
+                                      }
+                                    }
+
                                   },
                                     child: Text("Change Password",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
@@ -531,8 +571,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Image.asset("assets/close.png",height: 20,),
                                 SizedBox(width: 15,),
                                 GestureDetector(
-                                    onTap: (){
-                                      guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
+                                    onTap: ()async{
+                                      // guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
+
+                                      if(guestLogin==true){
+                                        _showPersistentBottomSheet( context);
+                                      }else{
+                                        int? result = await showDialog<int>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CustomAlertDailyGoalDialog();
+
+
+                                          },
+                                        );
+
+                                        if (result != null) {
+                                          // Do something with the selected number
+                                          print('Selected Number: $result');
+                                        }
+                                      }
+
                                     },
                                     child: Text("Change Time Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
@@ -548,9 +607,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(height: 20,),
                             GestureDetector(
-                              onTap: (){
-                                guestLogin==true?_showPersistentBottomSheet( context):   _generateInvitationCode();
-                                guestLogin==true?_showPersistentBottomSheet( context):   _fetchInvitationCode();
+                              onTap: ()async{
+                                if(guestLogin==true){
+                                  _showPersistentBottomSheet( context);
+                                }else{
+                                  _generateInvitationCode();
+                                  _fetchInvitationCode();
+
+                                }
+                                // guestLogin==true?_showPersistentBottomSheet( context):   _generateInvitationCode();
+                                // guestLogin==true?_showPersistentBottomSheet( context):   _fetchInvitationCode();
                               },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -791,51 +857,7 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
-  void _showEditDisplayNameDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            "Edit User Name",
-            style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
-          ),
-          content: TextField(
-            controller: _textFieldController,
-            decoration: InputDecoration(
-              hintText: "Enter new User Name",
-              hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: Text(
-                "Cancel",
-                style: TextStyle(fontFamily: 'font',color: Colors.red), // Set cancel text color
-              ),
-            ),
-            TextButton(
-              onPressed: () {
 
-                String newDisplayName = _textFieldController.text;
-
-                updateDisplayName(newDisplayName);
-                Navigator.pop(context); // Close the dialog
-              },
-              child: Text(
-                "Save",
-                style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
-              ),
-            ),
-          ],
-          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
-        );
-      },
-    );
-  }
   void _showEditEmailDialog() {
     showDialog(
       context: context,
@@ -916,4 +938,645 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+}
+class CustomAlertDialog extends StatefulWidget {
+
+  @override
+  _CustomAlertDialogState createState() => _CustomAlertDialogState();
+}
+
+class _CustomAlertDialogState extends State<CustomAlertDialog> {
+  int selectedNumber = 0;
+    TextEditingController _textFieldController = TextEditingController();
+  void updateDisplayName(String newDisplayName) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await user.updateDisplayName(newDisplayName);
+        _signOut();
+        print("Display name updated successfully: $newDisplayName");
+
+      } else {
+
+      }
+    } catch (e) {
+      print("Error updating display name: $e");
+    }
+  }
+  Future<void> _signOut() async {
+    SharedPreferences prefs =await SharedPreferences.getInstance();
+    try {
+      prefs.clear();
+      setState(() {
+        guestLogin = false;
+      });
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>SplashScreen()));
+    } catch (e) {
+      print("Error during logout: $e");
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Done Reading?',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+          Text(
+            'Update your Progress',
+            style: TextStyle(
+                fontSize: 14,
+                color: Color(0xff686868),fontFamily: 'font'
+            ),
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child:TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(
+                hintText: "Enter new User Name",
+                hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      updateDisplayName(_textFieldController.text);
+                    },
+                    child: Text(
+                      'Update',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+}
+
+
+
+class CustomAlertPasswordDialog extends StatefulWidget {
+  String email;
+  CustomAlertPasswordDialog({required this.email});
+  @override
+  _CustomAlertPasswordDialogState createState() => _CustomAlertPasswordDialogState();
+}
+
+class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
+  int selectedNumber = 0;
+
+
+  Future<void> _sendPasswordResetEmail() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: widget.email,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password reset email sent! Check your email.'),
+        ),
+      );
+    } catch (e) {
+      print('Error sending password reset email: $e');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Change Password',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text("Are you sure want to change your password?",style: TextStyle(fontFamily: 'font',),)
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+                    Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      _sendPasswordResetEmail();
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(msg: "Reset Password link sent to your email",backgroundColor:Color(0xFF283E50), );
+                    },
+                    child: Text(
+                      'Send',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+}
+
+
+
+
+class CustomAlertDailyGoalDialog extends StatefulWidget {
+
+  @override
+  _CustomAlertDailyGoalDialogState createState() => _CustomAlertDailyGoalDialogState();
+}
+
+class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog> {
+  int selectedNumber = 0;
+  TextEditingController newGoal = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> _changeGoal(bool reduce) async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_auth.currentUser?.uid)
+        .get();
+    int storedTime = userDoc.get('currentTime') ?? 0;
+    String dailyGoal = userDoc.get('dailyGoal') ?? 0;
+    int valueForDailyGoal = int.parse(dailyGoal)+int.parse(newGoal.text);
+    try {
+      if(storedTime!=0){
+        if(reduce==true){
+          if(int.parse(newGoal.text)!=int.parse(dailyGoal)){
+            if(int.parse(newGoal.text)<int.parse(dailyGoal)){
+              await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
+
+            }else{
+              Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+            }
+          }else{
+            Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+          }
+        }else{
+          await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
+        }
+      }else{
+        if(reduce==true){
+          if(int.parse(newGoal.text)!=int.parse(dailyGoal)){
+            if(int.parse(newGoal.text)<int.parse(dailyGoal)){
+              await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
+            }else{
+              Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
+            }
+          }else{
+            Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal");
+          }
+        }else{
+          await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
+        }
+      }
+      print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
+    } catch (error) {
+      print('Error increasing strikes for user with ID: ${_auth.currentUser
+          ?.uid} - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Change Password',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child:   TextField(
+                controller: newGoal,
+                decoration: InputDecoration(
+                  hintText: "Enter new goal Time",
+                  hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey),
+                ),
+              ),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+                      _changeGoal( true);
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(msg: "Time updated successfully!",backgroundColor:Color(0xFF283E50), );
+                    },
+                    child: Text(
+                      'Replace',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      _changeGoal(false);
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(msg: "Time updated successfully!",backgroundColor:Color(0xFF283E50), );
+                    },
+                    child: Text(
+                      'Increase',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+}
+
+
+class CustomAlertInvideDialog extends StatefulWidget {
+  String code;
+  CustomAlertInvideDialog({required this.code});
+  @override
+  _CustomAlertInvideDialogState createState() => _CustomAlertInvideDialogState();
+}
+
+class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Invite a friend',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child:   Text("Your invitation code is : ${widget.code}",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+
+                      Navigator.pop(context);
+
+                    },
+                    child: Text(
+                      'Close',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      _shareInviteCode();
+                      Navigator.pop(context);
+
+                    },
+                    child: Text(
+                      'Share',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  void _shareInviteCode() async{
+    String appName = 'Swift Pages';
+    String appDescription = 'Share your invitation code and invite friends to join $appName!';
+    String playStoreLink = 'https://play.google.com/store/apps/details?id=com.example.yourapp'; // Replace with your app's Play Store link
+
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+          .collection('about_us')
+          .doc('mjZWNYj7FARJMCZYrFt2')
+          .get();
+
+      if (userDoc.exists) {
+        setState(() {
+          playStoreLink = userDoc.get('playstoreLink')??'';
+          // finishedDate = userDoc.get('finishedDate') ?? 0;
+        });
+      }
+    } catch (error) {
+      //log('Error fetching data: $error');
+    }
+
+    String message = '''
+  Hey there! 👋
+
+  I'm inviting you to join $appName! 📚📖
+
+  Here's my invitation code: ${widget.code}
+
+  $appDescription
+
+  Download $appName on the Play Store: $playStoreLink
+
+  Let's read together and enjoy our favorite books! 📚🌟
+  ''';
+
+    Share.share(message);
+  }
+
 }
