@@ -82,6 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
 
+
+
   Future<void> _changeGoal(bool reduce) async {
 
       final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -131,6 +133,11 @@ class _ProfilePageState extends State<ProfilePage> {
         // Handle the error (e.g., show an error message)
       }
   }
+
+
+
+
+
   Future<void> _sendPasswordResetEmail() async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
@@ -1009,19 +1016,12 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       title: Column(
         children: [
           Text(
-            'Done Reading?',
+            'Change Username',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
           Divider(
             color: Colors.grey,
             thickness: 1,
-          ),
-          Text(
-            'Update your Progress',
-            style: TextStyle(
-                fontSize: 14,
-                color: Color(0xff686868),fontFamily: 'font'
-            ),
           ),
         ],
       ),

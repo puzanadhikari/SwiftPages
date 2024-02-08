@@ -7,6 +7,7 @@ import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:swiftpages/ui/homePage.dart';
 import 'package:swiftpages/ui/myBooks.dart';
 import 'package:swiftpages/ui/profilePage.dart';
@@ -112,72 +113,93 @@ class _MainPageState extends State<MainPage> {
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
     });
   }
-
+  DateTime? currentBackPressTime;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFFEEAD4),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        children: [
-          HomePage(),
-          MyBooks(),
-          GraphPage(),
-          ProfilePage(),
+    return WillPopScope(
+      onWillPop: () async {
+        final now = DateTime.now();
+        if (currentBackPressTime == null ||
+            now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+          currentBackPressTime = now;
+          Fluttertoast.showToast(msg: 'Press back again to exit',backgroundColor: Color(0xFFFF997A),gravity: ToastGravity.BOTTOM,textColor: Color(0xff283E50));
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       // width: MediaQuery.of(context).size.width,
+        //       content: Text('Press back again to exit'),
+        //       duration: Duration(seconds: 2),
+        // padding: EdgeInsets.all(20),
+        //
+        //     ),
+        //   );
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xFFFEEAD4),
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          children: [
+            HomePage(),
+            MyBooks(),
+            GraphPage(),
+            ProfilePage(),
 
-        ],
-      ),
-      extendBody: false,
-      bottomNavigationBar: Stack(
-        children: [
-          FloatingNavbar(
-            padding: EdgeInsets.only(top: 10),
-            borderRadius: 40.0,
-            selectedBackgroundColor: Colors.transparent,
-            selectedItemColor: Color(0xffFF997A),
-            unselectedItemColor: Color(0xffFF997A),
-            backgroundColor: Color(0xFF283E50),
-            onTap: _onTabTapped,
-            currentIndex: _currentIndex,
-            items: [
-              FloatingNavbarItem(icon: Icons.home, title: '',customWidget: SvgPicture.asset('assets/home.svg',
-        height: 25,
-        color: _currentIndex==0? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
-      ),),
-              FloatingNavbarItem(icon: Icons.book, title: '',customWidget: SvgPicture.asset('assets/myBooks.svg',
-                height: 25,
-                color: _currentIndex==1? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
-              ),),
-              FloatingNavbarItem(icon: Icons.auto_graph, title: '',customWidget: SvgPicture.asset('assets/graph.svg',
-                height: 25,
-                color: _currentIndex==2? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
-              ),),
-              FloatingNavbarItem(icon: Icons.person_2_outlined, title: '',customWidget: SvgPicture.asset('assets/profile.svg',
-                height: 25,
-                color: _currentIndex==3? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
-              ),),
-            ],
-          ),
-          // AnimatedPositioned(
-          //   duration: Duration(milliseconds: 300),
-          //   top: 15,
-          //   left: 20.0 + MediaQuery.of(context).size.width/2.2 * 0.5 * _currentIndex,
-          //   child: Container(
-          //     height: 40,
-          //     width: MediaQuery.of(context).size.width * 0.2,
-          //     decoration: BoxDecoration(
-          //       shape: BoxShape.circle,
-          //       color: Colors.white24,
-          //     ),
-          //   ),
-          // ),
-        ],
+          ],
+        ),
+        extendBody: false,
+        bottomNavigationBar: Stack(
+          children: [
+            FloatingNavbar(
+              padding: EdgeInsets.only(top: 10),
+              borderRadius: 40.0,
+              selectedBackgroundColor: Colors.transparent,
+              selectedItemColor: Color(0xffFF997A),
+              unselectedItemColor: Color(0xffFF997A),
+              backgroundColor: Color(0xFF283E50),
+              onTap: _onTabTapped,
+              currentIndex: _currentIndex,
+              items: [
+                FloatingNavbarItem(icon: Icons.home, title: '',customWidget: SvgPicture.asset('assets/home.svg',
+          height: 25,
+          color: _currentIndex==0? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
+        ),),
+                FloatingNavbarItem(icon: Icons.book, title: '',customWidget: SvgPicture.asset('assets/myBooks.svg',
+                  height: 25,
+                  color: _currentIndex==1? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
+                ),),
+                FloatingNavbarItem(icon: Icons.auto_graph, title: '',customWidget: SvgPicture.asset('assets/graph.svg',
+                  height: 25,
+                  color: _currentIndex==2? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
+                ),),
+                FloatingNavbarItem(icon: Icons.person_2_outlined, title: '',customWidget: SvgPicture.asset('assets/profile.svg',
+                  height: 25,
+                  color: _currentIndex==3? Color(0xffFF997A):Color(0xffFF997A).withOpacity(0.6),
+                ),),
+              ],
+            ),
+            // AnimatedPositioned(
+            //   duration: Duration(milliseconds: 300),
+            //   top: 15,
+            //   left: 20.0 + MediaQuery.of(context).size.width/2.2 * 0.5 * _currentIndex,
+            //   child: Container(
+            //     height: 40,
+            //     width: MediaQuery.of(context).size.width * 0.2,
+            //     decoration: BoxDecoration(
+            //       shape: BoxShape.circle,
+            //       color: Colors.white24,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }
