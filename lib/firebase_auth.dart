@@ -93,7 +93,9 @@ class FirebaseAuthService {
           'lastStrikeTimestamp': null,
           'yearlyGoal':yearlyGoal,
           'totalTimeMin':0,
-          'totalTimeSec':0
+          'totalTimeSec':0,
+          'increaseStrike':false,
+          'lastStrike':0,
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
