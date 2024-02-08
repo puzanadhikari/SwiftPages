@@ -629,9 +629,25 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(height: 20,),
                             GestureDetector(
-                              onTap: (){
-                                guestLogin==true?_showPersistentBottomSheet( context):    _showInvitationCodeEnterPopup();
-                                // _fetchInvitationCode();
+                              onTap: ()async{
+                                // guestLogin==true?_showPersistentBottomSheet( context):    _showInvitationCodeEnterPopup();
+                                if(guestLogin==true){
+                                  _showPersistentBottomSheet( context);
+                                }else{
+                                  int? result = await showDialog<int>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertRedeemDialog();
+
+
+                                    },
+                                  );
+
+                                  if (result != null) {
+                                    // Do something with the selected number
+                                    print('Selected Number: $result');
+                                  }
+                                }
                               },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1577,6 +1593,255 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
   ''';
 
     Share.share(message);
+  }
+
+}
+
+
+
+class CustomAlertRedeemDialog extends StatefulWidget {
+
+  @override
+  _CustomAlertRedeemDialogState createState() => _CustomAlertRedeemDialogState();
+}
+
+class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
+  TextEditingController _invitationCodeController = TextEditingController();
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Redeem your offer',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: TextField(
+              controller: _invitationCodeController,
+              decoration: InputDecoration(
+                hintText: "Enter the invitation code",
+                hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+
+                      Navigator.pop(context);
+
+                    },
+                    child: Text(
+                      'Close',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      _validateInvitationCode();
+                      Navigator.pop(context);
+
+                    },
+                    child: Text(
+                      'Redeem',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  void _validateInvitationCode() async{
+
+    User? user = _auth.currentUser;
+    String enteredCode = _invitationCodeController.text.trim();
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+    await _firestore.collection('users').doc(user?.uid).get();
+    // Perform a query to find the user with the entered invitation code
+    _firestore
+        .collection('users')
+        .where('invitationCode', isEqualTo: enteredCode)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        // User with the entered code found
+        DocumentSnapshot redeemingUserDocument = querySnapshot.docs.first;
+        String? redeemingUserId = _auth.currentUser?.uid;
+
+        // Check if the redeeming user has already redeemed the invitation
+        bool hasRedeemed = snapshot.data()?['redeemed'] ?? false;
+        //log(hasRedeemed.toString());
+        if (hasRedeemed) {
+          // User has already redeemed the invitation
+          print('Already redeemed the invitation code!');
+          // You may show a toast or other messages to indicate that it's already redeemed
+          Fluttertoast.showToast(
+            msg: 'Invitation code already redeemed!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        } else {
+          // Increase strikes for the redeeming user
+          _increaseStrikes(redeemingUserId!);
+
+          // Increase strikes for the generating user
+          String generatorUserId = redeemingUserDocument.id ?? '';
+          _increaseStrikes(generatorUserId);
+
+          // Delete the invitation code from the generating user's document
+          _deleteInvitationCode(generatorUserId);
+
+          // Mark the invitation as redeemed for the redeeming user
+          _markInvitationAsRedeemed(redeemingUserId);
+
+          print('Code is valid for user with ID: $redeemingUserId');
+          Navigator.of(context).pop(); // Close the dialog
+
+          // Implement your logic here based on the user associated with the code
+        }
+      } else {
+        // Code is invalid, show an error message
+        Fluttertoast.showToast(msg: 'Invalid code!',backgroundColor: Color(0xff283E50));
+        print('Invalid code!');
+        // You may show an error message or take other actions
+        Fluttertoast.showToast(
+          msg: 'Invalid invitation code!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    }).catchError((error) {
+      print('Error validating code: $error');
+      // Handle the error (e.g., show an error message)
+      Fluttertoast.showToast(
+        msg: 'Error validating invitation code!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    });
+  }
+
+
+  Future<void> _markInvitationAsRedeemed(String userId) async {
+    User? user = _auth.currentUser;
+
+    try {
+      // Mark the 'redeemed' field as true for the user with the given ID
+      await _firestore.collection('users').doc(user?.uid).update({'redeemed': true});
+      print('Invitation marked as redeemed for user with ID: $userId');
+    } catch (error) {
+      print('Error marking invitation as redeemed for user with ID: $userId - $error');
+      // Handle the error (e.g., show an error message)
+    }
+  }
+
+
+  Future<void> _deleteInvitationCode(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({'invitationCode': FieldValue.delete()});
+      print('Invitation code deleted for user with ID: $userId');
+    } catch (error) {
+      print('Error deleting invitation code for user with ID: $userId - $error');
+    }
+  }
+  Future<void> _increaseStrikes(String userId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser?.uid)
+          .get();
+      // String strikeIncreseCount = userDoc.get('dailyGoal') ?? 0;
+      await _firestore.collection('users').doc(userId).update({'strikes': FieldValue.increment(10)});
+      // await _firestore.collection('users').doc(userId).get();
+      print('Strikes increased for user with ID: $userId');
+    } catch (error) {
+      print('Error increasing strikes for user with ID: $userId - $error');
+      // Handle the error (e.g., show an error message)
+    }
   }
 
 }
