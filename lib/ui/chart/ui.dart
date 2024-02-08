@@ -56,93 +56,75 @@ class _GraphPageState extends State<GraphPage> {
   double finalRating = 0;
   Future<void> fetchBooksForPace() async {
     try {
-      // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // User is signed in, use the UID to fetch books
         String uid = user.uid;
         moodCounts.clear();
-        // Reference to the 'myBooks' collection with the UID as the document ID
+
         CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
         QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
 
-        // Access the documents in the query snapshot
         List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
-         mediumPaceCount = 0;
-         fastPaceCount = 0;
-         slowPaceCount = 0;
 
         setState(() {
-          // completedLength = querySnapshotMyReads.docs.length.toString();
-
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
+        });
 
+        // Initialize counters
+        mediumPaceCount = 0;
+        fastPaceCount = 0;
+        slowPaceCount = 0;
+        ratingTotal = 0.0;
+        completedLength = bookDocumentsMyReads.length;
 
-          // Iterate through each book document to check reviews and pace
+        if (completedLength > 0) {
           for (var doc in bookDocumentsMyReads) {
-            // Access the data of the document
             Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-            // Check if the document has a 'reviews' array
-            if (data.containsKey('reviews')) {
 
-              // Access the 'reviews' array
+            if (data.containsKey('reviews')) {
               List<dynamic> reviews = data['reviews'];
 
-              // Iterate through each review
               for (var review in reviews) {
-
-                // Check if the review has a 'pace' value
                 if (review.containsKey('pace')) {
-
-
-                  //log(ratingTotal.toString());
-                  // Increment the corresponding pace count based on the 'pace' value
                   switch (review['pace']) {
                     case 'Medium':
                       mediumPaceCount++;
-                      mediumPaceCountPer = (mediumPaceCount/completedLength)*100;
                       break;
                     case 'Fast':
                       fastPaceCount++;
-                      fastPaceCountPer = (fastPaceCount/completedLength)*100;
                       break;
                     case 'Slow':
                       slowPaceCount++;
-                      slowPaceCountPer = (slowPaceCount/completedLength)*100;
                       break;
                   }
-                  double ratings = review['rating'];
-                  ratingTotal += ratings;
-                  // log(ratingTotal.toString()+completedLength.toString());
-                  finalRating = ratingTotal/completedLength;
-                  setState(() {
+                }
 
-                  });
+                if (review.containsKey('rating')) {
+                  double rating = review['rating'];
+                  ratingTotal += rating;
                 }
               }
             }
           }
-        });
-        for (var book in myBooksMyReads) {
-          for (var review in book.reviews) {
-            if (review.containsKey('mood')) {
-              String mood = review['mood'];
-              moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
-            }
-          }
-        }
 
-        // Update the UI
-        setState(() {});
+          setState(() {
+            mediumPaceCountPer = (mediumPaceCount / completedLength) * 100;
+            fastPaceCountPer = (fastPaceCount / completedLength) * 100;
+            slowPaceCountPer = (slowPaceCount / completedLength) * 100;
+
+            finalRating = ratingTotal / completedLength;
+          });
+        }
       }
     } catch (e) {
-      print('Error fetching books first: $e');
+      print('Error fetching books for pace: $e');
     }
   }
+
 
   Future fetchBooks() async {
     try {
@@ -460,7 +442,8 @@ class _GraphPageState extends State<GraphPage> {
                                               child: Text(updatedTime,  style: TextStyle(
                                                   color: Color(0xff283E50),
                                                   fontSize: 14,
-                                                  fontWeight: FontWeight.bold
+                                                  fontWeight: FontWeight.bold,
+                                           fontFamily: 'font',
                                               ),),
                                             ),
                                             Text(
@@ -631,58 +614,20 @@ class _GraphPageState extends State<GraphPage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0,right: 30),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/4,
-                  decoration: BoxDecoration(
-                    color: Color(0xffD9D9D9),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Center(
-                    child: Expanded(
-                      child: BarChart(
-                        BarChartData(
-                          groupsSpace: 12,
-                          titlesData:FlTitlesData(
-                          leftTitles: AxisTitles(
-                          // sideTitles: false,
-                        ),
-                        bottomTitles: AxisTitles(
-                          // showTitles: true,
-                          // getTextStyles: (context, value) => const TextStyle(
-                          //   color: Color(0xff7589a2),
-                          //   fontWeight: FontWeight.bold,
-                          //   fontSize: 14,
-                          // ),
-                          // margin: 20,
-                          // getTitles: (double value) {
-                          //   // Dynamically generate labels for the X-axis based on moodCounts
-                          //   if (value >= 0 && value < moodCounts.length) {
-                          //     return moodCounts.keys.toList()[value.toInt()];
-                          //   }
-                          //   return '';
-                          // },
-                        ),
-                      ),
-                          borderData: FlBorderData(show: false),
-                          barGroups: List.generate(
-                            moodCounts.length,
-                                (index) => BarChartGroupData(
-                              x: index,
-                              barRods: [
-                                BarChartRodData(toY: moodCounts.values.toList()[index].toDouble()),
-                              ],
-                              showingTooltipIndicators: [0],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 30.0,right: 30),
+              //   child: Container(
+              //     width: MediaQuery.of(context).size.width,
+              //     height: MediaQuery.of(context).size.height/4,
+              //     decoration: BoxDecoration(
+              //       color: Color(0xffD9D9D9),
+              //       borderRadius: BorderRadius.circular(20.0),
+              //     ),
+              //     child: Center(
+              //       child:
+              //     ),
+              //   ),
+              // ),
 
             ],
           ),

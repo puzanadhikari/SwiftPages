@@ -462,7 +462,6 @@ class _TimerPageState extends State<TimerPage> {
                                           }
                                         },
 
-
                                         child: Text(
                                           "Started",
                                           style: TextStyle(

@@ -37,10 +37,33 @@ List <String > mood = [];
 String selectedPace = '';
 String selectedGenre = '';
 String selectedMood = '';
+String startDate = '';
+DateTime? finishedDate ;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+Future<void> fetchData() async {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  try {
+    DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+        .collection('myBooks')
+        .doc(_auth.currentUser?.uid).collection('books').doc(widget.book.documentId)
+        .get();
+
+    if (userDoc.exists) {
+      setState(() {
+        startDate = userDoc.get('startingDate') ?? '';
+        log(startDate);
+        // finishedDate = userDoc.get('finishedDate') ?? 0;
+      });
+    }
+  } catch (error) {
+    //log('Error fetching data: $error');
+  }
+}
   @override
   void initState() {
     super.initState();
+    fetchData();
 
   }
 
@@ -205,17 +228,18 @@ String selectedMood = '';
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                  onTap:(){
-
-                                  },
-                                  child: Text("Starting Date",style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold),)),
-                              GestureDetector(
-                                  onTap: (){
-
-                                  },
-                                  child: Text("Finished Date",style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold),)),
-                              ],
+                              Column(
+                                children: [
+                                  Text("Starting Date",style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  Text(startDate,style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text("Finished Date",style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  Text(DateTime.now().year.toString()+'/'+DateTime.now().month.toString()+'/'+DateTime.now().day.toString(),style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                ],
+                              ), ],
                           ),
                         ),
 
@@ -245,7 +269,7 @@ String selectedMood = '';
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(reviewController.text.isEmpty?'Add your review here':reviewController.text, style: TextStyle(color:  Color(0xFF283E50) ,fontWeight: FontWeight.bold),),
+                                  Text(reviewController.text.isEmpty?'Add your review here':reviewController.text, style: TextStyle(color:  Color(0xFF283E50) ,fontWeight: FontWeight.bold,fontFamily: 'font'),),
                                 ],
                               ),
                             ),
@@ -294,7 +318,7 @@ String selectedMood = '';
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(12.0),
-                                    child: Text(pace[index], style: TextStyle(color: selectedPace != pace[index] ? Color(0xFF283E50) : Color(0xfffeead4),fontWeight: FontWeight.bold),),
+                                    child: Text(pace[index], style: TextStyle(color: selectedPace != pace[index] ? Color(0xFF283E50) : Color(0xfffeead4),fontWeight: FontWeight.bold,fontFamily: 'font'),),
                                   ),
                                 ),
                               );
