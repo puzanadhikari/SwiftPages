@@ -126,7 +126,6 @@ class _ProfilePageState extends State<ProfilePage> {
            if(int.parse(newGoal.text)!=int.parse(dailyGoal)){
              if(int.parse(newGoal.text)<int.parse(dailyGoal)){
                await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
-
              }else{
                Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal");
              }
@@ -137,7 +136,6 @@ class _ProfilePageState extends State<ProfilePage> {
            await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
          }
        }
-
             print('Strikes increased for user with ID: ${_auth.currentUser?.uid}');
       } catch (error) {
         print('Error increasing strikes for user with ID: ${_auth.currentUser

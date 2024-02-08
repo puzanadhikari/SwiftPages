@@ -528,12 +528,31 @@ class _TimerPageState extends State<TimerPage> {
                                             fontSize: 24,
                                             fontWeight: FontWeight.bold,fontFamily: 'font'),
                                       )),
-                                  Text(
-                                    'Page',
-                                    style: TextStyle(
-                                        color: Color(0xff283E50),
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                  GestureDetector(
+                                    onTap: ()async{
+                                      int? result = await showDialog<int>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomAlertForPageDialog(
+                                            book: widget.book,
+                                            totalPage: widget.book.totalPage,
+                                            currentPage: widget.book.currentPage,
+                                          );
+                                        },
+                                      );
+
+                                      if (result != null) {
+                                        // Do something with the selected number
+                                        print('Selected Number: $result');
+                                      }
+                                    },
+                                    child: Text(
+                                      'Page',
+                                      style: TextStyle(
+                                          color: Color(0xff283E50),
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -1887,6 +1906,234 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       // Access the document data
       Map<String, dynamic> bookData =
           bookSnapshot.data() as Map<String, dynamic>;
+
+      // Print the current status for reference
+      print('Current Status: ${bookData['status']}');
+
+      // Update the status to 'CURRENTLY READING'
+      await myBooksRef.doc(bookIdToUpdate).update({'status': status});
+
+      print('Status updated successfully');
+    } else {
+      // Handle the case where the specified book does not exist
+      print('Book with ID $bookIdToUpdate does not exist.');
+    }
+  }
+
+  void updatePageNumber(DetailBook book, int newPageNumber) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
+
+        // Update the page number in the Firestore document
+        await myBooksRef
+            .doc(book.documentId)
+            .update({'currentPage': newPageNumber});
+
+        // Update the local state with the new page number
+        setState(() {
+          book.currentPage = newPageNumber;
+        });
+
+        print('Page number updated successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error updating page number: $e');
+    }
+  }
+}
+class CustomAlertForPageDialog extends StatefulWidget {
+  DetailBook book;
+  final int totalPage;
+  final int currentPage;
+
+  CustomAlertForPageDialog(
+      {required this.book, required this.totalPage, required this.currentPage});
+
+  @override
+  _CustomAlertForPageDialogState createState() => _CustomAlertForPageDialogState();
+}
+
+class _CustomAlertForPageDialogState extends State<CustomAlertForPageDialog> {
+  int selectedNumber = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedNumber = widget.currentPage;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Done Reading?',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+          Text(
+            'Update your Progress',
+            style: TextStyle(
+                fontSize: 14,
+                color: Color(0xff686868),fontFamily: 'font'
+            ),
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Container(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.totalPage,
+                itemBuilder: (BuildContext context, int index) {
+                  int number = index + 1;
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedNumber = number;
+                      });
+                    },
+                    child: Container(
+                      width: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: number == selectedNumber
+                            ? Color(0xffD9D9D9)
+                            : Colors.transparent,
+                        border: Border.all(
+                          color: number == selectedNumber
+                              ? Color(0xffD9D9D9)
+                              : Colors.transparent,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '$number',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,fontFamily:'font',
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 100,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Color(0xFF283E50),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  updatePageNumber(widget.book, selectedNumber);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  setState(() {});
+                },
+                child: Text(
+                  'Save',
+                  style: TextStyle(
+                      color: Colors.white,fontFamily: 'font'
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> addFinishedDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "finishedDate": DateTime.now(),
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
+  void updateStatusOfBook(String status) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+
+// Reference to the 'myBooks' collection with the UID as the document ID
+    CollectionReference myBooksRef = FirebaseFirestore.instance
+        .collection('myBooks')
+        .doc(uid)
+        .collection('books');
+
+// Specify the ID of the book you want to update
+    String bookIdToUpdate =
+        widget.book.documentId; // Replace with the actual ID
+
+// Fetch the specific book document
+    DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
+
+    if (bookSnapshot.exists) {
+      // Access the document data
+      Map<String, dynamic> bookData =
+      bookSnapshot.data() as Map<String, dynamic>;
 
       // Print the current status for reference
       print('Current Status: ${bookData['status']}');
