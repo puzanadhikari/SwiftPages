@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +28,7 @@ class _GraphPageState extends State<GraphPage> {
   int completedLength=0;
 
   Map<String, int> moodCounts = {}; // Map to store mood counts
+  Map<String, int> genreCounts = {}; // Map to store mood counts
 
 
   double ratingTotal =0.0;
@@ -106,6 +108,14 @@ class _GraphPageState extends State<GraphPage> {
                 if (review.containsKey('rating')) {
                   double rating = review['rating'];
                   ratingTotal += rating;
+                }
+                if (review.containsKey('mood')) {
+                  String mood = review['mood'];
+                  moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+                }
+                if (review.containsKey('genre')) {
+                  String genre = review['genre'];
+                  genreCounts[genre] = (genreCounts[genre] ?? 0) + 1;
                 }
               }
             }
@@ -206,7 +216,7 @@ class _GraphPageState extends State<GraphPage> {
     }
   }
 
-
+  final _random = Random();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -614,20 +624,152 @@ class _GraphPageState extends State<GraphPage> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 30.0,right: 30),
-              //   child: Container(
-              //     width: MediaQuery.of(context).size.width,
-              //     height: MediaQuery.of(context).size.height/4,
-              //     decoration: BoxDecoration(
-              //       color: Color(0xffD9D9D9),
-              //       borderRadius: BorderRadius.circular(20.0),
-              //     ),
-              //     child: Center(
-              //       child:
-              //     ),
-              //   ),
-              // ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, left: 30.0, right: 30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Genre",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xff283E50),
+                            fontSize: 20,
+                            fontFamily: 'font',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height/3.5 ,
+                        child: ListView(
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            AspectRatio(
+                              aspectRatio:1.5,
+                              child: PieChart(
+                                PieChartData(
+                                  sections: genreCounts.entries.map((entry) {
+                                    String genre = entry.key;
+                                    int count = entry.value;
+
+                                    return PieChartSectionData(
+                                      color: _getNextColor(), // Use the next color from the list
+                                      value: (count / completedLength).toDouble(),
+                                      title: '$genre\n${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                      titleStyle: TextStyle(fontFamily: 'font'),
+                                      radius: 70,
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:30,left: 30.0,right: 30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height/4,
+                  decoration: BoxDecoration(
+                    color: Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Mood",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(0xff283E50),
+                                fontSize: 20,fontFamily: 'font',
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30.0, right: 30),
+                          child: Column(
+                            children: List.generate((moodCounts.length / 3).ceil(), (index) {
+                              int startIndex = index * 3;
+                              int endIndex = startIndex + 3;
+
+                              // Ensure endIndex does not exceed the length of the moodCounts list
+                              endIndex = endIndex > moodCounts.length ? moodCounts.length : endIndex;
+
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: moodCounts.entries.toList().sublist(startIndex, endIndex).map((entry) {
+                                  String mood = entry.key;
+                                  int count = entry.value;
+
+                                  // Calculate radius based on percentage
+                                  double radius = (count / completedLength) * 10 + 30; // Adjust the scaling factor 50 as needed
+
+                                  // Determine the color based on the index
+                                  Color backgroundColor = moodCounts.keys.toList().indexOf(mood).isOdd ? Color(0xff283E50) : Color(0xFFFF997A);
+
+                                  return CircleAvatar(
+                                    radius: radius,
+                                    backgroundColor: backgroundColor,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                          style: TextStyle(
+                                            color: Color(0xFFD9D9D9),
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'font',
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Text(
+                                          mood,
+                                          style: TextStyle(
+                                            color: Color(0xFFD9D9D9),
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'font',
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }),
+                          ),
+                        ),
+
+
+
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
 
             ],
           ),
@@ -635,7 +777,28 @@ class _GraphPageState extends State<GraphPage> {
       ),
     );
   }
+  int _colorIndex = 0;
 
+  Color _getNextColor() {
+    List<Color> colors = [
+      Color(0xFFE57373),
+      Color(0xFFFF8A65),
+      Color(0xFFFFD54F),
+      Color(0xFFAED581),
+      Color(0xFF64B5F6),
+      Color(0xFF9575CD),
+      Color(0xFFFFD700),
+      // Add more colors as needed
+    ];
+
+    Color nextColor = colors[_colorIndex % colors.length];
+    _colorIndex++;
+    return nextColor;
+  }
+
+  Color _getRandomColor() {
+    return Color((0xFF000000 & 0xFFFFFF) | _random.nextInt(0xFFFFFF));
+  }
 }
 
 
