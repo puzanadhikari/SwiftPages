@@ -136,7 +136,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                                 width: 40.0,
                                 height: 40.0,
                                 useOldImageOnUrlChange: false,
-                                placeholder: (context, url) => CircularProgressIndicator(color:Color(0xFF283E50)),
+                                placeholder: (context, url) => CircularProgressIndicator(color:Colors.transparent),
                                 errorWidget: (context, url, error) => Icon(Icons.error),
                               ),
                             ),
