@@ -296,6 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             "Already have an account?",
                             style: TextStyle(
+                              fontFamily: "font",
                               color: Color(0xFF686868),
                               fontSize: 14,
                             ),

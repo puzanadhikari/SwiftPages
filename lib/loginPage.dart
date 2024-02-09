@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Color(0xFF283E50),
           size: 60,
           secondRingColor: Color(0xFFFF997A),
-          thirdRingColor:Color(0xFF686868),
+          thirdRingColor:Color(0xFFD9D9D9),
         )): Stack(
           children: [
             Positioned(
@@ -73,11 +73,13 @@ class _LoginPageState extends State<LoginPage> {
                         height: 0,
                       ),
                     ),
+                    SizedBox(height: 10),
                     Text(
                       'Get ready for a journey where every page \n        turns into a swift adventure!!!!!',
                       style: TextStyle(
-                        color: Color(0xFF283E50),
+                        color: Color(0xFF686868),
                         fontSize: 12,
+                        fontFamily: "font",
                         height: 0,
                       ),
                     ),
@@ -101,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             "Email",
                             style: TextStyle(
-                              fontSize:14,
+                              fontSize:18,
                               fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
 
@@ -113,12 +115,15 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(2),
                               color:Color(0xFFD9D9D9),
                             ),
-                            child: TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                hintText: 'Email',
-                                border: InputBorder.none,
-                                prefixIcon: Icon(Icons.email_outlined),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left:15.0),
+                              child: TextField(
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                  hintText: 'Email',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: "font",color:Color(0xff686868).withOpacity(0.5)),
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
                           ),
@@ -131,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             "Password",
                             style: TextStyle(
-                              fontSize:14,
+                              fontSize:18,
                               fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
 
@@ -143,22 +148,25 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(2.0),
                               color: Color(0xFFD9D9D9),
                             ),
-                            child: TextField(
-                              controller: passwordController,
-                              obscureText: obscurePassword,
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                                border: InputBorder.none,
-                                prefixIcon: Icon(Icons.lock),
-                                suffixIcon: IconButton(
-                                  icon: Icon(obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility),
-                                  onPressed: () {
-                                    setState(() {
-                                      obscurePassword = !obscurePassword;
-                                    });
-                                  },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left:15.0),
+                              child: TextField(
+                                controller: passwordController,
+                                obscureText: obscurePassword,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Your Password',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: "font",color:Color(0xff686868).withOpacity(0.5)),
+                                  border: InputBorder.none,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(obscurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,color:Color(0xff686868).withOpacity(0.5),size: 18),
+                                    onPressed: () {
+                                      setState(() {
+                                        obscurePassword = !obscurePassword;
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
@@ -214,6 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             "Do not have account?",
                             style: TextStyle(
+                                fontFamily: "font",
                               color: Color(0xFF686868),
                               fontSize: 14,
                             ),
