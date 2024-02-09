@@ -87,7 +87,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                     child: Text(
                       "Choose Your Avatar!!",
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,fontFamily:'font',
                         color: Color(0xFF283E50),
                       ),
@@ -147,7 +147,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                   ),
                   SizedBox(height: 40),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 50.0),
+                    padding: const EdgeInsets.only(bottom: 80.0),
                     child: ElevatedButton(
                       onPressed: () async {
                         if (selectedAvatar != null) {
@@ -172,15 +172,15 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                         ),
                       ),
                       child: Container(
-                        width: MediaQuery.of(context).size.width /3,
-                        height: 60,
+                        width: MediaQuery.of(context).size.width /4,
+                        height: 45,
                         child: Center(
                           child: Text(
                             'SAVE',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: selectedAvatar != null ? Color(0xfffeead4) : Color(0xFF283E50),
-                              fontSize: 25,
+                              fontSize: 23,
                               fontFamily: 'font',
                               height: 0,
                             ),
