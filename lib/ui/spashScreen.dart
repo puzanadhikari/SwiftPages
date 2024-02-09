@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:swiftpages/signUpPage.dart';
 import 'package:swiftpages/ui/homePage.dart';
 import 'package:swiftpages/ui/mainPage.dart';
@@ -79,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 2), () {
       checkLoginTime();
       checkAuthentication();
     });
@@ -102,11 +103,16 @@ class _SplashScreenState extends State<SplashScreen> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/logo.png", height: 200.0, width: 200.0),
+              Image.asset("assets/logo.png", height: 450.0, width: 450.0),
               SizedBox(height: 20.0),
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xffFEEAD4)),
+              LoadingAnimationWidget.discreteCircle(
+                color: Color(0xFFFEEAD4),
+                size: 60,
+                secondRingColor: Color(0xFFFF997A),
+                thirdRingColor:Color(0xFFD9D9D9),
               ),
+              SizedBox(height: 20.0),
+              Text("Loading...",style: TextStyle(color: Color(0xFFFEEAD4),fontFamily: "font"))
             ],
           ),
         ],

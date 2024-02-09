@@ -91,12 +91,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         height: 0,
                       ),
                     ),
+                    SizedBox(height: 10),
                     Text(
                       'Get ready for a journey where every page \n        turns into a swift adventure!!!!!',
                       style: TextStyle(
-                        color: Color(0xFF283E50),
+                        color: Color(0xFF686868),
                         fontSize: 12,
-
+                        fontFamily: 'font',
                         height: 0,
                       ),
                     ),
@@ -114,34 +115,40 @@ class _SignUpPageState extends State<SignUpPage> {
                       // Remove the Image.asset from here
 
                       SizedBox(height: 160),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Email",
-                            style: TextStyle(
-                              fontSize:14,
-                              fontWeight: FontWeight.bold,fontFamily:'font',
-                              color:  Color(0xFF686868),
+                      Padding(
+                        padding: const EdgeInsets.only(top:45.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Email",
+                              style: TextStyle(
+                                fontSize:18,
+                                fontWeight: FontWeight.bold,fontFamily:'font',
+                                color:  Color(0xFF686868),
 
-                            ),
-                          ),
-                          SizedBox(height: 5,),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              color:Color(0xFFD9D9D9),
-                            ),
-                            child: TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                hintText: 'Email',
-                                border: InputBorder.none,
-                                prefixIcon: Icon(Icons.email_outlined),
                               ),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 5,),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2),
+                                color:Color(0xFFD9D9D9),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left:15.0),
+                                child: TextField(
+                                  controller: emailController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter Your Email',
+                                    hintStyle: TextStyle(fontSize: 12,fontFamily: "font",color:Color(0xff686868).withOpacity(0.5)),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
 
                       SizedBox(height: 16.0),
@@ -151,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             "Username",
                             style: TextStyle(
-                              fontSize:14,
+                              fontSize:18,
                               fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
 
@@ -163,12 +170,15 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.circular(2.0),
                               color: Color(0xFFD9D9D9),
                             ),
-                            child: TextField(
-                              controller: userNameController,
-                              decoration: InputDecoration(
-                                hintText: 'Username',
-                                border: InputBorder.none,
-                                prefixIcon: Icon(Icons.person),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left:15.0),
+                              child: TextField(
+                                controller: userNameController,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Your Username',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: "font",color:Color(0xff686868).withOpacity(0.5)),
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
                           ),
@@ -181,7 +191,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             "Password",
                             style: TextStyle(
-                              fontSize:14,
+                              fontSize:18,
                               fontWeight: FontWeight.bold,fontFamily:'font',
                               color:  Color(0xFF686868),
 
@@ -193,22 +203,25 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.circular(2.0),
                               color: Color(0xFFD9D9D9),
                             ),
-                            child: TextField(
-                              controller: passwordController,
-                              obscureText: obscurePassword,
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                                border: InputBorder.none,
-                                prefixIcon: Icon(Icons.lock),
-                                suffixIcon: IconButton(
-                                  icon: Icon(obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility),
-                                  onPressed: () {
-                                    setState(() {
-                                      obscurePassword = !obscurePassword;
-                                    });
-                                  },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left:15.0),
+                              child: TextField(
+                                controller: passwordController,
+                                obscureText: obscurePassword,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Your Password',
+                                  hintStyle: TextStyle(fontSize: 12,fontFamily: "font",color:Color(0xff686868).withOpacity(0.5)),
+                                  border: InputBorder.none,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(obscurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,color:Color(0xff686868).withOpacity(0.5),size: 18),
+                                    onPressed: () {
+                                      setState(() {
+                                        obscurePassword = !obscurePassword;
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
