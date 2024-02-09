@@ -47,7 +47,7 @@ class FirebaseAuthService {
      await addUserData(email,username,password,avatars,dailyGoal,_avatarColor,yearlyGoal);
       Fluttertoast.showToast(
           msg: 'Signup successfully',
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xff283E50),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,
@@ -65,7 +65,7 @@ class FirebaseAuthService {
       //log("Error during registration: $e");
       Fluttertoast.showToast(
           msg: 'Signup Failed',
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xff283E50),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,
@@ -93,7 +93,9 @@ class FirebaseAuthService {
           'lastStrikeTimestamp': null,
           'yearlyGoal':yearlyGoal,
           'totalTimeMin':0,
-          'totalTimeSec':0
+          'totalTimeSec':0,
+          'increaseStrike':false,
+          'lastStrike':0,
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
@@ -149,7 +151,7 @@ class FirebaseAuthService {
       if (credential.user != null && credential.user!.emailVerified) {
         Fluttertoast.showToast(
             msg: 'Login successfully',
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xff283E50),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP_RIGHT,
             textColor: Colors.white,
@@ -174,7 +176,7 @@ class FirebaseAuthService {
       log("Error during login: $e");
       Fluttertoast.showToast(
           msg: 'Login Failed',
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xff283E50),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP_RIGHT,
           textColor: Colors.white,

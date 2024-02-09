@@ -51,9 +51,9 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
           // Add the book data to the 'myBooks' collection
           await myBooksRef.add(bookData);
 
-          Fluttertoast.showToast(msg: "Book saved successfully!");
+          Fluttertoast.showToast(msg: "Book saved successfully!",backgroundColor: Color(0xff283E50),);
         } else {
-          Fluttertoast.showToast(msg: "Book already exists!");
+          Fluttertoast.showToast(msg: "Book already exists!",backgroundColor: Color(0xff283E50),);
         }
       } else {
         print('No user is currently signed in.');

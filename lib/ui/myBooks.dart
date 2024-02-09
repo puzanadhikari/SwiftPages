@@ -170,7 +170,7 @@ class _MyBooksState extends State<MyBooks> {
 
       // Update the status to 'CURRENTLY READING'
       await myBooksRef.doc(bookIdToUpdate).update({'status': status});
-      Fluttertoast.showToast(msg: "Book saved to currently reading successfully!");
+      Fluttertoast.showToast(msg: "Book saved to currently reading successfully!",backgroundColor: Color(0xff283E50),);
       print('Status updated successfully');
     } else {
       // Handle the case where the specified book does not exist
@@ -213,9 +213,9 @@ class _MyBooksState extends State<MyBooks> {
           // Add the book data to the 'myBooks' collection
           await myBooksRef.add(bookData);
 
-          Fluttertoast.showToast(msg: "Book saved successfully!");
+          Fluttertoast.showToast(msg: "Book saved successfully!",backgroundColor: Color(0xff283E50),);
         } else {
-          Fluttertoast.showToast(msg: "Book already exists!");
+          Fluttertoast.showToast(msg: "Book already exists!",backgroundColor: Color(0xff283E50),);
         }
       } else {
         print('No user is currently signed in.');
@@ -390,7 +390,7 @@ class _MyBooksState extends State<MyBooks> {
                                                   ),
                                                   ElevatedButton(
                                                     onPressed: () {
-                                                      shareBookDetailsForComplete(myBooksMyReads[index],myBooksMyReads[index].reviews[0]['review'],myBooksMyReads[index].reviews[0]['rating'],myBooksMyReads[index].reviews[0]['pace'],myBooksMyReads[index].reviews[0]['genre'],myBooksMyReads[index].reviews[0]['mood'],);
+                                                      // shareBookDetailsForComplete(myBooksMyReads[index],myBooksMyReads[index].reviews[0]['review'],myBooksMyReads[index].reviews[0]['rating'],myBooksMyReads[index].reviews[0]['pace'],myBooksMyReads[index].reviews[0]['genre'],myBooksMyReads[index].reviews[0]['mood'],);
                                                       _showAddNotesDialog(myBooksMyReads[index]);
                                                     },
                                                     child: Text("Share",style: TextStyle(  fontFamily: 'font'),),
@@ -611,37 +611,78 @@ class _MyBooksState extends State<MyBooks> {
         TextEditingController notesController = TextEditingController();
 
         return AlertDialog(
-          title: Text('Add Notes',style: TextStyle(fontFamily: 'font'),),
+          backgroundColor: Color(0xffFEEAD4),
+          title: Text('Add Notes',style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),),),
           content: TextField(
             controller: notesController,
             maxLines: null,
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
               hintText: 'Write your notes here...',
+              hintStyle: TextStyle(color: Color(0xFF283E50),fontFamily: 'font')
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: Text('Cancel',style: TextStyle(fontFamily: 'font'),),
+            Container(
+              width: 100,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Color(0xFF283E50),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              // Add your action widgets here
+              child: TextButton(
+                onPressed: () {
+
+                  Navigator.pop(context);
+
+                },
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                      color: Colors.white,fontFamily: 'font'
+                  ),
+                ),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                String newNote = notesController.text.trim();
-                if (newNote.isNotEmpty) {
-                  shareBookDetails(book, notesController.text);
-                  Navigator.pop(context); // Close the dialog
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Book shared successfully!',style: TextStyle(fontFamily: 'font'),),
-                    ),
-                  );
-                }
-              },
-              child: Text('Save',style: TextStyle(fontFamily: 'font'),),
+            Container(
+              width: 100,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Color(0xFF283E50),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              // Add your action widgets here
+              child: TextButton(
+                onPressed: () {
+
+                  String newNote = notesController.text.trim();
+                  if (newNote.isNotEmpty) {
+                    shareBookDetails(book, notesController.text);
+
+                    Navigator.pop(context);
+                    notesController.clear();// Close the dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Book shared successfully!',style: TextStyle(fontFamily: 'font'),),
+                      ),
+                    );
+                  }
+
+                },
+                child: Text(
+                  'Share',
+                  style: TextStyle(
+                      color: Colors.white,fontFamily: 'font'
+                  ),
+                ),
+              ),
             ),
+
           ],
         );
       },

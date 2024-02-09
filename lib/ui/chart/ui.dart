@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +28,7 @@ class _GraphPageState extends State<GraphPage> {
   int completedLength=0;
 
   Map<String, int> moodCounts = {}; // Map to store mood counts
+  Map<String, int> genreCounts = {}; // Map to store mood counts
 
 
   double ratingTotal =0.0;
@@ -56,93 +58,83 @@ class _GraphPageState extends State<GraphPage> {
   double finalRating = 0;
   Future<void> fetchBooksForPace() async {
     try {
-      // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // User is signed in, use the UID to fetch books
         String uid = user.uid;
         moodCounts.clear();
-        // Reference to the 'myBooks' collection with the UID as the document ID
+
         CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
         QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
 
-        // Access the documents in the query snapshot
         List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
-         mediumPaceCount = 0;
-         fastPaceCount = 0;
-         slowPaceCount = 0;
 
         setState(() {
-          // completedLength = querySnapshotMyReads.docs.length.toString();
-
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
+        });
 
+        // Initialize counters
+        mediumPaceCount = 0;
+        fastPaceCount = 0;
+        slowPaceCount = 0;
+        ratingTotal = 0.0;
+        completedLength = bookDocumentsMyReads.length;
 
-          // Iterate through each book document to check reviews and pace
+        if (completedLength > 0) {
           for (var doc in bookDocumentsMyReads) {
-            // Access the data of the document
             Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-            // Check if the document has a 'reviews' array
-            if (data.containsKey('reviews')) {
 
-              // Access the 'reviews' array
+            if (data.containsKey('reviews')) {
               List<dynamic> reviews = data['reviews'];
 
-              // Iterate through each review
               for (var review in reviews) {
-
-                // Check if the review has a 'pace' value
                 if (review.containsKey('pace')) {
-
-
-                  //log(ratingTotal.toString());
-                  // Increment the corresponding pace count based on the 'pace' value
                   switch (review['pace']) {
                     case 'Medium':
                       mediumPaceCount++;
-                      mediumPaceCountPer = (mediumPaceCount/completedLength)*100;
                       break;
                     case 'Fast':
                       fastPaceCount++;
-                      fastPaceCountPer = (fastPaceCount/completedLength)*100;
                       break;
                     case 'Slow':
                       slowPaceCount++;
-                      slowPaceCountPer = (slowPaceCount/completedLength)*100;
                       break;
                   }
-                  double ratings = review['rating'];
-                  ratingTotal += ratings;
-                  // log(ratingTotal.toString()+completedLength.toString());
-                  finalRating = ratingTotal/completedLength;
-                  setState(() {
+                }
 
-                  });
+                if (review.containsKey('rating')) {
+                  double rating = review['rating'];
+                  ratingTotal += rating;
+                }
+                if (review.containsKey('mood')) {
+                  String mood = review['mood'];
+                  moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+                }
+                if (review.containsKey('genre')) {
+                  String genre = review['genre'];
+                  genreCounts[genre] = (genreCounts[genre] ?? 0) + 1;
                 }
               }
             }
           }
-        });
-        for (var book in myBooksMyReads) {
-          for (var review in book.reviews) {
-            if (review.containsKey('mood')) {
-              String mood = review['mood'];
-              moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
-            }
-          }
-        }
 
-        // Update the UI
-        setState(() {});
+          setState(() {
+            mediumPaceCountPer = (mediumPaceCount / completedLength) * 100;
+            fastPaceCountPer = (fastPaceCount / completedLength) * 100;
+            slowPaceCountPer = (slowPaceCount / completedLength) * 100;
+
+            finalRating = ratingTotal / completedLength;
+          });
+        }
       }
     } catch (e) {
-      print('Error fetching books first: $e');
+      print('Error fetching books for pace: $e');
     }
   }
+
 
   Future fetchBooks() async {
     try {
@@ -224,7 +216,7 @@ class _GraphPageState extends State<GraphPage> {
     }
   }
 
-
+  final _random = Random();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -460,7 +452,8 @@ class _GraphPageState extends State<GraphPage> {
                                               child: Text(updatedTime,  style: TextStyle(
                                                   color: Color(0xff283E50),
                                                   fontSize: 14,
-                                                  fontWeight: FontWeight.bold
+                                                  fontWeight: FontWeight.bold,
+                                           fontFamily: 'font',
                                               ),),
                                             ),
                                             Text(
@@ -632,7 +625,63 @@ class _GraphPageState extends State<GraphPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30.0,right: 30),
+                padding: const EdgeInsets.only(top: 30, left: 30.0, right: 30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Color(0xffD9D9D9),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Genre",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xff283E50),
+                            fontSize: 20,
+                            fontFamily: 'font',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height/3.5 ,
+                        child: ListView(
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            AspectRatio(
+                              aspectRatio:1.5,
+                              child: PieChart(
+                                PieChartData(
+                                  sections: genreCounts.entries.map((entry) {
+                                    String genre = entry.key;
+                                    int count = entry.value;
+
+                                    return PieChartSectionData(
+                                      color: _getNextColor(), // Use the next color from the list
+                                      value: (count / completedLength).toDouble(),
+                                      title: '$genre\n${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                      titleStyle: TextStyle(fontFamily: 'font'),
+                                      radius: 70,
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:30,left: 30.0,right: 30),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height/4,
@@ -641,44 +690,82 @@ class _GraphPageState extends State<GraphPage> {
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Center(
-                    child: Expanded(
-                      child: BarChart(
-                        BarChartData(
-                          groupsSpace: 12,
-                          titlesData:FlTitlesData(
-                          leftTitles: AxisTitles(
-                          // sideTitles: false,
-                        ),
-                        bottomTitles: AxisTitles(
-                          // showTitles: true,
-                          // getTextStyles: (context, value) => const TextStyle(
-                          //   color: Color(0xff7589a2),
-                          //   fontWeight: FontWeight.bold,
-                          //   fontSize: 14,
-                          // ),
-                          // margin: 20,
-                          // getTitles: (double value) {
-                          //   // Dynamically generate labels for the X-axis based on moodCounts
-                          //   if (value >= 0 && value < moodCounts.length) {
-                          //     return moodCounts.keys.toList()[value.toInt()];
-                          //   }
-                          //   return '';
-                          // },
-                        ),
-                      ),
-                          borderData: FlBorderData(show: false),
-                          barGroups: List.generate(
-                            moodCounts.length,
-                                (index) => BarChartGroupData(
-                              x: index,
-                              barRods: [
-                                BarChartRodData(toY: moodCounts.values.toList()[index].toDouble()),
-                              ],
-                              showingTooltipIndicators: [0],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Mood",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(0xff283E50),
+                                fontSize: 20,fontFamily: 'font',
+                                fontWeight: FontWeight.bold
                             ),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30.0, right: 30),
+                          child: Column(
+                            children: List.generate((moodCounts.length / 3).ceil(), (index) {
+                              int startIndex = index * 3;
+                              int endIndex = startIndex + 3;
+
+                              // Ensure endIndex does not exceed the length of the moodCounts list
+                              endIndex = endIndex > moodCounts.length ? moodCounts.length : endIndex;
+
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: moodCounts.entries.toList().sublist(startIndex, endIndex).map((entry) {
+                                  String mood = entry.key;
+                                  int count = entry.value;
+
+                                  // Calculate radius based on percentage
+                                  double radius = (count / completedLength) * 10 + 30; // Adjust the scaling factor 50 as needed
+
+                                  // Determine the color based on the index
+                                  Color backgroundColor = moodCounts.keys.toList().indexOf(mood).isOdd ? Color(0xff283E50) : Color(0xFFFF997A);
+
+                                  return CircleAvatar(
+                                    radius: radius,
+                                    backgroundColor: backgroundColor,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                          style: TextStyle(
+                                            color: Color(0xFFD9D9D9),
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'font',
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Text(
+                                          mood,
+                                          style: TextStyle(
+                                            color: Color(0xFFD9D9D9),
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'font',
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }),
+                          ),
+                        ),
+
+
+
+
+
+                      ],
                     ),
                   ),
                 ),
@@ -690,7 +777,28 @@ class _GraphPageState extends State<GraphPage> {
       ),
     );
   }
+  int _colorIndex = 0;
 
+  Color _getNextColor() {
+    List<Color> colors = [
+      Color(0xFFE57373),
+      Color(0xFFFF8A65),
+      Color(0xFFFFD54F),
+      Color(0xFFAED581),
+      Color(0xFF64B5F6),
+      Color(0xFF9575CD),
+      Color(0xFFFFD700),
+      // Add more colors as needed
+    ];
+
+    Color nextColor = colors[_colorIndex % colors.length];
+    _colorIndex++;
+    return nextColor;
+  }
+
+  Color _getRandomColor() {
+    return Color((0xFF000000 & 0xFFFFFF) | _random.nextInt(0xFFFFFF));
+  }
 }
 
 
