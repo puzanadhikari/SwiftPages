@@ -504,7 +504,7 @@ class _CommentPageState extends State<CommentPage> {
                       children: [
                         Expanded(
                             child:
-                            Center(child: Text("No Comments yet"))),
+                            Center(child: Text("No Comments yet",style: TextStyle(fontFamily: 'font'),))),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(

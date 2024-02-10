@@ -659,7 +659,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       ),
       title: Column(
         children: [
-          Text('Done Reviewing?',style: TextStyle(color:  Color(0xff283E50)),),
+          Text('Done Reviewing?',style: TextStyle(color:  Color(0xff283E50),fontFamily: 'font'),),
           Divider(
             color: Colors.grey,
             thickness: 1,

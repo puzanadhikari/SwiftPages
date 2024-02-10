@@ -166,7 +166,7 @@ class _BookCardState extends State<BookCard> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius:
-            BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)), // Adjust the radius as needed
+            BorderRadius.all(Radius.circular(20)), // Adjust the radius as needed
       ),
       color: Color(0xFFFF997A),
       elevation: 8,
@@ -327,7 +327,7 @@ class _BookCardState extends State<BookCard> {
 
                               },
                             ),
-                            Text("${widget.bookData['rating']==null?0:widget.bookData['rating']}/5 stars")
+                            Text("${widget.bookData['rating']==null?0:widget.bookData['rating']}/5 stars",style: TextStyle(fontFamily: 'font'),)
                           ],
                         ),
                         SizedBox(height: 10,),
@@ -1544,7 +1544,7 @@ class _CommentPageState extends State<CommentPage> {
                             children: [
                               Expanded(
                                   child:
-                                      Center(child: Text("No Comments yet"))),
+                                      Center(child: Text("No Comments yet",style: TextStyle(fontFamily: 'font'),))),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
@@ -1570,7 +1570,7 @@ class _CommentPageState extends State<CommentPage> {
                                             cursorColor: Color(0xFF283E50),
                                           decoration: InputDecoration(
                                             hintText: 'Add your comment',
-                                            hintStyle: TextStyle(color: Colors.grey)
+                                            hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font')
                                           ),
                                           ),
                                         ),
@@ -1588,7 +1588,7 @@ class _CommentPageState extends State<CommentPage> {
                                             onPressed: widget.onPressed,
                                             child: Text(
                                               'Comment',
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(color: Colors.white,fontFamily: 'font'),
                                             ),
                                           ),
                                         ),

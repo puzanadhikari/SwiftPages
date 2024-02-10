@@ -1779,7 +1779,7 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
         }
       } else {
         // Code is invalid, show an error message
-        Fluttertoast.showToast(msg: 'Invalid code!',backgroundColor: Color(0xff283E50));
+        // Fluttertoast.showToast(msg: 'Invalid code!',backgroundColor: Color(0xff283E50));
         print('Invalid code!');
         // You may show an error message or take other actions
         Fluttertoast.showToast(

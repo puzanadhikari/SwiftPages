@@ -150,7 +150,7 @@ class FirebaseAuthService {
 
       if (credential.user != null && credential.user!.emailVerified) {
         Fluttertoast.showToast(
-            msg: 'Login successfully',
+            msg: 'Logged in Successful',
             backgroundColor: Color(0xff283E50),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP_RIGHT,

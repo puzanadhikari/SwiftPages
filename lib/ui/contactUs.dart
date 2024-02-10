@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
@@ -38,6 +39,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
         name.clear();
         msg.clear();
         log('Form data stored successfully!');
+        Fluttertoast.showToast(
+            msg: ' Form Successfully Submitted',
+            backgroundColor: Color(0xff283E50),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP_RIGHT,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }} catch (e) {
       log('Error storing form data data: $e'); // Add this line to print the error
     }
@@ -174,6 +182,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                     horizontal: 30.0, vertical: 8.0),
                                 child: TextFormField(
                                   controller: msg,
+                                  maxLines: null,
                                   decoration: InputDecoration(
                                     hintText: 'Message',
                                     hintStyle: TextStyle(
