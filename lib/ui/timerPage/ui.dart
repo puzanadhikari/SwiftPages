@@ -1544,30 +1544,38 @@ class _TimerPageState extends State<TimerPage> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: TextField(
-                        controller: pageNumberController,
-                        onChanged: (value) {},
-                        cursorColor: Color(0xFFD9D9D9),
-                        decoration: InputDecoration(
-                          hintText: '0',
-                          hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
-                          border: InputBorder.none,
+                Row(
+                  children: [
+                    Text(
+                        'Pg No.',
+                        style: TextStyle(color: Colors.grey[700],fontFamily: 'font')),
+                    SizedBox(width: 5,),
+                    Container(
+                      height: 35,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:13,left: 20.0),
+                          child: TextField(
+                            controller: pageNumberController,
+                            onChanged: (value) {},
+                            cursorColor: Color(0xFFD9D9D9),
+                            decoration: InputDecoration(
+                              hintText: '0',
+                              hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
+                              border: InputBorder.none,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
@@ -1590,7 +1598,7 @@ class _TimerPageState extends State<TimerPage> {
             borderRadius:
                 BorderRadius.circular(20.0), // Adjust the radius as needed
           ),
-          title: Text('Quotes'),
+          title: Text('Quotes',style: TextStyle(fontFamily: 'font'),),
           content: Container(
             height: 50,
             decoration: BoxDecoration(
@@ -1600,6 +1608,7 @@ class _TimerPageState extends State<TimerPage> {
               ),
             ),
             child: Row(
+
               children: [
                 Expanded(
                   child: Padding(
@@ -1622,6 +1631,7 @@ class _TimerPageState extends State<TimerPage> {
           actions: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   decoration: BoxDecoration(
@@ -1654,30 +1664,38 @@ class _TimerPageState extends State<TimerPage> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: TextField(
-                        controller: pageNumberController,
-                        onChanged: (value) {},
-                        cursorColor: Color(0xFFD9D9D9),
-                        decoration: InputDecoration(
-                          hintText: '0',
-                          hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
-                          border: InputBorder.none,
+                Row(
+                  children: [
+                    Text(
+                      'Pg No.',
+                      style: TextStyle(color: Colors.grey[700],fontFamily: 'font')),
+                    SizedBox(width: 5,),
+                    Container(
+                      height: 30,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:12.5,left: 20.0),
+                          child: TextField(
+                            controller: pageNumberController,
+                            onChanged: (value) {},
+                            cursorColor: Color(0xFFD9D9D9),
+                            decoration: InputDecoration(
+                              hintText: '0',
+                              hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
+                              border: InputBorder.none,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
