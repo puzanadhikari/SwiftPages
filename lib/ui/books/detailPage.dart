@@ -51,9 +51,9 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
           // Add the book data to the 'myBooks' collection
           await myBooksRef.add(bookData);
 
-          Fluttertoast.showToast(msg: "Book saved successfully!",backgroundColor: Color(0xff283E50),);
+          Fluttertoast.showToast(msg: "Book saved successfully!",backgroundColor:Color(0xFFFF997A));
         } else {
-          Fluttertoast.showToast(msg: "Book already exists!",backgroundColor: Color(0xff283E50),);
+          Fluttertoast.showToast(msg: "Book already exists!",backgroundColor: Color(0xFFFF997A));
         }
       } else {
         print('No user is currently signed in.');
@@ -320,10 +320,10 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                        width: 120,
-                      child: Center(child: Text("To Be Read",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
+                        width: 80,
+                      child: Center(child: Text("To Be Read",style: TextStyle(color:  Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 12),))),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFFF997A)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -331,22 +331,22 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ),
                   ),
                 ),
-
-
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Container(
-                      child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ),
-                ),
+                //
+                //
+                // SizedBox(height: 16.0),
+                // ElevatedButton(
+                //   onPressed: () {},
+                //   child: Container(
+                //       child: Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 14),))),
+                //   style: ButtonStyle(
+                //     backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                //       RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(15.0),
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 //
                 // SizedBox(height: 16.0),

@@ -150,7 +150,7 @@ class _ChatPageState extends State<ChatPage> {
                           builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
                             if (!snapshot.hasData || !snapshot.data!.exists) {
                               return Center(
-                                child: CircularProgressIndicator(),
+                                child: Text("No Message to Display"),
                               );
                             }
                             var chatDocument = snapshot.data!;

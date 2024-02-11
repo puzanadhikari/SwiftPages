@@ -35,7 +35,7 @@ class _GroupChatState extends State<GroupChat> {
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: Text("No Message to Display"),
                   );
                 }
                 var messages = snapshot.data!.docs
