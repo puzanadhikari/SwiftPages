@@ -224,8 +224,14 @@ class _BookCardState extends State<BookCard> {
               child: Column(
                 children: [
                   Row(
-                    children: [
 
+                    children: [
+                      Text(
+                        'Review',
+                        style: TextStyle(
+                          color: Color(0xFF283E50),fontFamily: 'font',
+                        ),
+                      ),
                       GestureDetector(
                         onTap: (){
                           _showConfirmationDialogToSave(context);
