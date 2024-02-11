@@ -273,6 +273,7 @@ class _BookCardState extends State<BookCard> {
                         child: SvgPicture.asset(
                           'assets/comment.svg',
                           height: 30,
+                          color: Color(0xff283E50),
                         ),
                       ),
                       SizedBox(
@@ -538,11 +539,11 @@ class _BookCardState extends State<BookCard> {
                             Image.asset(
                               "assets/strick.png",
                               height: 40,
-                              color: Colors.black,
+                              color: Color(0xff283E50),
                             ),
                             Text(userData['strikes'].toString(), style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,fontFamily: 'font',
+                              color: Color(0xff283E50),fontFamily: 'font',
                             )),
                           ],
                         ),
@@ -625,7 +626,7 @@ class _BookCardState extends State<BookCard> {
         return AlertDialog(
           title: Text(
             "Swift Pages user detail",
-            style: TextStyle(color: Colors.black,fontFamily: 'font',), // Set title text color
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font',), // Set title text color
           ),
           actions: <Widget>[
             Card(
@@ -661,11 +662,11 @@ class _BookCardState extends State<BookCard> {
                         Image.asset(
                           "assets/strick.png",
                           height: 40,
-                          color: Colors.black,
+                          color: Color(0xff283E50)
                         ),
                         Text(strikes.toString(), style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black,fontFamily: 'font',
+                          color: Color(0xff283E50),fontFamily: 'font',
                         )),
                       ],
                     ),
@@ -1120,11 +1121,11 @@ class _BookCardSheetState extends State<BookCardSheet> {
                             Image.asset(
                               "assets/strick.png",
                               height: 40,
-                              color: Colors.black,
+                              color: Color(0xff283E50)
                             ),
                             Text(userData['strikes'].toString(), style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,fontFamily: 'font',
+                              color: Color(0xff283E50),fontFamily: 'font',
                             )),
                           ],
                         ),
@@ -1186,7 +1187,7 @@ class _BookCardSheetState extends State<BookCardSheet> {
         return AlertDialog(
           title: Text(
             "Swift Pages user detail",
-            style: TextStyle(fontFamily: 'font',color: Colors.black), // Set title text color
+            style: TextStyle(fontFamily: 'font',color: Color(0xff283E50)), // Set title text color
           ),
           actions: <Widget>[
             Card(
@@ -1222,11 +1223,11 @@ class _BookCardSheetState extends State<BookCardSheet> {
                         Image.asset(
                           "assets/strick.png",
                           height: 40,
-                          color: Colors.black,
+                          color: Color(0xff283E50)
                         ),
                         Text(strikes.toString(), style: TextStyle(
                           fontSize: 14,
-                          color: Colors.black,fontFamily: 'font',
+                          color: Color(0xff283E50),fontFamily: 'font',
                         )),
                       ],
                     ),

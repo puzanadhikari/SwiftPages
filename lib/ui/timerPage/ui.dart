@@ -2252,7 +2252,6 @@ class _CustomAlertForStartDateDialogState
             color: Colors.grey,
             thickness: 1,
           ),
-
         ],
       ),
       content: Container(
