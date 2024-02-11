@@ -86,6 +86,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xfffeead4),
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: _firestore
               .collection('chats')
@@ -97,22 +98,28 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   // _buildUserDropdown(),
                   // _buildUserSearch(),
-                  SizedBox(height: 10,),
-                  Container(
-                    height: 50,
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50.0),
-                      color: Colors.grey[200], // Change the color as needed
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search users...',
-                        prefixIcon: Icon(Icons.search),
-                        border: InputBorder.none, // Remove the default border
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 55,
+                      decoration: ShapeDecoration(
+                        color: Color(0xFFD9D9D9),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(92),
+                        ),
                       ),
-                      onChanged: _onSearchChanged,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search users...',
+                            // prefixIcon: Icon(Icons.search),
+                            border: InputBorder.none, // Remove the default border
+                          ),
+                          onChanged: _onSearchChanged,
+                        ),
+                      ),
                     ),
                   ),
 

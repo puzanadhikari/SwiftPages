@@ -627,6 +627,7 @@ class _GraphPageState extends State<GraphPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 30, left: 30.0, right: 30),
                 child: Container(
+                  height:MediaQuery.of(context).size.height/2.8,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Color(0xffD9D9D9),
@@ -651,29 +652,24 @@ class _GraphPageState extends State<GraphPage> {
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height/3.5 ,
-                        child: ListView(
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            AspectRatio(
-                              aspectRatio:1.5,
-                              child: PieChart(
-                                PieChartData(
-                                  sections: genreCounts.entries.map((entry) {
-                                    String genre = entry.key;
-                                    int count = entry.value;
+                        child: AspectRatio(
+                          aspectRatio:1.5,
+                          child: PieChart(
+                            PieChartData(
+                              sections: genreCounts.entries.map((entry) {
+                                String genre = entry.key;
+                                int count = entry.value;
 
-                                    return PieChartSectionData(
-                                      color: _getNextColor(), // Use the next color from the list
-                                      value: (count / completedLength).toDouble(),
-                                      title: '$genre\n${((count / completedLength) * 100).toStringAsFixed(2)}%',
-                                      titleStyle: TextStyle(fontFamily: 'font'),
-                                      radius: 70,
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
+                                return PieChartSectionData(
+                                  color: _getNextColor(), // Use the next color from the list
+                                  value: (count / completedLength).toDouble(),
+                                  title: '$genre\n${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                  titleStyle: TextStyle(fontFamily: 'font'),
+                                  radius: 70,
+                                );
+                              }).toList(),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ],

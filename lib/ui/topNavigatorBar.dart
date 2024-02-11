@@ -111,7 +111,7 @@ class _TopNavigationState extends State<TopNavigation> {
             ),
             Positioned(
               top: 10,
-              right: 10,
+              right: 20,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(context,
@@ -119,7 +119,14 @@ class _TopNavigationState extends State<TopNavigation> {
                 },
                 child: Stack(
                   children: [
-                    Icon(Icons.notifications,size: 35,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset('assets/notificationIcon.svg',
+                        fit: BoxFit.cover,
+                        height:30,
+                        color: Color(0xFF283E50),
+                      ),
+                    ),
                     Positioned(
                       left: 15,
                       child:StreamBuilder<int>(
@@ -153,22 +160,20 @@ class _TopNavigationState extends State<TopNavigation> {
               ),
             ),
             Positioned(
-              top: 5,
-              right: 40,
+              top: 20,
+              right: 70,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SearchPage()));
                 },
-                child: Image.asset(
-                  "assets/search.png",
-                  height: 50,
+                child: SvgPicture.asset('assets/searchIcon.svg',
+                  fit: BoxFit.cover,
+                  height: 25,
+                  color:Color(0xFF283E50),
                 ),
               ),
             ),
-
-
-
 
           ],
         ),

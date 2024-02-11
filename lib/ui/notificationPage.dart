@@ -300,7 +300,7 @@ class _ActivityListState extends State<ActivityList> {
             child: Expanded(
               child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Text("Are you sure want to delete all the Notifications?",style: TextStyle(fontFamily: 'font',),)
+                  child: Text("Are you sure want to delete all the Notifications?",style: TextStyle(fontFamily: 'font',color: Colors.grey.shade700),)
               ),
             ),
           ),
