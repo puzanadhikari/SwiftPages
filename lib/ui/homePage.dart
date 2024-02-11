@@ -781,22 +781,28 @@ userName  = preferences.getString("userName")!;
                               ],
                             ),
                             myBooks.isEmpty?
-                            Container(
-                                height: 100,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                      Image.asset('assets/self.png'),
-                                    ],
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Container(
+                                height: 300,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFD9D9D9),
+                                  borderRadius: BorderRadius.circular(40.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "No Books. Add Books",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color:  Colors.grey[700],
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,fontFamily:'font',
+                                    ),
                                   ),
-                                ))
+                                ),
+                              ),
+                            )
                                 : Expanded(
                               flex: 1,
                                   child: ListView.builder(

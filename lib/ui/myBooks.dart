@@ -308,7 +308,28 @@ class _MyBooksState extends State<MyBooks> {
 
                           ),
                         ),
-                        Container(
+                        myBooksMyReads.isEmpty?Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Container(
+                            height: 300,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "No Books. Add Books",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:  Colors.grey[700],
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ):  Container(
                           height: MediaQuery.of(context).size.height/2,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -337,22 +358,22 @@ class _MyBooksState extends State<MyBooks> {
                                           ),
                                           child: Column(
                                             children: [
-                                              SizedBox(height: 30,),
-                                              RatingBar.builder(
-                                                initialRating: myBooksMyReads[index].reviews[0]['rating'],
-                                                minRating: 1,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: true,
-                                                itemCount: 5,
-                                                itemSize: 20,
-                                                itemBuilder: (context, _) => Icon(
-                                                  Icons.star,
-                                                  color: Color(0xff283E50),
-                                                ),
-                                                onRatingUpdate: (rating) {
-                                                  // You can update the rating if needed
-                                                },
-                                              ),
+                                              // SizedBox(height: 30,),
+                                              // RatingBar.builder(
+                                              //   initialRating: myBooksMyReads[index].reviewsmyBooksMyReads[index].reviews[0]['rating'],
+                                              //   minRating: 1,
+                                              //   direction: Axis.horizontal,
+                                              //   allowHalfRating: true,
+                                              //   itemCount: 5,
+                                              //   itemSize: 20,
+                                              //   itemBuilder: (context, _) => Icon(
+                                              //     Icons.star,
+                                              //     color: Color(0xff283E50),
+                                              //   ),
+                                              //   onRatingUpdate: (rating) {
+                                              //     // You can update the rating if needed
+                                              //   },
+                                              // ),
                                               SizedBox(height: 8),
                                               Container(
                                                 height: 70,
@@ -437,7 +458,28 @@ class _MyBooksState extends State<MyBooks> {
                             height: 29 / 20,
                           ),
                         ),
-                        Container(
+                        myBooksToBeRead.isEmpty?Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Container(
+                            height: 300,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "No Books. Add Books",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:  Colors.grey[700],
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ):Container(
                           height: MediaQuery.of(context).size.height/2,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,

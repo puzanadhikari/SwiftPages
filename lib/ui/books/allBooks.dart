@@ -78,27 +78,30 @@ class _AllBooksState extends State<AllBooks> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: TextField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Search Books...',
-                          hintStyle: TextStyle(
-                            color: Color(0xFF283E50),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: searchController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search Books...',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 18,
+                              fontFamily: 'font',
+                              fontWeight: FontWeight.w700,
+                            ),
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          style: TextStyle(
+                            color: Color(0xFF686868),
                             fontSize: 18,
                             fontFamily: 'font',
                             fontWeight: FontWeight.w700,
                           ),
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Color(0xFF283E50),
-                          ),
-                        ),
-                        style: TextStyle(
-                          color: Color(0xFF686868),
-                          fontSize: 18,
-                          fontFamily: 'font',
-                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),

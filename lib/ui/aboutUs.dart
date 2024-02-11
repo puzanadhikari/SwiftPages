@@ -70,11 +70,11 @@ class _AboutUsPageState extends State<AboutUsPage> {
             height: MediaQuery.of(context).size.height,
             child:Stack(
               children: [
-                SvgPicture.asset('assets/background.svg',
-                  fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.grey.withOpacity(0.2),
-                ),
+                // SvgPicture.asset('assets/background.svg',
+                //   fit: BoxFit.cover,
+                //   height: MediaQuery.of(context).size.height,
+                //   color: Colors.grey.withOpacity(0.2),
+                // ),
                 Stack(
                   children: [
                     Positioned(

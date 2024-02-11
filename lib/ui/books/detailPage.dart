@@ -81,11 +81,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                   child: Icon(Icons.arrow_back,),
                 ),
               ),
-              SvgPicture.asset('assets/background.svg',
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.grey.withOpacity(0.2),
-              ),
+              // SvgPicture.asset('assets/background.svg',
+              //   fit: BoxFit.cover,
+              //   height: MediaQuery.of(context).size.height,
+              //   color: Colors.grey.withOpacity(0.2),
+              // ),
              Stack(
                children: [
                  Padding(
@@ -177,7 +177,9 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                                child: Text(
 
                                  widget.book.description,style: TextStyle(color: Color(0xffD9D9D9),fontSize: 14,fontFamily: 'font'),
-                                 textAlign: TextAlign.center,),
+                                 textAlign: TextAlign.center,
+                                 maxLines: 30,
+                               ),
                              ),
 
                            ],
