@@ -148,12 +148,13 @@ class _ActivityListState extends State<ActivityList> {
                                 var activity = activityList[index];
                                 final timeFormatter = DateFormat('hh:mm a');
                                 return Card(
+
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           20.0), // Adjust the radius as needed
                                     ),
                                     color: Color(0xFFFF997A),
-                                    elevation: 8,
+                                    elevation: 0,
                                     margin: EdgeInsets.all(10),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),

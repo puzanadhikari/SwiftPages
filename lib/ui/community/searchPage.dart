@@ -87,7 +87,8 @@ class _SearchPageState extends State<SearchPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xfffeead4),
-        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        body:
+        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: _firestore
               .collection('chats')
               .where('users', arrayContains: currentUserId)
@@ -114,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
                           controller: _searchController,
                           decoration: InputDecoration(
                             hintText: 'Search users...',
-                            // prefixIcon: Icon(Icons.search),
+                            prefixIcon: Icon(Icons.search),
                             border: InputBorder.none, // Remove the default border
                           ),
                           onChanged: _onSearchChanged,
@@ -123,110 +124,16 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
 
-                  Visibility(
-                    visible: _searchController.text.isEmpty?false:true,
-                    child: Expanded(
-                      child: StreamBuilder<List<Map<String, dynamic>>>(
-                        stream: _usersStream,
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return Text('No users available');
-                          }
-
-                          _users = snapshot.data!;
-
-                          return Visibility(
-                            visible: _searchController.text.isEmpty?false:true,
-                            child: Card(
-                              color: Colors.white,
-                              elevation: 8,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0), // Set the border radius
-                              ),
-                              child: ListView.builder(
-                                itemCount: _users.length,
-                                itemBuilder: (context, index) {
-                                  var user = _users[index];
-                                  var userId = user['userId'];
-                                  var username = user['username'];
-                                  var avatar = user['avatar'];
-
-                                  return ListTile(
-                                    title: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage: NetworkImage(avatar),
-                                          radius: 20,
-                                          backgroundColor: Color(0xFF283E50),
-                                        ),
-                                        Text(username),
-                                      ],
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ChatPage(
-                                            recipientUserId: userId,
-                                            recipientUsername: username,
-                                            recipientAvatar: avatar,
-                                          ),
-                                        ),
-                                      );
-                                      setState(() {
-                                        _searchController.clear();
-                                      });
-                                      log('Selected User: $userId');
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-
-                ],
-              );
-            }
-
-            var chatDocs = snapshot.data!.docs;
-
-            return Column(
-              children: [
-                // _buildUserDropdown(),
-                // _buildUserSearch(),
-                SizedBox(height: 10,),
-                Container(
-                  height: 50,
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.0),
-                    color: Colors.grey[200], // Change the color as needed
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search users...',
-                      prefixIcon: Icon(Icons.search),
-                      border: InputBorder.none, // Remove the default border
-                    ),
-                    onChanged: _onSearchChanged,
-                  ),
-                ),
-
-                Visibility(
-                  visible: _searchController.text.isEmpty?false:true,
-                  child: Expanded(
+                 Expanded(
                     child: StreamBuilder<List<Map<String, dynamic>>>(
                       stream: _usersStream,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Text('No users available');
                         }
+
                         _users = snapshot.data!;
+
                         return Visibility(
                           visible: _searchController.text.isEmpty?false:true,
                           child: Card(
@@ -255,7 +162,20 @@ class _SearchPageState extends State<SearchPage> {
                                     ],
                                   ),
                                   onTap: () {
-                                    fetchUserDetailsById(userId);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPage(
+                                          recipientUserId: userId,
+                                          recipientUsername: username,
+                                          recipientAvatar: avatar,
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {
+                                      _searchController.clear();
+                                    });
+                                    log('Selected User: $userId');
                                   },
                                 );
                               },
@@ -264,6 +184,137 @@ class _SearchPageState extends State<SearchPage> {
                         );
                       },
                     ),
+                  ),
+
+                ],
+              );
+            }
+
+            var chatDocs = snapshot.data!.docs;
+
+            return Column(
+              children: [
+                // _buildUserDropdown(),
+                // _buildUserSearch(),
+                SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    height: 50,
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50.0),
+                      color: Colors.grey[200], // Change the color as needed
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:15.0),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search users...',
+                          suffixIcon: Icon(Icons.search),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.grey[600],fontFamily: 'font',fontSize: 13)
+                        ),
+                        onChanged: _onSearchChanged,
+                      ),
+                    ),
+                  ),
+                ),
+
+                _searchController.text.isEmpty?
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:80.0),
+                    child: SvgPicture.asset('assets/oops.svg',
+                      height: 500,
+                    ),
+                  ),
+                ): Expanded(
+                  child: StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: _usersStream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Text('No users available');
+                      }
+                      _users = snapshot.data!;
+                      return Visibility(
+                        visible: _searchController.text.isEmpty?false:true,
+                        child: Card(
+                          color: Color(0xffFEEAD4),
+                          elevation: 8,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0), // Set the border radius
+                          ),
+                          child: ListView.builder(
+                            itemCount: _users.length,
+                            itemBuilder: (context, index) {
+                              var user = _users[index];
+                              var userId = user['userId'];
+                              var username = user['username'];
+                              var avatar = user['avatar'];
+
+                              return Card(
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        20.0), // Adjust the radius as needed
+                                  ),
+                                  color: Color(0xFFFF997A),
+                                  elevation: 0,
+                                  margin: EdgeInsets.all(10),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 20,
+                                                    backgroundImage: NetworkImage(avatar),
+                                                    backgroundColor: Color(0xfffeead4),
+                                                  ),
+                                                  SizedBox(width: 5,),
+                                                  Text("${username}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
+
+                                                ],
+                                              ),
+                                              SizedBox(width: 10),
+
+                                            ]),
+                                         ],
+                                    ),
+                                  ) );
+
+
+
+
+                                ListTile(
+                                title: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(avatar),
+                                      radius: 20,
+                                      backgroundColor: Color(0xFF283E50),
+                                    ),
+                                    Text(username),
+                                  ],
+                                ),
+                                onTap: () {
+                                  fetchUserDetailsById(userId);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
 

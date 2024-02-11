@@ -347,7 +347,7 @@ class _MyBooksState extends State<MyBooks> {
                                                 itemSize: 20,
                                                 itemBuilder: (context, _) => Icon(
                                                   Icons.star,
-                                                  color: Colors.amber,
+                                                  color: Color(0xff283E50),
                                                 ),
                                                 onRatingUpdate: (rating) {
                                                   // You can update the rating if needed
@@ -363,7 +363,7 @@ class _MyBooksState extends State<MyBooks> {
                                                       myBooksMyReads[index].author,
                                                       textAlign: TextAlign.center,
                                                       style: TextStyle(
-                                                        color: Colors.black,
+                                                          color: Color(0xff283E50),
                                                         fontFamily: 'font'
                                                       ),
                                                     ),

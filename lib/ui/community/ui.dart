@@ -313,6 +313,7 @@ class _BookCardState extends State<BookCard> {
                         Row(
                           children: [
                             RatingBar.builder(
+                              glow: false,
                               initialRating: widget.bookData['rating']==null?0:widget.bookData['rating'],
                               minRating: 0,
                               direction: Axis.horizontal,
@@ -321,7 +322,7 @@ class _BookCardState extends State<BookCard> {
                               itemSize: 20,
                               itemBuilder: (context, _) => Icon(
                                 Icons.star,
-                                color: Colors.amber,
+                                color: Color(0xff283E50),
                               ),
                               onRatingUpdate: (value) {
 

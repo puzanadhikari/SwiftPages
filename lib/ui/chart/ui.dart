@@ -548,7 +548,7 @@ class _GraphPageState extends State<GraphPage> {
                 padding: const EdgeInsets.only(left: 30.0,right: 30),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/4,
+                  // height: MediaQuery.of(context).size.height/4,
                   decoration: BoxDecoration(
                     color: Color(0xffD9D9D9),
                     borderRadius: BorderRadius.circular(20.0),

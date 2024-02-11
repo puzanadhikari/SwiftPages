@@ -435,75 +435,85 @@ class _TimerPageState extends State<TimerPage> {
                                 ),
                               ],
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: ()async {
-                                          int? result = await showDialog<int>(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return
-                                              CustomAlertForStartDateDialog(
-                                                book: widget.book,
-                                                year: year,
-                                                days: days,
-                                                month: month,
-                                              );
-                                            },
-                                          );
-
-                                          if (result != null) {
-                                            // Do something with the selected number
-                                            print('Selected Number: $result');
-                                          }
-                                        },
-
-                                        child: Text(
-                                          "Started",
-                                          style: TextStyle(
-                                              color: Color(0xff686868),fontFamily: 'font'),
-                                        )),
-                                    Text(
-                                      widget.book.startingDate==null?'-':widget.book.startingDate,
-                                      style:
-                                          TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                    width: 120,
-                                    child: Text(
-                                      widget.book.author,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                      color: Color(0xff686868),
-                                      fontWeight: FontWeight.bold,fontFamily:'font',
-                                      fontSize: 16),
-                                    )),
-                                Text(
-                                  widget.book.status == 'CURRENTLY READING'
-                                      ? 'Reading'
-                                      : widget.book.status == 'TO BE READ'
-                                          ? 'Pending'
-                                          : 'Finished',
-                                  style: TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
-                                ),
-                              ],
-                            ),
+                            Container(
+                                width: 120,
+                                child: Text(
+                                  widget.book.author,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                  color: Color(0xff686868),
+                                  fontWeight: FontWeight.bold,fontFamily:'font',
+                                  fontSize: 16),
+                                )),
                             Divider(
                               color: Color(0xffFEEAD4),
                               thickness: 1,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(20.0),
+                              child:      Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    children: [
+                                      GestureDetector(
+                                          onTap: ()async {
+                                            int? result = await showDialog<int>(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return
+                                                  CustomAlertForStartDateDialog(
+                                                    book: widget.book,
+                                                    year: year,
+                                                    days: days,
+                                                    month: month,
+                                                  );
+                                              },
+                                            );
+
+                                            if (result != null) {
+                                              // Do something with the selected number
+                                              print('Selected Number: $result');
+                                            }
+                                          },
+
+                                          child: Text(
+                                            "Started",
+                                            style: TextStyle(
+                                                color: Color(0xff686868),fontFamily: 'font'),
+                                          )),
+                                      SizedBox(height: 5,),
+                                      Text(
+                                        widget.book.startingDate==null?'-':widget.book.startingDate,
+                                        style:
+                                        TextStyle(color: Color(0xff283E50),fontSize: 20,fontFamily: 'font'),
+                                      ),
+                                    ],
+                                  ),
+
+                                  Text(
+                                    widget.book.status == 'CURRENTLY READING'
+                                        ? 'Reading'
+                                        : widget.book.status == 'TO BE READ'
+                                        ? 'Pending'
+                                        : 'Finished',
+                                    style: TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Divider(
+                              color: Color(0xffFEEAD4),
+                              thickness: 1,
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   GestureDetector(
                                       onTap: () {
@@ -1466,7 +1476,7 @@ class _TimerPageState extends State<TimerPage> {
             borderRadius:
                 BorderRadius.circular(20.0), // Adjust the radius as needed
           ),
-          title: Text('Notes'),
+          title: Text('Notes',style: TextStyle(fontFamily: 'font'),),
           content: Container(
             height: 50,
             decoration: BoxDecoration(
@@ -1497,40 +1507,39 @@ class _TimerPageState extends State<TimerPage> {
           ),
           actions: <Widget>[
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF283E50),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF283E50),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
                       ),
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            String newNote = notesController.text.trim();
-                            if (newNote.isNotEmpty) {
-                              addNote(book, newNote, pageNumberController.text);
-                              notesController.clear();
-                              Fluttertoast.showToast(
-                                msg: "Note added successfully!",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: Color(0xFF283E50),
-                                textColor: Colors.white,
-                              );
-                              Navigator.pop(context);
-                            }
-                          });
-                        },
-                        child: Text(
-                          'Done',
-                          style: TextStyle(color: Colors.white,fontFamily: 'font'),
-                        ),
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          String newNote = notesController.text.trim();
+                          if (newNote.isNotEmpty) {
+                            addNote(book, newNote, pageNumberController.text);
+                            notesController.clear();
+                            Fluttertoast.showToast(
+                              msg: "Note added successfully!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Color(0xFF283E50),
+                              textColor: Colors.white,
+                            );
+                            Navigator.pop(context);
+                          }
+                        });
+                      },
+                      child: Text(
+                        'Done',
+                        style: TextStyle(color: Colors.white,fontFamily: 'font'),
                       ),
                     ),
                   ),

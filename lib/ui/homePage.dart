@@ -12,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiftpages/ui/choosePage.dart';
+import 'package:swiftpages/ui/community/searchPage.dart';
 import 'package:swiftpages/ui/myBooks/detailPage.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 import 'package:timer_count_down/timer_controller.dart';
@@ -768,7 +769,17 @@ userName  = preferences.getString("userName")!;
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                           
-                            Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily:'font', ),),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Currently Reading",style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily:'font', ),),
+                                GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                                    },
+                                    child: Icon(Icons.add,color:  Color(0xFF283E50),))
+                              ],
+                            ),
                             myBooks.isEmpty?
                             Container(
                                 height: 100,

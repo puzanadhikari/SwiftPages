@@ -11,7 +11,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import 'package:timer_count_down/timer_controller.dart';
-
 import 'myBooks.dart';
 
 
@@ -202,6 +201,7 @@ Future<void> fetchData() async {
                             child: Center(child: Text(widget.book.author,style: TextStyle(color: Color(0xff686868),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),))),
 
                         RatingBar.builder(
+                          glow: false,
                           initialRating: rating,
                           minRating: 0,
                           direction: Axis.horizontal,
@@ -210,7 +210,7 @@ Future<void> fetchData() async {
                           itemSize: 40,
                           itemBuilder: (context, _) => Icon(
                             Icons.star,
-                            color: Colors.amber,
+                            color: Color(0xFF283E50),
                           ),
                           onRatingUpdate: (value) {
                           setState(() {
@@ -230,14 +230,16 @@ Future<void> fetchData() async {
                             children: [
                               Column(
                                 children: [
-                                  Text("Starting Date",style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
-                                  Text(startDate,style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  Text("Starting Date",style: TextStyle(color: Color(0xff686868),fontSize: 12,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  SizedBox(height: 5,),
+                                  Text(startDate,style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'font'),),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Text("Finished Date",style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
-                                  Text(DateTime.now().year.toString()+'/'+DateTime.now().month.toString()+'/'+DateTime.now().day.toString(),style: TextStyle(color: Color(0xff686868),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  Text("Finished Date",style: TextStyle(color: Color(0xff686868),fontSize: 12,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  SizedBox(height: 5,),
+                                  Text(DateTime.now().year.toString()+'/'+DateTime.now().month.toString()+'/'+DateTime.now().day.toString(),style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'font'),),
                                 ],
                               ), ],
                           ),
@@ -471,7 +473,7 @@ void _showAddReviewDialog(DetailBook book) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
         ),
-        title: Text('Review'),
+        title: Text('Review',style: TextStyle(fontFamily: 'font'),),
 
         content: Container(
           height: 50,
@@ -494,7 +496,7 @@ void _showAddReviewDialog(DetailBook book) {
                     cursorColor: Color(0xFFD9D9D9),
                     decoration: InputDecoration(
                       hintText: 'Write Your Review',
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font'),
                       border: InputBorder.none,
 
                     ),
@@ -539,7 +541,7 @@ void _showAddReviewDialog(DetailBook book) {
                   },
                   child: Text(
                     'Done',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white,fontFamily: 'font'),
                   ),
                 ),
               ),
