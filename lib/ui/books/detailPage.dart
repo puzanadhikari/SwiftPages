@@ -284,6 +284,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
 
                         saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING',widget.book.publishedDate.substring(0,4),widget.book.description); // Example values, replace with your data
                         Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       child: Container(
                           // width: 70,
@@ -300,6 +302,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ElevatedButton(
                       onPressed: () {
                         saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED',widget.book.publishedDate.substring(0,4),widget.book.description);  // Example values, replace with your data
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -319,6 +323,8 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                 ElevatedButton(
                   onPressed: () {
                     saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'TO BE READ',widget.book.publishedDate.substring(0,4),widget.book.description);  // Example values, replace with your data
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   child: Container(

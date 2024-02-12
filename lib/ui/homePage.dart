@@ -997,7 +997,7 @@ userName  = preferences.getString("userName")!;
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      _formatDuration(_stopwatch.elapsed),
+                                                                      "${((totalTimeMin * 60 + totalTimeSec) / 60).toStringAsFixed(2)} mins",
                                                                       style: TextStyle(
                                                                           fontSize: 14,
                                                                           color: Color(0xff686868),

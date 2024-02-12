@@ -690,6 +690,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                       addReview(widget.book, widget.newReview);
                       Navigator.pop(context);
                       Navigator.pop(context);
+                      Navigator.pop(context);
                       setState(() {
 
                       });

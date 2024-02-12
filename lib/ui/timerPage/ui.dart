@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:async';
 
@@ -293,619 +294,636 @@ class _TimerPageState extends State<TimerPage> {
     audioPlayer.dispose();
     super.dispose();
   }
+  DateTime? currentBackPressTime;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xFFFEEAD4),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Container(
-              color: Color(0xffD9D9D9),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Container(
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF283E50),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
+      child: WillPopScope(
+        onWillPop: () async {
+          final now = DateTime.now();
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            Fluttertoast.showToast(msg: "You haven't saved you progress yet!!!\n Press back again to exist",backgroundColor: Color(0xFFFF997A),gravity: ToastGravity.BOTTOM,textColor: Color(0xff283E50));
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     SnackBar(
+            //       // width: MediaQuery.of(context).size.width,
+            //       content: Text('Press back again to exit'),
+            //       duration: Duration(seconds: 2),
+            // padding: EdgeInsets.all(20),
+            //
+            //     ),
+            //   );
+            return false;
+          }
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: Color(0xFFFEEAD4),
+          body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20),
+              child: Container(
+                color: Color(0xffD9D9D9),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Container(
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF283E50),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          ),
                         ),
-                      ),
-                      child: TextButton(
-                        onPressed: () async {
-                          int? result = await showDialog<int>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomAlertDialog(
-                                book: widget.book,
-                                totalPage: widget.book.totalPage,
-                                currentPage: widget.book.currentPage,
-                              );
-                            },
-                          );
+                        child: TextButton(
+                          onPressed: () async {
+                            int? result = await showDialog<int>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomAlertDialog(
+                                  book: widget.book,
+                                  totalPage: widget.book.totalPage,
+                                  currentPage: widget.book.currentPage,
+                                );
+                              },
+                            );
 
-                          if (result != null) {
-                            // Do something with the selected number
-                            print('Selected Number: $result');
-                          }
-                        },
-                        child: Text(
-                          'Done',
-                          style: TextStyle(color: Colors.white,fontFamily: 'font'),
+                            if (result != null) {
+                              // Do something with the selected number
+                              print('Selected Number: $result');
+                            }
+                          },
+                          child: Text(
+                            'Done',
+                            style: TextStyle(color: Colors.white,fontFamily: 'font'),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: Center(
-                        child: Text(
-                      widget.book.currentPage.toString() +
-                          '/' +
-                          totalPages.toString(),
-                      style: TextStyle(
-                          color: Color(0xff686868),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,fontFamily: 'font'),
-                    )),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          children: [
-                            Stack(
-                              alignment: Alignment.topLeft,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 30.0),
-                                  child: Column(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
-                                        child: Image.network(
-                                          widget.book.imageLink,
-                                          height: 200,
-                                          width: 150,
-                                          loadingBuilder: (BuildContext context,
-                                              Widget child,
-                                              ImageChunkEvent?
-                                                  loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              // Image is fully loaded, display the actual image
-                                              return child;
-                                            } else {
-                                              // Image is still loading, display a placeholder or loading indicator
-                                              return Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  value: loadingProgress
-                                                              .expectedTotalBytes !=
-                                                          null
-                                                      ? loadingProgress
-                                                              .cumulativeBytesLoaded /
-                                                          (loadingProgress
-                                                                  .expectedTotalBytes ??
-                                                              1)
-                                                      : null,
-                                                ),
-                                              );
-                                            }
-                                          },
+                    Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Center(
+                          child: Text(
+                        widget.book.currentPage.toString() +
+                            '/' +
+                            totalPages.toString(),
+                        style: TextStyle(
+                            color: Color(0xff686868),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,fontFamily: 'font'),
+                      )),
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Column(
+                            children: [
+                              Stack(
+                                alignment: Alignment.topLeft,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 30.0),
+                                    child: Column(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                          child: Image.network(
+                                            widget.book.imageLink,
+                                            height: 200,
+                                            width: 150,
+                                            loadingBuilder: (BuildContext context,
+                                                Widget child,
+                                                ImageChunkEvent?
+                                                    loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                // Image is fully loaded, display the actual image
+                                                return child;
+                                              } else {
+                                                // Image is still loading, display a placeholder or loading indicator
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                        ? loadingProgress
+                                                                .cumulativeBytesLoaded /
+                                                            (loadingProgress
+                                                                    .expectedTotalBytes ??
+                                                                1)
+                                                        : null,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
 
-                                      // Container(
-                                      //   height: 40,
-                                      //   width: 100,
-                                      //   child: ElevatedButton(
-                                      //     onPressed: _startPauseTimer,
-                                      //     style: ElevatedButton.styleFrom(
-                                      //       primary: Color(0xff283E50), // Set your desired button color
-                                      //       shape: RoundedRectangleBorder(
-                                      //         borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
-                                      //       ),
-                                      //     ),
-                                      //     child: Padding(
-                                      //       padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                                      //       child:Text(
-                                      //         _isRunning ? 'Pause' : 'Start',
-                                      //         style: TextStyle(fontSize: 16.0),
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      // )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                                width: 120,
-                                child: Text(
-                                  widget.book.author,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                  color: Color(0xff686868),
-                                  fontWeight: FontWeight.bold,fontFamily:'font',
-                                  fontSize: 16),
-                                )),
-                            Divider(
-                              color: Color(0xffFEEAD4),
-                              thickness: 1,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child:      Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      GestureDetector(
-                                          onTap: ()async {
-                                            int? result = await showDialog<int>(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return
-                                                  CustomAlertForStartDateDialog(
-                                                    book: widget.book,
-                                                    year: year,
-                                                    days: days,
-                                                    month: month,
-                                                  );
-                                              },
-                                            );
-
-                                            if (result != null) {
-                                              // Do something with the selected number
-                                              print('Selected Number: $result');
-                                            }
-                                          },
-
-                                          child: Text(
-                                            "Started",
-                                            style: TextStyle(
-                                                color: Color(0xff686868),fontFamily: 'font'),
-                                          )),
-                                      SizedBox(height: 5,),
-                                      Text(
-                                        widget.book.startingDate==null?'-':widget.book.startingDate,
-                                        style:
-                                        TextStyle(color: Color(0xff283E50),fontSize: 20,fontFamily: 'font'),
-                                      ),
-                                    ],
-                                  ),
-
-                                  Text(
-                                    widget.book.status == 'CURRENTLY READING'
-                                        ? 'Reading'
-                                        : widget.book.status == 'TO BE READ'
-                                        ? 'Pending'
-                                        : 'Finished',
-                                    style: TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Divider(
-                              color: Color(0xffFEEAD4),
-                              thickness: 1,
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                      onTap: () {
-                                        _showAddNotesDialog(widget.book);
-                                      },
-                                      child: Text(
-                                        "Notes",
-                                        style: TextStyle(
-                                            color: Color(0xff283E50),
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        _showAddQuotesDialog(widget.book);
-                                      },
-                                      child: Text(
-                                        "Quotes",
-                                        style: TextStyle(
-                                            color: Color(0xff283E50),
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
-                                      )),
-                                  GestureDetector(
-                                    onTap: ()async{
-                                      int? result = await showDialog<int>(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return CustomAlertForPageDialog(
-                                            book: widget.book,
-                                            totalPage: widget.book.totalPage,
-                                            currentPage: widget.book.currentPage,
-                                          );
-                                        },
-                                      );
-
-                                      if (result != null) {
-                                        // Do something with the selected number
-                                        print('Selected Number: $result');
-                                      }
-                                    },
-                                    child: Text(
-                                      'Page',
-                                      style: TextStyle(
-                                          color: Color(0xff283E50),
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                        // Container(
+                                        //   height: 40,
+                                        //   width: 100,
+                                        //   child: ElevatedButton(
+                                        //     onPressed: _startPauseTimer,
+                                        //     style: ElevatedButton.styleFrom(
+                                        //       primary: Color(0xff283E50), // Set your desired button color
+                                        //       shape: RoundedRectangleBorder(
+                                        //         borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                                        //       ),
+                                        //     ),
+                                        //     child: Padding(
+                                        //       padding: const EdgeInsets.all(10.0), // Adjust the padding as needed
+                                        //       child:Text(
+                                        //         _isRunning ? 'Pause' : 'Start',
+                                        //         style: TextStyle(fontSize: 16.0),
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // )
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                            Divider(
-                              color: Color(0xffFEEAD4),
-                              thickness: 1,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Countdown(
-                                        controller: _controller,
-                                        seconds: finalTime,
-                                        build: (_, double time) {
-                                          currentTime = time.toInt();
-                                          return Text(
-                                            formatTime(time.toInt()),
-                                            style: TextStyle(
-                                              fontSize: 30,
-                                              color: Color(0xff686868),
-                                              fontWeight: FontWeight.bold,fontFamily:'font',
-                                            ),
-                                          );
-                                        },
-                                        interval: Duration(milliseconds: 100),
-                                        onFinished: () {
-                                          print('Countdown finished!');
-                                          try {
-                                            // Your existing code here
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text('Timer is done!'),
-                                              ),
-                                            );
-                                            updateStrikeInFirestore();
-                                            _storeCurrentTimeOnFinished();
-                                            _controller.pause();
-                                            setState(() {
-                                              // _isRunning = false;
-                                            });
-                                          } catch (e) {
-                                            print(
-                                                'Error in onFinished callback: $e');
-                                            log('Error in onFinished callback: $e');
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "Daily Goal",
-                                        style: TextStyle(
-                                          color: Color(0xff283E50),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,fontFamily:'font',
+                              Container(
+                                  width: 120,
+                                  child: Text(
+                                    widget.book.author,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                    color: Color(0xff686868),
+                                    fontWeight: FontWeight.bold,fontFamily:'font',
+                                    fontSize: 16),
+                                  )),
+                              Divider(
+                                color: Color(0xffFEEAD4),
+                                thickness: 1,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child:      Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        GestureDetector(
+                                            onTap: ()async {
+                                              int? result = await showDialog<int>(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return
+                                                    CustomAlertForStartDateDialog(
+                                                      book: widget.book,
+                                                      year: year,
+                                                      days: days,
+                                                      month: month,
+                                                    );
+                                                },
+                                              );
+
+                                              if (result != null) {
+                                                // Do something with the selected number
+                                                print('Selected Number: $result');
+                                              }
+                                            },
+
+                                            child: Text(
+                                              "Started",
+                                              style: TextStyle(
+                                                  color: Color(0xff686868),fontFamily: 'font'),
+                                            )),
+                                        SizedBox(height: 5,),
+                                        Text(
+                                          widget.book.startingDate==null?'-':widget.book.startingDate,
+                                          style:
+                                          TextStyle(color: Color(0xff283E50),fontSize: 20,fontFamily: 'font'),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        _formatDuration(_stopwatch.elapsed),
-                                        style: TextStyle(
-                                            color: Color(0xff686868),
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,fontFamily: 'font'),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "Total Time",
+                                      ],
+                                    ),
+
+                                    Text(
+                                      widget.book.status == 'CURRENTLY READING'
+                                          ? 'Reading'
+                                          : widget.book.status == 'TO BE READ'
+                                          ? 'Pending'
+                                          : 'Finished',
+                                      style: TextStyle(color: Color(0xff686868),fontSize: 12,fontFamily: 'font'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                color: Color(0xffFEEAD4),
+                                thickness: 1,
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          _showAddNotesDialog(widget.book);
+                                        },
+                                        child: Text(
+                                          "Notes",
+                                          style: TextStyle(
+                                              color: Color(0xff283E50),
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                        )),
+                                    GestureDetector(
+                                        onTap: () {
+                                          _showAddQuotesDialog(widget.book);
+                                        },
+                                        child: Text(
+                                          "Quotes",
+                                          style: TextStyle(
+                                              color: Color(0xff283E50),
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                        )),
+                                    GestureDetector(
+                                      onTap: ()async{
+                                        int? result = await showDialog<int>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CustomAlertForPageDialog(
+                                              book: widget.book,
+                                              totalPage: widget.book.totalPage,
+                                              currentPage: widget.book.currentPage,
+                                            );
+                                          },
+                                        );
+
+                                        if (result != null) {
+                                          // Do something with the selected number
+                                          print('Selected Number: $result');
+                                        }
+                                      },
+                                      child: Text(
+                                        'Page',
                                         style: TextStyle(
                                             color: Color(0xff283E50),
-                                            fontSize: 16,
+                                            fontSize: 24,
                                             fontWeight: FontWeight.bold,fontFamily: 'font'),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 40,
-                              width: 100,
-                              child: ElevatedButton(
-                                onPressed: _startPauseTimer,
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xff283E50),
-                                  // Set your desired button color
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        15.0), // Adjust the radius as needed
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  // Adjust the padding as needed
-                                  child: Text(
-                                    _isRunning ? 'Pause' : 'Start',
-                                    style: TextStyle(fontSize: 16.0,fontFamily: 'font'),
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            Divider(
-                              color: Color(0xffFEEAD4),
-                              thickness: 1,
-                            ),
-                            Text(
-                              "Notes",
-                              style: const TextStyle(
-                                  color: Color(0xFF283E50),
-                                  fontWeight: FontWeight.bold,fontFamily:'font',
-                                  fontSize: 20),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              // height: 250,
-                              width: MediaQuery.of(context).size.width,
-                              // padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
+                              Divider(
+                                color: Color(0xffFEEAD4),
+                                thickness: 1,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    // crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: widget.book.notes.map((note) {
-                                      return Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Countdown(
+                                          controller: _controller,
+                                          seconds: finalTime,
+                                          build: (_, double time) {
+                                            currentTime = time.toInt();
+                                            return Text(
+                                              formatTime(time.toInt()),
+                                              style: TextStyle(
+                                                fontSize: 30,
+                                                color: Color(0xff686868),
+                                                fontWeight: FontWeight.bold,fontFamily:'font',
+                                              ),
+                                            );
+                                          },
+                                          interval: Duration(milliseconds: 100),
+                                          onFinished: () {
+                                            print('Countdown finished!');
+                                            try {
+                                            Fluttertoast.showToast(msg:"Timer is done!",backgroundColor: Color(0xFFFF997A),textColor:Color(0xff283E50));
+
+                                              updateStrikeInFirestore();
+                                              _storeCurrentTimeOnFinished();
+                                              _controller.pause();
+                                              setState(() {
+                                                // _isRunning = false;
+                                              });
+                                            } catch (e) {
+                                              print(
+                                                  'Error in onFinished callback: $e');
+                                              log('Error in onFinished callback: $e');
+                                            }
+                                          },
                                         ),
-                                        color:
-                                            Color(0xFFFEEAD4).withOpacity(0.9),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 8),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          "Daily Goal",
+                                          style: TextStyle(
+                                            color: Color(0xff283E50),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,fontFamily:'font',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          _formatDuration(_stopwatch.elapsed),
+                                          style: TextStyle(
+                                              color: Color(0xff686868),
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          "Total Time",
+                                          style: TextStyle(
+                                              color: Color(0xff283E50),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,fontFamily: 'font'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 40,
+                                width: 100,
+                                child: ElevatedButton(
+                                  onPressed: _startPauseTimer,
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xff283E50),
+                                    // Set your desired button color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          15.0), // Adjust the radius as needed
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    // Adjust the padding as needed
+                                    child: Text(
+                                      _isRunning ? 'Pause' : 'Start',
+                                      style: TextStyle(fontSize: 16.0,fontFamily: 'font'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Divider(
+                                color: Color(0xffFEEAD4),
+                                thickness: 1,
+                              ),
+                              Text(
+                                "Notes",
+                                style: const TextStyle(
+                                    color: Color(0xFF283E50),
+                                    fontWeight: FontWeight.bold,fontFamily:'font',
+                                    fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                // height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                // padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: widget.book.notes.map((note) {
+                                        return Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          color:
+                                              Color(0xFFFEEAD4).withOpacity(0.9),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: Text(
-                                                      note['note'],
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xff686868),
-                                                          fontWeight:
-                                                              FontWeight.bold,fontFamily: 'font'),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 20),
+                                            padding:
+                                                EdgeInsets.symmetric(vertical: 8),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 5,
                                                       child: Text(
-                                                        'Page -' +
-                                                            note['pageNumber'],
+                                                        note['note'],
                                                         style: TextStyle(
-                                                            fontSize: 10,
-                                                            color: Color(
-                                                                0xff686868),
+                                                            fontSize: 12,
+                                                            color:
+                                                                Color(0xff686868),
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold,fontFamily: 'font'),
+                                                                FontWeight.bold,fontFamily: 'font'),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                            top: 20),
+                                                        child: Text(
+                                                          'Page -' +
+                                                              note['pageNumber'],
+                                                          style: TextStyle(
+                                                              fontSize: 10,
+                                                              color: Color(
+                                                                  0xff686868),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,fontFamily: 'font'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.only(top: 5.0),
-                                  //   child: Text(
-                                  //     myBooks[index].description,
-                                  //     textAlign: TextAlign.center,
-                                  //     maxLines: 12, // Adjust the number of lines as needed
-                                  //     overflow: TextOverflow.ellipsis,
-                                  //     style: const TextStyle(
-                                  //       color: Color(0xFF686868),
-                                  //       fontSize: 12,
-                                  //       fontWeight: FontWeight.w500,fontFamily:'font',
-                                  //     ),
-                                  //   )
-                                  //
-                                  // ),
-                                ],
+                                        );
+                                      }).toList(),
+                                    ),
+                                    // Padding(
+                                    //   padding:
+                                    //       const EdgeInsets.only(top: 5.0),
+                                    //   child: Text(
+                                    //     myBooks[index].description,
+                                    //     textAlign: TextAlign.center,
+                                    //     maxLines: 12, // Adjust the number of lines as needed
+                                    //     overflow: TextOverflow.ellipsis,
+                                    //     style: const TextStyle(
+                                    //       color: Color(0xFF686868),
+                                    //       fontSize: 12,
+                                    //       fontWeight: FontWeight.w500,fontFamily:'font',
+                                    //     ),
+                                    //   )
+                                    //
+                                    // ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Divider(
-                              color: Color(0xffFEEAD4),
-                              thickness: 1,
-                            ),
-                            Text(
-                              "Quotes",
-                              style: const TextStyle(
-                                  color: Color(0xFF283E50),
-                                  fontWeight: FontWeight.bold,fontFamily:'font',
-                                  fontSize: 20),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              // height: 250,
-                              width: MediaQuery.of(context).size.width,
+                              Divider(
+                                color: Color(0xffFEEAD4),
+                                thickness: 1,
+                              ),
+                              Text(
+                                "Quotes",
+                                style: const TextStyle(
+                                    color: Color(0xFF283E50),
+                                    fontWeight: FontWeight.bold,fontFamily:'font',
+                                    fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                // height: 250,
+                                width: MediaQuery.of(context).size.width,
 
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    // crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: widget.book.quotes.map((quotes) {
-                                      return Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        color: const Color(0xFFFEEAD4)
-                                            .withOpacity(0.9),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: widget.book.quotes.map((quotes) {
+                                        return Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          color: const Color(0xFFFEEAD4)
+                                              .withOpacity(0.9),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: Text(
-                                                      quotes['quote'],
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xff686868),
-                                                          fontWeight:
-                                                              FontWeight.bold,fontFamily: 'font'),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 20),
+                                            padding:
+                                                EdgeInsets.symmetric(vertical: 8),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 5,
                                                       child: Text(
-                                                        'Page -' +
-                                                            quotes[
-                                                                'pageNumber'],
+                                                        quotes['quote'],
                                                         style: TextStyle(
-                                                            fontSize: 10,
-                                                            color: Color(
-                                                                0xff686868),
+                                                            fontSize: 12,
+                                                            color:
+                                                                Color(0xff686868),
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold,fontFamily: 'font'),
+                                                                FontWeight.bold,fontFamily: 'font'),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                            top: 20),
+                                                        child: Text(
+                                                          'Page -' +
+                                                              quotes[
+                                                                  'pageNumber'],
+                                                          style: TextStyle(
+                                                              fontSize: 10,
+                                                              color: Color(
+                                                                  0xff686868),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,fontFamily: 'font'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                                        );
+                                      }).toList(),
+                                    ),
 
 
 
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.only(top: 5.0),
-                                  //   child: Text(
-                                  //     myBooks[index].description,
-                                  //     textAlign: TextAlign.center,
-                                  //     maxLines: 12, // Adjust the number of lines as needed
-                                  //     overflow: TextOverflow.ellipsis,
-                                  //     style: const TextStyle(
-                                  //       color: Color(0xFF686868),
-                                  //       fontSize: 12,
-                                  //       fontWeight: FontWeight.w500,fontFamily:'font',
-                                  //     ),
-                                  //   )
-                                  //
-                                  // ),
-                                ],
+                                    // Padding(
+                                    //   padding:
+                                    //       const EdgeInsets.only(top: 5.0),
+                                    //   child: Text(
+                                    //     myBooks[index].description,
+                                    //     textAlign: TextAlign.center,
+                                    //     maxLines: 12, // Adjust the number of lines as needed
+                                    //     overflow: TextOverflow.ellipsis,
+                                    //     style: const TextStyle(
+                                    //       color: Color(0xFF686868),
+                                    //       fontSize: 12,
+                                    //       fontWeight: FontWeight.w500,fontFamily:'font',
+                                    //     ),
+                                    //   )
+                                    //
+                                    // ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
+          extendBody: true,
         ),
-        extendBody: true,
       ),
     );
   }
@@ -2244,9 +2262,41 @@ class _CustomAlertForStartDateDialogState
       ),
       title: Column(
         children: [
-          Text(
-            'Started Date',
-            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Started Date',
+                style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+              ),
+              Container(
+                width: 100,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Color(0xFF283E50),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    DateTime now = DateTime.now();
+                    startingDate = DateFormat('yyyy/MMM/dd', 'en_US').format(now);
+                    addStartingDate(widget.book.documentId);
+                    // log(formattedDate);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    setState(() {});
+                  },
+                  child: Text(
+                    'Today',
+                    style: TextStyle(
+                        color: Colors.white,fontFamily: 'font'
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Divider(
             color: Colors.grey,
