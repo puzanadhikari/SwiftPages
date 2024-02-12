@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:swiftpages/ui/timerPage/ui.dart';
 
+import 'books/allBooks.dart';
 import 'books/detailEachForBookStatus.dart';
 import 'myBooks/detailPage.dart';
 
@@ -56,6 +58,8 @@ class _MyBooksState extends State<MyBooks> {
       print('Error sharing book: $e');
     }
   }
+  String _selectedItem = '';
+  bool _isDropdownOpen = false;
   void shareBookDetails(DetailBook book,String note) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -89,6 +93,17 @@ class _MyBooksState extends State<MyBooks> {
   }
   List<DetailBook> myBooksToBeRead = [];
   List<DetailBook> myBooksMyReads = [];
+  final List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
+  ];
+  String? selectedValue;
   List<DetailBook> books = [];
   final String apiKey =
       "AIzaSyBmb7AmvBdsQsQwLD1uTEuwTQqfDJm7DN0"; // Replace with your actual API key
@@ -269,9 +284,14 @@ class _MyBooksState extends State<MyBooks> {
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: Image.asset(
-                    "assets/search.png",
-                    height: 50,
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooks()));
+                    },
+                    child: Image.asset(
+                      "assets/search.png",
+                      height: 50,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -346,6 +366,9 @@ class _MyBooksState extends State<MyBooks> {
                                   child: Stack(
                                     alignment: Alignment.topCenter,
                                     children: [
+
+
+
                                       Positioned(
                                         top: 180,
                                         child: Container(
@@ -374,7 +397,7 @@ class _MyBooksState extends State<MyBooks> {
                                               //     // You can update the rating if needed
                                               //   },
                                               // ),
-                                              SizedBox(height: 8),
+                                              SizedBox(height: 10),
                                               Container(
                                                 height: 70,
                                                 child: SingleChildScrollView(
@@ -397,7 +420,7 @@ class _MyBooksState extends State<MyBooks> {
 
                                                   ElevatedButton(
                                                     onPressed: () {
-                                                      _showRemoveBookDialog(myBooksMyReads[index]);
+
                                                     },
                                                     child: Text("Remove",style: TextStyle(  fontFamily: 'font'),),
                                                     style: ButtonStyle(
@@ -488,7 +511,6 @@ class _MyBooksState extends State<MyBooks> {
                               return GestureDetector(
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksToBeRead[index],)));
-
                                 },
                                 child: Container(
                                   width: 250,
@@ -496,6 +518,7 @@ class _MyBooksState extends State<MyBooks> {
                                   child: Stack(
                                     alignment: Alignment.topCenter,
                                     children: [
+
                                       Positioned(
                                         top: 180,
                                         child: Container(
@@ -503,7 +526,7 @@ class _MyBooksState extends State<MyBooks> {
                                           width: 250,
                                           padding: EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: Color(0xFFD9D9D9),
+                                            // color: Color(0xFFD9D9D9),
                                             borderRadius: BorderRadius.circular(20.0),
                                           ),
                                           child: Column(
@@ -511,22 +534,22 @@ class _MyBooksState extends State<MyBooks> {
                                               SizedBox(height: 30,),
 
                                               SizedBox(height: 8),
-                                              Container(
-                                                height: 70,
-                                                child: SingleChildScrollView(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 10.0),
-                                                    child: Text(
-                                                      myBooksToBeRead[index].author,
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                          fontFamily: 'font'
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                              // Container(
+                                              //   height: 70,
+                                              //   child: SingleChildScrollView(
+                                              //     child: Padding(
+                                              //       padding: const EdgeInsets.only(top: 10.0),
+                                              //       child: Text(
+                                              //         myBooksToBeRead[index].author,
+                                              //         textAlign: TextAlign.center,
+                                              //         style: TextStyle(
+                                              //           color: Colors.black,
+                                              //             fontFamily: 'font'
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
@@ -587,6 +610,7 @@ class _MyBooksState extends State<MyBooks> {
                                           ),
                                         ),
                                       ),
+
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Image.network(
@@ -595,6 +619,78 @@ class _MyBooksState extends State<MyBooks> {
                                           width: 200,
                                         ),
                                       ),
+                                      Positioned(
+                                        right:50 ,
+                                        child:  DropdownButtonHideUnderline(
+                                          child: CircleAvatar(
+                                            backgroundColor: Color(0xFF283E50),
+                                            child:DropdownButtonHideUnderline(
+                                              child: DropdownButton2<String>(
+                                                isExpanded: true,
+                                                hint: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color:Color(0xFF283E50),
+                                                  ),
+                                                  width: 36,
+                                                  height: 36,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left:5.0),
+                                                    child: Icon(
+                                                      Icons.list,
+                                                      size: 30,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                                items: [
+                                                  DropdownMenuItem<String>(
+                                                    value: 'Read',
+                                                    child: Text('Read', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF283E50),)),
+                                                  ),
+                                                  DropdownMenuItem<String>(
+                                                    value: 'Remove',
+                                                    child: Text('Remove', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color:Color(0xFF283E50),)),
+                                                  ),
+                                                  DropdownMenuItem<String>(
+                                                    value: 'Share',
+                                                    child: Text('Share', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color:Color(0xFF283E50),)),
+                                                  ),
+                                                ],
+                                                onChanged: (value) {
+                                                  // Perform actions based on the selected item
+                                                  if (value == 'Read') {
+                                                    updateStatusOfBook('CURRENTLY READING', myBooksToBeRead[index].documentId);
+                                                    setState(() {});
+                                                  } else if (value == 'Remove') {
+                                                    _showRemoveBookDialog(myBooksToBeRead[index]);
+                                                  } else if (value == 'Share') {
+                                                    _showAddNotesDialog(myBooksToBeRead[index]);
+                                                  }
+                                                },
+                                                dropdownStyleData: DropdownStyleData(
+                                                  width: 160,
+                                                  padding: const EdgeInsets.symmetric(vertical: 6),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(14),
+                                                    color: Colors.white,
+                                                  ),
+                                                  offset: const Offset(-20, 0),
+                                                ),
+                                                menuItemStyleData: const MenuItemStyleData(
+                                                  height: 40,
+                                                  padding: EdgeInsets.only(left: 14, right: 14),
+                                                ),
+                                              ),
+                                            ),
+
+                                          ),
+                                        ),
+                                      ),
+
+
+
+
                                     ],
                                   ),
                                 ),
@@ -714,7 +810,6 @@ class _MyBooksState extends State<MyBooks> {
                       ),
                     );
                   }
-
                 },
                 child: Text(
                   'Share',
@@ -825,5 +920,55 @@ class DetailBook {
       quotes: List<Map<String, dynamic>>.from(map['quotes'] ?? []),
       reviews: List<Map<String, dynamic>>.from(map['reviews'] ?? []),
     );
+  }
+}
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+  });
+
+  final String text;
+  final IconData icon;
+}
+
+abstract class MenuItems {
+  static const List<MenuItem> firstItems = [home, share, settings];
+
+  static const home = MenuItem(text: 'Read', icon: Icons.book);
+  static const share = MenuItem(text: 'Remove', icon: Icons.delete);
+  static const settings = MenuItem(text: 'Share', icon: Icons.share);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon, color: Color(0xFF283E50), size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            item.text,
+            style: const TextStyle(
+              color: Color(0xFF283E50),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static void onChanged(BuildContext context, MenuItem item) {
+    switch (item) {
+      case MenuItems.home:
+
+        break;
+      case MenuItems.settings:
+      // Do something
+        break;
+      case MenuItems.share:
+      // Do something
+        break;
+    }
   }
 }

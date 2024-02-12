@@ -239,6 +239,10 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                style: TextStyle(
+                    color: Color(0xff283E50),
+                    fontFamily: 'font'
+                ),
                 controller: _invitationCodeController,
                 decoration: InputDecoration(labelText: 'Invitation Code'),
               ),
@@ -891,6 +895,10 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(fontFamily: 'font',color: Colors.blue),
           ),
           content: TextField(
+            style: TextStyle(
+                color: Color(0xff283E50),
+                fontFamily: 'font'
+            ),
             controller: newGoal,
             decoration: InputDecoration(
               hintText: "Enter new goal Time",
@@ -942,7 +950,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Text(
                 "No",
-                style: TextStyle(fontFamily: 'font',color: Colors.red), // Set cancel text color
+                style: TextStyle(fontFamily: 'font',color: Color(0xff283E50)), // Set cancel text color
               ),
             ),
             TextButton(
@@ -950,6 +958,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 _sendPasswordResetEmail();
                   Navigator.pop(context); // Close the dialog
               },
+
               child: Text(
                 "Yes",
                 style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
@@ -1038,6 +1047,10 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child:TextField(
+              style: TextStyle(
+                  color: Color(0xff283E50),
+                  fontFamily: 'font'
+              ),
               controller: _textFieldController,
               decoration: InputDecoration(
                 hintText: "Enter new User Name",
@@ -1332,14 +1345,13 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
       title: Column(
         children: [
           Text(
-            'Change Password',
+            'Change Time Goal',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
           Divider(
             color: Colors.grey,
             thickness: 1,
           ),
-
         ],
       ),
       content: Container(
@@ -1355,6 +1367,10 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
           child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child:   TextField(
+                style: TextStyle(
+                    color: Color(0xff283E50),
+                    fontFamily: 'font'
+                ),
                 controller: newGoal,
                 decoration: InputDecoration(
                   hintText: "Enter new goal Time",
@@ -1651,8 +1667,13 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
             padding: const EdgeInsets.only(left: 8.0),
             child: TextField(
               controller: _invitationCodeController,
+              style: TextStyle(
+                color: Color(0xff283E50),
+                fontFamily: 'font'
+              ),
               decoration: InputDecoration(
                 hintText: "Enter the invitation code",
+
                 hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
               ),
             ),
@@ -1755,13 +1776,20 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
+            backgroundColor: Color(0xFFFF997A),
+            textColor:  Color(0xff283E50),
           );
         } else {
           // Increase strikes for the redeeming user
           _increaseStrikes(redeemingUserId!);
-
+          Fluttertoast.showToast(
+            msg: 'Code Redeemed Successfully!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(0xFFFF997A),
+            textColor:  Color(0xff283E50),
+          );
           // Increase strikes for the generating user
           String generatorUserId = redeemingUserDocument.id ?? '';
           _increaseStrikes(generatorUserId);
@@ -1787,21 +1815,21 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
+          backgroundColor: Color(0xFFFF997A),
+          textColor:  Color(0xff283E50),
         );
       }
     }).catchError((error) {
       print('Error validating code: $error');
       // Handle the error (e.g., show an error message)
-      Fluttertoast.showToast(
-        msg: 'Error validating invitation code!',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: 'Error validating invitation code!',
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   timeInSecForIosWeb: 1,
+      //   backgroundColor: Color(0xFFFF997A),
+      //   textColor:  Color(0xff283E50),
+      // );
     });
   }
 
