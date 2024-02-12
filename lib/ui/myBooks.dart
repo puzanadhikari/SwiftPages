@@ -253,10 +253,7 @@ class _MyBooksState extends State<MyBooks> {
     super.dispose();
   }
   Future<void> _refresh(){
-
     return fetchBooks();
-
-
   }
 
   @override

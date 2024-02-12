@@ -570,7 +570,7 @@ class _GraphPageState extends State<GraphPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top:20,left: 30.0,right: 30),
+                          padding: const EdgeInsets.only(top:20,left: 30.0,right: 30,bottom: 30),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
