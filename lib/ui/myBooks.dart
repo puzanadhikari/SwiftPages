@@ -550,62 +550,62 @@ class _MyBooksState extends State<MyBooks> {
                                               //     ),
                                               //   ),
                                               // ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      updateStatusOfBook(
-                                                        'CURRENTLY READING',
-                                                        myBooksToBeRead[index].documentId,
-                                                      );
-                                                    setState(() {
-
-                                                    });
-                                                    },
-                                                    child: Text("Read",style: TextStyle(    fontFamily: 'font'),),
-                                                    style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                                                      minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
-                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(15.0),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      _showRemoveBookDialog(myBooksToBeRead[index]);
-                                                    },
-                                                    child: Text("Remove",style: TextStyle(    fontFamily: 'font'),),
-                                                    style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(15.0),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      _showAddNotesDialog(myBooksToBeRead[index]);
-                                                    },
-                                                    child: Text("Share",style: TextStyle(    fontFamily: 'font'),),
-                                                    style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
-                                                      // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
-                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(15.0),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                ],
-                                              ),
+                                              // Row(
+                                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              //   children: [
+                                              //     ElevatedButton(
+                                              //       onPressed: () {
+                                              //         updateStatusOfBook(
+                                              //           'CURRENTLY READING',
+                                              //           myBooksToBeRead[index].documentId,
+                                              //         );
+                                              //       setState(() {
+                                              //
+                                              //       });
+                                              //       },
+                                              //       child: Text("Read",style: TextStyle(    fontFamily: 'font'),),
+                                              //       style: ButtonStyle(
+                                              //         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                              //         minimumSize: MaterialStateProperty.all<Size>(Size(double.minPositive,40)),
+                                              //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              //           RoundedRectangleBorder(
+                                              //             borderRadius: BorderRadius.circular(15.0),
+                                              //           ),
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //     ElevatedButton(
+                                              //       onPressed: () {
+                                              //         _showRemoveBookDialog(myBooksToBeRead[index]);
+                                              //       },
+                                              //       child: Text("Remove",style: TextStyle(    fontFamily: 'font'),),
+                                              //       style: ButtonStyle(
+                                              //         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                              //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              //           RoundedRectangleBorder(
+                                              //             borderRadius: BorderRadius.circular(15.0),
+                                              //           ),
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //     ElevatedButton(
+                                              //       onPressed: () {
+                                              //         _showAddNotesDialog(myBooksToBeRead[index]);
+                                              //       },
+                                              //       child: Text("Share",style: TextStyle(    fontFamily: 'font'),),
+                                              //       style: ButtonStyle(
+                                              //         backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF283E50)),
+                                              //         // minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+                                              //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              //           RoundedRectangleBorder(
+                                              //             borderRadius: BorderRadius.circular(15.0),
+                                              //           ),
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //
+                                              //   ],
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -627,22 +627,25 @@ class _MyBooksState extends State<MyBooks> {
                                             child:DropdownButtonHideUnderline(
                                               child: DropdownButton2<String>(
                                                 isExpanded: true,
+                                                isDense: false,
                                                 hint: Container(
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color:Color(0xFF283E50),
                                                   ),
-                                                  width: 36,
-                                                  height: 36,
+
+                                                  width: 30,
+                                                  height: 30,
                                                   child: Padding(
-                                                    padding: const EdgeInsets.only(left:5.0),
+                                                    padding: const EdgeInsets.only(left:8.0),
                                                     child: Icon(
                                                       Icons.list,
-                                                      size: 30,
+                                                      size: 25,
                                                       color: Colors.white,
                                                     ),
                                                   ),
                                                 ),
+
                                                 items: [
                                                   DropdownMenuItem<String>(
                                                     value: 'Read',
@@ -676,10 +679,15 @@ class _MyBooksState extends State<MyBooks> {
                                                     color: Colors.white,
                                                   ),
                                                   offset: const Offset(-20, 0),
+
                                                 ),
+
                                                 menuItemStyleData: const MenuItemStyleData(
                                                   height: 40,
                                                   padding: EdgeInsets.only(left: 14, right: 14),
+                                                ),
+                                                iconStyleData: IconStyleData(
+                                                  iconSize: 0
                                                 ),
                                               ),
                                             ),
