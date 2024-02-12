@@ -20,6 +20,7 @@ class _AllBooksState extends State<AllBooks> {
   List<Book> books = [];
   List<Book> filteredBooks = [];
   String searchQuery = 'novels';
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +80,7 @@ class _AllBooksState extends State<AllBooks> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(top: 5.0, left: 15),
                         child: TextField(
                           controller: searchController,
                           decoration: InputDecoration(
@@ -87,7 +88,7 @@ class _AllBooksState extends State<AllBooks> {
                             hintText: 'Search Books...',
                             hintStyle: TextStyle(
                               color: Colors.grey[700],
-                              fontSize: 18,
+                              fontSize: 14,
                               fontFamily: 'font',
                               fontWeight: FontWeight.w700,
                             ),
@@ -109,17 +110,17 @@ class _AllBooksState extends State<AllBooks> {
                 ),
               ],
             ),
-            searchController.text.isEmpty?Expanded(
+            searchController.text.isEmpty ? Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.only(top:80.0),
+                padding: const EdgeInsets.only(top: 80.0),
                 child: SvgPicture.asset('assets/oops.svg',
                   height: 500,
                 ),
               ),
-            ): Expanded(
+            ) : Expanded(
               child: GridView.builder(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(10.0),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16.0,
@@ -136,7 +137,8 @@ class _AllBooksState extends State<AllBooks> {
       ),
     );
   }
-  void saveMyBook(String author, String image,int totalPage) async {
+
+  void saveMyBook(String author, String image, int totalPage) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -147,7 +149,8 @@ class _AllBooksState extends State<AllBooks> {
 
         // Reference to the 'myBooks' collection with the UID as the document ID
         CollectionReference myBooksRef =
-        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection(
+            'books');
 
         // Check if the book with the same author and image already exists
         QuerySnapshot existingBooks = await myBooksRef
@@ -161,17 +164,19 @@ class _AllBooksState extends State<AllBooks> {
           Map<String, dynamic> bookData = {
             'image': image,
             'author': author,
-            'totalPageCount': totalPage==0?150:totalPage,
-            'status':'TO BE READ',
-            'currentPage':0
+            'totalPageCount': totalPage == 0 ? 150 : totalPage,
+            'status': 'TO BE READ',
+            'currentPage': 0
           };
 
           // Add the book data to the 'myBooks' collection
           await myBooksRef.add(bookData);
 
-          Fluttertoast.showToast(msg: "Book saved successfully!",backgroundColor: Color(0xFFFF997A));
+          Fluttertoast.showToast(msg: "Book saved successfully!",
+              backgroundColor: Color(0xFFFF997A));
         } else {
-          Fluttertoast.showToast(msg: "Book already exists!",backgroundColor:Color(0xFFFF997A));
+          Fluttertoast.showToast(
+              msg: "Book already exists!", backgroundColor: Color(0xFFFF997A));
         }
       } else {
         print('No user is currently signed in.',);
@@ -183,63 +188,67 @@ class _AllBooksState extends State<AllBooks> {
 
   Widget buildBookItem(Book book) {
     return GestureDetector(
-        onTap: (){
+        onTap: () {
           log(book.imageLink.toUpperCase());
           // _showConfirmationDialog( book.title, book.imageLink,book.pageCount);
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPage(book: book,)));
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => AllBookDetailPage(book: book,)));
         },
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
         child: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFFFF997A),
-            borderRadius: BorderRadius.circular(31),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-            book.imageLink=="No Image"?Container(
-          width: 116,
-            height: 100,
-            decoration: ShapeDecoration(
+          height: 350,
+          child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top:140.0),
+                  child: Container(
+                    height: 350,
+                    width: MediaQuery.of(context).size.width/2,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFFF997A),
+                      borderRadius: BorderRadius.circular(31),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(book.title,textAlign: TextAlign.center,style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 12),),
+                    ),
 
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(9),
-              ),
-            ),
-              child: Center(child: Text("No Image")),
-          ):  Container(
-                width: 116,
-                height: 100,
-                decoration: ShapeDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(book.imageLink),
-                    fit: BoxFit.fill,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(9),
                   ),
                 ),
-              ),
-              SizedBox(
-                child: Text(
-                  book.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF283E50),
-                    fontSize: 12,
-                    fontFamily: 'font',
-                    fontWeight: FontWeight.w700,
+                book.imageLink=="No Image"?Container(
+                  width: 116,
+                  height: 100,
+                  decoration: ShapeDecoration(
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                  ),
+                  child: Center(child: Text("No Image")),
+                ):  Padding(
+                  padding: const EdgeInsets.only(left:22.0,bottom: 40),
+                  child: Container(
+                    width: 120,
+                    height: 350,
+                    decoration: ShapeDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(book.imageLink),
+                        // fit: BoxFit.fill,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
+
+
+
+                ]),
+        )
     );
   }
-  void _showConfirmationDialog(String author,String image,int totalPage) {
+
+  void _showConfirmationDialog(String author, String image, int totalPage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -261,7 +270,7 @@ class _AllBooksState extends State<AllBooks> {
             ),
             TextButton(
               onPressed: () {
-                saveMyBook( author,image,totalPage);
+                saveMyBook(author, image, totalPage);
                 Navigator.pop(context); // Close the dialog
               },
               child: Text(
@@ -303,7 +312,8 @@ class Book {
       imageLink: volumeInfo['imageLinks']?['thumbnail'] ?? 'No Image',
       rating: volumeInfo['averageRating']?.toDouble() ?? 0.0,
       pageCount: volumeInfo['pageCount'] ?? 0,
-      publishedDate: volumeInfo['publishedDate'] ?? '-', // Extract and set the publication date
+      publishedDate: volumeInfo['publishedDate'] ??
+          '-', // Extract and set the publication date
 
     );
   }

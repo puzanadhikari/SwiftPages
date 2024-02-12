@@ -207,7 +207,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.grey[200], // Change the color as needed
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(left:15.0),
+                      padding: const EdgeInsets.only(bottom:8.0,left:15),
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
