@@ -199,9 +199,9 @@ class _AllBooksState extends State<AllBooks> {
           child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top:140.0),
+                  padding: const EdgeInsets.only(top:130.0),
                   child: Container(
-                    height: 350,
+                    // height: 350,
                     width: MediaQuery.of(context).size.width/2,
                     decoration: BoxDecoration(
                       color: Color(0xFFFF997A),
@@ -209,11 +209,12 @@ class _AllBooksState extends State<AllBooks> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(book.title,textAlign: TextAlign.center,style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 12),),
+                      child: Text(book.title,textAlign: TextAlign.center,maxLines: 2,style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 12),),
                     ),
 
                   ),
                 ),
+
                 book.imageLink=="No Image"?Container(
                   width: 116,
                   height: 100,
@@ -225,10 +226,10 @@ class _AllBooksState extends State<AllBooks> {
                   ),
                   child: Center(child: Text("No Image")),
                 ):  Padding(
-                  padding: const EdgeInsets.only(left:22.0,bottom: 40),
+                  padding: const EdgeInsets.only(left:22.0,bottom: 55),
                   child: Container(
                     width: 120,
-                    height: 350,
+                    // height: 0,
                     decoration: ShapeDecoration(
                       image: DecorationImage(
                         image: NetworkImage(book.imageLink),
