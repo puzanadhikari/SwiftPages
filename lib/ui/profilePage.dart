@@ -85,7 +85,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
   Future<void> _changeGoal(bool reduce) async {
-
       final FirebaseAuth _auth = FirebaseAuth.instance;
       DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
           .instance
@@ -986,6 +985,10 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
 
       if (user != null) {
         await user.updateDisplayName(newDisplayName);
+        String userId = user.uid;
+        DocumentReference userRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
+        await userRef.update({'username': newDisplayName});
         _signOut();
         print("Display name updated successfully: $newDisplayName");
 

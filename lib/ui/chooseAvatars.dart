@@ -64,19 +64,18 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
         body: Stack(
           children: [
             Positioned(
-              top: 0,
+              top: -10,
               left: 0,
               right: 0,
               child: Container(
                 height:MediaQuery.of(context).size.height/3,// Adjust the height as needed
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/EllipseAvatars.png'), // Replace with your image asset
-                    fit: BoxFit.cover,
-                  ),
+               child: SvgPicture.asset(
+                   "assets/ellipse12.svg",
+                   fit: BoxFit.fill
+               ),
                 ),
               ),
-            ),
+
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -109,6 +108,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: GridView.builder(
+                        physics:NeverScrollableScrollPhysics() ,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 20.0,
@@ -230,7 +230,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
 
-                      Text("Set Your Daily Goal!!!",style: TextStyle(fontSize: 30,   color: Color(0xFF686868),),),
+                      Text("Set Your Daily Goal!!!",style: TextStyle(fontSize: 30, color: Color(0xFF686868),fontFamily:'font',),),
                       SizedBox(height: 30,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
