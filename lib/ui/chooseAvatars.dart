@@ -83,7 +83,7 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 70.0),
+                    padding: const EdgeInsets.only(top: 60.0),
                     child: Text(
                       "Choose Your Avatar!!",
                       style: TextStyle(
@@ -95,11 +95,16 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                   ),
                   SizedBox(height: 20,),
                   avatarUrls.isEmpty
-                      ? LoadingAnimationWidget.discreteCircle(
-                        color: Color(0xFF283E50),
-                        size: 60,
-                        secondRingColor: Color(0xFFFF997A),
-                        thirdRingColor:Color(0xFF686868),
+                      ? Container(
+                    height: MediaQuery.of(context).size.height/2,
+                        child: Center(
+                          child: LoadingAnimationWidget.discreteCircle(
+                            color: Color(0xFF283E50),
+                            size: 60,
+                            secondRingColor: Color(0xFFFF997A),
+                            thirdRingColor:Color(0xFF686868),
+                          ),
+                        ),
                       ) : Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -133,8 +138,8 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                               child: CachedNetworkImage(
                                 imageUrl: avatarUrls[index],
                                 fit: BoxFit.scaleDown,
-                                width: 40.0,
-                                height: 40.0,
+                                width: 30.0,
+                                height: 30.0,
                                 useOldImageOnUrlChange: false,
                                 placeholder: (context, url) => CircularProgressIndicator(color:Colors.transparent),
                                 errorWidget: (context, url, error) => Icon(Icons.error),
