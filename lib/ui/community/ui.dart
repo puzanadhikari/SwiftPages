@@ -324,6 +324,7 @@ class _BookCardState extends State<BookCard> {
                               initialRating: widget.bookData['rating']==null?0:widget.bookData['rating'],
                               minRating: 0,
                               direction: Axis.horizontal,
+                              ignoreGestures: true,
                               allowHalfRating: true,
                               itemCount: 5,
                               itemSize: 20,

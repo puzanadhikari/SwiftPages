@@ -13,6 +13,7 @@ import 'package:swiftpages/ui/timerPage/ui.dart';
 
 import 'books/allBooks.dart';
 import 'books/detailEachForBookStatus.dart';
+import 'books/reviewDonePages.dart';
 import 'myBooks/detailPage.dart';
 
 class MyBooks extends StatefulWidget {
@@ -362,7 +363,7 @@ class _MyBooksState extends State<MyBooks> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBookDetailPageEachStatus(book: myBooksMyReads[index],)));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ReviewDonePage(book: myBooksMyReads[index],)));
 
                                   },
                                   child: Container(
