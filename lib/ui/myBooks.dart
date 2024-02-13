@@ -826,6 +826,7 @@ class DetailBook {
   final bool increaseStrike; // Updated to bool type
   int currentPage;
   int totalPage;
+  double rating;
   List<Map<String, dynamic>> notes;
   List<Map<String, dynamic>> quotes;
   List<Map<String, dynamic>> reviews;
@@ -841,6 +842,7 @@ class DetailBook {
     required this.increaseStrike, // Updated to bool type
     this.currentPage = 0,
     this.totalPage = 0,
+    required this.rating,
     this.notes = const [],
     this.quotes = const [],
     this.reviews = const [],
@@ -858,6 +860,7 @@ class DetailBook {
         startingDate: 'startingDate',
         increaseStrike: false, // Default value for bool
         totalPage: 100,
+        rating: 0.0
       );
     }
     return DetailBook(
@@ -871,6 +874,7 @@ class DetailBook {
       increaseStrike: map['increaseStrike'] ?? false, // Parse as bool
       currentPage: map['currentPage'] ?? 0,
       totalPage: map['totalPageCount'] ?? 0,
+      rating: map['rating']??0.0,
       notes: List<Map<String, dynamic>>.from(map['notes'] ?? []),
       quotes: List<Map<String, dynamic>>.from(map['quotes'] ?? []),
       reviews: List<Map<String, dynamic>>.from(map['reviews'] ?? []),

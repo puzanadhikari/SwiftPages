@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:swiftpages/signUpPage.dart';
 import 'package:swiftpages/ui/homePage.dart';
@@ -103,7 +104,11 @@ class _SplashScreenState extends State<SplashScreen> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/logo.png", height: 450.0, width: 450.0),
+              SvgPicture.asset(
+                'assets/logo.svg',
+                // height: 200,
+                // color: Color(0xff283E50),
+              ),
               SizedBox(height: 20.0),
               LoadingAnimationWidget.discreteCircle(
                 color: Color(0xFFFEEAD4),

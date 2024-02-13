@@ -333,7 +333,6 @@ class _BookCardState extends State<BookCard> {
                                 color: Color(0xff283E50),
                               ),
                               onRatingUpdate: (value) {
-
                               },
                             ),
                             Text("${widget.bookData['rating']==null?0:widget.bookData['rating']}/5 stars",style: TextStyle(fontFamily: 'font'),)

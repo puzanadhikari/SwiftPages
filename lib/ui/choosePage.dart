@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:swiftpages/loginPage.dart';
 import 'package:swiftpages/signUpPage.dart';
 import 'package:swiftpages/ui/mainPage.dart';
@@ -31,7 +32,11 @@ class _ChoosePageState extends State<ChoosePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Image.asset("assets/logo.png"),
+                  SvgPicture.asset(
+                    'assets/logo.svg',
+                    // height: 200,
+                    // color: Color(0xff283E50),
+                  ),
                   SizedBox(height: 20.0),
                   SizedBox(
                     height: 25,
@@ -167,7 +172,7 @@ class _ChoosePageState extends State<ChoosePage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Taking a test drive?",style: TextStyle(fontSize: 30,   color: Color(0xFF283E50),),),
+                    Text("Taking a test drive?",style: TextStyle(fontSize: 30,   color: Color(0xFF283E50),fontFamily: 'font'),),
                     SizedBox(height: 30,),
                     Center(
                       child: Text("Discover more with a more personalized experience!! Unlock exclusive features and join our community for a richer experience!",style: TextStyle(

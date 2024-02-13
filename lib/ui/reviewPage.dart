@@ -597,7 +597,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
               'pace':widget.selectedPace,
               'rating':widget.rating,
               'genre':widget.genre,
-              'mood':widget.mood
+              'mood':widget.mood,
+              'year':DateTime.now().year
             }
           ]),
         });

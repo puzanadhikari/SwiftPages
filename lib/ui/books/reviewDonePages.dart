@@ -108,41 +108,41 @@ class _ReviewDonePageState extends State<ReviewDonePage> {
           scrollDirection: Axis.vertical,
           child: Stack(
             children: [
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF283E50),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
-
-                    ),
-
-                  ),
-                  child: TextButton(
-                    onPressed: () async {
-                      int? result = await showDialog<int>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CustomAlertDialog(book:widget.book,totalPage: widget.book.totalPage,currentPage: widget.book.currentPage,newReview: reviewController.text.toString(),selectedPace: selectedPace,rating: rating,genre: selectedGenre,mood: selectedMood,);
-                        },
-                      );
-
-                      if (result != null) {
-                        // Do something with the selected number
-                        print('Selected Number: $result');
-                      }
-                    },
-
-                    child: Text(
-                      'Done',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 10,
+              //   right: 10,
+              //   child: Container(
+              //     height: 35,
+              //     decoration: BoxDecoration(
+              //       color: Color(0xFF283E50),
+              //       borderRadius: BorderRadius.all(
+              //         Radius.circular(15),
+              //
+              //       ),
+              //
+              //     ),
+              //     child: TextButton(
+              //       onPressed: () async {
+              //         int? result = await showDialog<int>(
+              //           context: context,
+              //           builder: (BuildContext context) {
+              //             return CustomAlertDialog(book:widget.book,totalPage: widget.book.totalPage,currentPage: widget.book.currentPage,newReview: reviewController.text.toString(),selectedPace: selectedPace,rating: rating,genre: selectedGenre,mood: selectedMood,);
+              //           },
+              //         );
+              //
+              //         if (result != null) {
+              //           // Do something with the selected number
+              //           print('Selected Number: $result');
+              //         }
+              //       },
+              //
+              //       child: Text(
+              //         'Done',
+              //         style: TextStyle(color: Colors.white),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(child: Text('Your Ratings',style: TextStyle(

@@ -155,153 +155,120 @@ class _AllBookDetailPageEachStatusState extends State<AllBookDetailPageEachStatu
                           height: MediaQuery.of(context).size.height*2,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFF283E50),
+                            color: Color(0xFFD9D9D9),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top:120.0,left: 5,right: 5),
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:50,left: 30.0,right: 30),
+                                    child: Container(
+                                        child:Text(
+                                          widget.book.author,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.grey[700],fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),)
+                                    ),
+                                  ),
+                                  SizedBox(height: 25,),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left:40.0,right:40),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          height:50,
-                                          width:100,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffFF997A),
-                                            borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-                                          ),
-                                          child: Center(child: Text(widget.book.publishedDate.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
-
+                                        Column(
+                                          children: [
+                                            Container(
+                                              height:40,
+                                              width:70,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffFF997A),
+                                                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                              ),
+                                              child: Center(child: Text(widget.book.publishedDate.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold,fontFamily: 'font'),)),
+                                            ),
+                                            SizedBox(height: 5,),
+                                            Text("Date",style: TextStyle(color:Color(0xFF283E50),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),)
+                                          ],
                                         ),
-                                        Text("Date",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
+                                        Column(
+                                          children: [
+                                            Container(
+                                              height:40,
+                                              width:70,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffFF997A),
+                                                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                              ),
+                                              child: Center(child: Text(widget.book.rating.toString(),style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+
+                                            ),
+                                            SizedBox(height: 5,),
+                                            Text("Rating",style: TextStyle(color: Color(0xFF283E50),fontFamily: 'font',fontSize: 14,fontWeight: FontWeight.bold),)
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Container(
+                                              height:40,
+                                              width:70,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffFF997A),
+                                                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+                                              ),
+                                              child: Center(child: Text(widget.book.totalPage.toString(),style: TextStyle(fontFamily: 'font',color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+
+                                            ),
+                                            SizedBox(height: 5,),
+                                            Text("Pages",style: TextStyle(color: Color(0xFF283E50),fontSize: 14,fontWeight: FontWeight.bold,fontFamily: 'font'),)
+                                          ],
+                                        ),
+
+
                                       ],
                                     ),
-                                    Column(
-                                      children: [
-                                        Container(
-                                          height:50,
-                                          width:100,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffFF997A),
-                                            borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-                                          ),
-                                          child: Center(child: Text(widget.book.publishedDate.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20,),
+                              Divider(
+                                color: Colors.white.withOpacity(0.2),
+                                indent: 15,
+                                endIndent: 15,
+                                thickness: 1,
+                              ),
+                              SizedBox(height: 20,),
+                              Text("About",style: TextStyle(color: Color(0xFF283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'font'),),
 
-                                        ),
-                                        Text("Rating",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Container(
-                                          height:50,
-                                          width:100,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffFF997A),
-                                            borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-                                          ),
-                                          child: Center(child: Text(widget.book.totalPage.toString(),style: TextStyle(color: Color(0xFF283E50),fontSize: 16,fontWeight: FontWeight.bold),)),
+                              SizedBox(height: 10,),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
 
-                                        ),
-                                        Text("Pages",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
-                                      ],
-                                    ),
+                                  widget.book.description,
+                              maxLines: 100,
+                                  style: TextStyle(color: Color(0xFF686868),fontSize: 14,fontFamily: 'font'),
+                                  textAlign: TextAlign.center,),
+                              ),
 
-
-                                  ],
-                                ),
-                                SizedBox(height: 20,),
-                                Text("About",style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold),),
-
-                                SizedBox(height: 10,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-
-                                    widget.book.description,
-                                maxLines: 100,
-                                    style: TextStyle(color: Colors.white,fontSize: 14),
-                                    textAlign: TextAlign.center,),
-                                ),
-
-                              ],
-                            ),
+                            ],
                           ),
 
                         ),
                       ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.only(top: 50.0),
                       child: Align(
                         alignment: Alignment.topCenter,
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  child: Image.network(widget.book.imageLink),
-                                ),
-                                SizedBox(height: 10,),
-                                Container(
-                                    child:Text(widget.book.author,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),)
-                                ),
-
-                              ],
-                            ),
-                          ],
+                        child: Container(
+                          child: Image.network(widget.book.imageLink,height: 180,),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40.0,right: 40),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _showInvitationCodePopup(); // Example values, replace with your data
 
-                              },
-                              child: Text("Add To Self",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),),
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height/1.2),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _showInvitationCodePopupToRemove(); // Example values, replace with your data
-
-                              },
-                              child: Text("Remove",style: TextStyle(color: Color(0xFF283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 18),),
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFF997A)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
 
 
                   ],
