@@ -47,6 +47,8 @@ dependencies:
   dots_indicator:
   expandable:
   just_audio:
+  flutter_flip_clock:
+  from_to_time_picker:
   floating_bottom_navigation_bar: ^1.5.2
   cloud_firestore:
   audioplayers:
