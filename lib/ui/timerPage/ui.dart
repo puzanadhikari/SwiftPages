@@ -1259,7 +1259,7 @@ class _TimerPageState extends State<TimerPage> {
                 .doc(uid)
                 .update({'strikes': currentStrikes + 1});
           } else {
-            Fluttertoast.showToast(msg:'Cannot add a new strike within 24 hours.');
+            Fluttertoast.showToast(msg:'Cannot add a new strike within 24 hours.',backgroundColor: Color(0xFFFF997A));
             print('Cannot add a new strike within 24 hours.');
           }
         } else {
