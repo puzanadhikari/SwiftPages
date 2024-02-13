@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 
@@ -333,6 +334,7 @@ class _BookCardState extends State<BookCard> {
                                 color: Color(0xff283E50),
                               ),
                               onRatingUpdate: (value) {
+
                               },
                             ),
                             Text("${widget.bookData['rating']==null?0:widget.bookData['rating']}/5 stars",style: TextStyle(fontFamily: 'font'),)
@@ -1470,12 +1472,45 @@ class CommentPage extends StatefulWidget {
 class _CommentPageState extends State<CommentPage> {
   bool isLoading = false;
 
-
+  StreamController<List<Map<String, dynamic>>> commentsStreamController = StreamController<List<Map<String, dynamic>>>();
   @override
   void initState() {
     super.initState();
-
+    // Initialize the comments stream
+    fetchComments();
   }
+  @override
+  void dispose() {
+    // Dispose the comments stream controller
+    commentsStreamController.close();
+    super.dispose();
+  }
+  Future<void> fetchComments() async {
+    try {
+      // Fetch the document from the 'communityBooks' collection
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('communityBooks')
+          .doc(widget.docId)
+          .get();
+
+      // Retrieve the document data as Map<String, dynamic>
+      Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+
+      // Extract the comments array from the document data
+      List<Map<String, dynamic>> comments = (data?['comments'] ?? []).cast<Map<String, dynamic>>();
+      countComment = comments!.length;
+      // Add comments to the stream
+      commentsStreamController.add(comments);
+      setState(() {
+
+      });
+    } catch (e) {
+      print('Error fetching comments: $e');
+    }
+  }
+
+
+
   Future<void> reloadComments() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('communityBooks')
@@ -1488,6 +1523,7 @@ class _CommentPageState extends State<CommentPage> {
       widget.comments = snapshot.docs.map<Map<String, dynamic>>((doc) => doc.data()! as Map<String, dynamic>).toList();
     });
   }
+  int countComment=0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -1546,68 +1582,223 @@ class _CommentPageState extends State<CommentPage> {
                 margin: EdgeInsets.all(10),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: widget.commentCount == 0
-                      ? Center(
-                          child: Column(
+                  child: countComment == 0
+                      ? Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 15,
+                                          backgroundColor: Color(0xFFFEEAD4),
+                                          backgroundImage: NetworkImage(
+                                            widget.bookData['avatarUrl'] ?? '',
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(widget.bookData['username'] ?? 'Anonymous'),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 150,
+                                      width: 100,
+                                      child: Image.network(
+                                        widget.bookData['imageLink'] ?? '',
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+
+                                          Container(
+                                            height: 120,
+                                            width: 200,
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFD9D9D9),
+                                              borderRadius: BorderRadius.circular(20.0),
+                                            ),
+                                            child: Container(
+                                              height: 150,
+                                              width: 150,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 5.0),
+                                                child: Text(
+                                                  '${widget.bookData['notes'] ?? ''}',
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      color: Color(0xFF686868),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w500,fontFamily:'font'),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10,),
+                                          // GestureDetector(
+                                          //     onTap: (){
+                                          //       _showConfirmationDialogToSave(context);
+                                          //     },
+                                          //     child: Icon(Icons.download))
+                                        ],
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: Color(0xff686868),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Comments ${countComment}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
+                                Text('${widget.bookData['likes'] } Likes',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: StreamBuilder<List<Map<String, dynamic>>>(
+                          stream: commentsStreamController.stream,
+                          builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            return ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                var commentData = snapshot.data![index];
+                                return CommentWidget(
+                                  username: commentData['username'] ?? '',
+                                  avatarUrl: commentData['avatarUrl'] ?? '',
+                                  comment: commentData['comment'] ?? '',
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+
+
+
+                      // Add Comment Section
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Color(0xffD9D9D9),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Row(
                             children: [
                               Expanded(
-                                  child:
-                                      Center(child: Text("No Comments yet",style: TextStyle(fontFamily: 'font'),))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:8.0),
+                                  child: TextField(
+                                    controller: commentController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        comment = value;
+                                      });
+                                    },
+                                    cursorColor: Color(0xFF283E50),
+                                    decoration: InputDecoration(
+                                      hintText: 'Add your comment',
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
-                                  height: 50,
                                   decoration: BoxDecoration(
-                                    color: Color(0xffD9D9D9),
+                                    color: Color(0xFF283E50),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(10),
                                     ),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left:8.0),
-                                          child: TextField(
-                                            // controller: commentController,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                comment = value;
-                                              });
-                                            },
-                                            cursorColor: Color(0xFF283E50),
-                                          decoration: InputDecoration(
-                                            hintText: 'Add your comment',
-                                            hintStyle: TextStyle(color: Colors.grey,fontFamily: 'font')
-                                          ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF283E50),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                          ),
-                                          child: TextButton(
-                                            onPressed: widget.onPressed,
-                                            child: Text(
-                                              'Comment',
-                                              style: TextStyle(color: Colors.white,fontFamily: 'font'),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  child: TextButton(
+                                    onPressed:()async{
+                                      FirebaseAuth _auth = FirebaseAuth.instance;
+                                      if (comment.isNotEmpty) {
+                                        Map<String, dynamic> commentData = {
+                                          'username': _auth.currentUser?.displayName,
+                                          'avatarUrl': _auth.currentUser?.photoURL,
+                                          'comment': commentController.text,
+                                        };
+
+                                        List<Map<String, dynamic>> updatedComments =
+                                        List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+                                        updatedComments.add(commentData);
+
+                                        // Update Firestore document with the new comments
+                                        await FirebaseFirestore.instance
+                                            .collection('communityBooks')
+                                            .doc(widget.docId)
+                                            .update({'comments': updatedComments});
+
+
+                                        setState(() {
+                                          commentController.clear();
+                                          comment = '';
+                                        });
+                                        fetchComments();
+
+                                        commentController.clear();
+                                      }
+
+                                    },
+                                    child: Text(
+                                      'Comment',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        )
+                        ),
+                      ),
+                    ],
+                  )
                       : Column(
                           children: [
                   Padding(
@@ -1703,24 +1894,41 @@ class _CommentPageState extends State<CommentPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Comments ${widget.commentCount}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
+                            Text('Comments ${countComment}',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold),),
                             Text('${widget.bookData['likes'] } Likes',style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
                     ),
                   ),
-
-                            SizedBox(height: 5,),
                             Expanded(
-                              child: ListView(children: [
-                                for (var comment in widget.comments)
-                                  CommentWidget(
-                                      username: comment['username'],
-                                      avatarUrl: comment['avatarUrl'],
-                                      comment: comment['comment'])
-                              ]),
+                              child: StreamBuilder<List<Map<String, dynamic>>>(
+                                stream: commentsStreamController.stream,
+                                builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+
+                                  return ListView.builder(
+                                    itemCount: snapshot.data!.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      var commentData = snapshot.data![index];
+                                      return CommentWidget(
+                                        username: commentData['username'] ?? '',
+                                        avatarUrl: commentData['avatarUrl'] ?? '',
+                                        comment: commentData['comment'] ?? '',
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
+
+
 
                             // Add Comment Section
                             Padding(
@@ -1764,14 +1972,35 @@ class _CommentPageState extends State<CommentPage> {
                                           ),
                                         ),
                                         child: TextButton(
-                                          onPressed:(){
+                                          onPressed:()async{
+                                            FirebaseAuth _auth = FirebaseAuth.instance;
+                                            if (comment.isNotEmpty) {
+                                              Map<String, dynamic> commentData = {
+                                                'username': _auth.currentUser?.displayName,
+                                                'avatarUrl': _auth.currentUser?.photoURL,
+                                                'comment': commentController.text,
+                                              };
 
-                                            setState(() {
+                                              List<Map<String, dynamic>> updatedComments =
+                                              List<Map<String, dynamic>>.from(widget.bookData['comments'] ?? []);
+                                              updatedComments.add(commentData);
 
-                                              widget.onPressed();
+                                              // Update Firestore document with the new comments
+                                              await FirebaseFirestore.instance
+                                                  .collection('communityBooks')
+                                                  .doc(widget.docId)
+                                                  .update({'comments': updatedComments});
+
+
+                                              setState(() {
+                                                commentController.clear();
+                                                comment = '';
+                                              });
+                                              fetchComments();
+
                                               commentController.clear();
-                                              Navigator.pop(context);
-                                            });
+                                            }
+
                                           },
                                           child: Text(
                                             'Comment',

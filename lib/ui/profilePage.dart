@@ -1142,18 +1142,27 @@ class CustomAlertPasswordDialog extends StatefulWidget {
 class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
   int selectedNumber = 0;
 
-
+  Future<void> _signOut() async {
+    SharedPreferences prefs =await SharedPreferences.getInstance();
+    try {
+      prefs.clear();
+      setState(() {
+        guestLogin = false;
+      });
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>SplashScreen()));
+    } catch (e) {
+      print("Error during logout: $e");
+    }
+  }
   Future<void> _sendPasswordResetEmail() async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: widget.email,
       );
+        Fluttertoast.showToast(msg: "Password reset email sent! Check your email.",backgroundColor: Color(0xFFFF997A));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password reset email sent! Check your email.'),
-        ),
-      );
+
     } catch (e) {
       print('Error sending password reset email: $e');
       // Handle the error (e.g., show an error message)
@@ -1248,8 +1257,8 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
                   child: TextButton(
                     onPressed: () {
                       _sendPasswordResetEmail();
+                      _signOut();
                       Navigator.pop(context);
-                      Fluttertoast.showToast(msg: "Reset Password link sent to your email",backgroundColor:Color(0xFF283E50), );
                     },
                     child: Text(
                       'Send',
