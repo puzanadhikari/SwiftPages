@@ -1237,14 +1237,15 @@ class _TimerPageState extends State<TimerPage> {
 
         // Get the current user document from Firestore
         DocumentSnapshot<Map<String, dynamic>> userDoc =
-            await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
         // Check if 'lastStrikeTimestamp' field exists
         if (userDoc.data()?.containsKey('lastStrikeTimestamp') ?? false) {
           // Get the 'lastStrikeTimestamp' field
           DateTime lastStrikeTimestamp =
-              (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
+          (userDoc.get('lastStrikeTimestamp') as Timestamp).toDate();
           if (DateTime.now().difference(lastStrikeTimestamp).inHours >= 12) {
+            log("in if");
             await FirebaseFirestore.instance
                 .collection('users')
                 .doc(uid)
@@ -1253,15 +1254,16 @@ class _TimerPageState extends State<TimerPage> {
             int currentStrikes = userDoc.data()?.containsKey('strikes') ?? false
                 ? userDoc.get('strikes')
                 : 0;
-            log(userDoc.get('strikes'));
             await FirebaseFirestore.instance
                 .collection('users')
                 .doc(uid)
                 .update({'strikes': currentStrikes + 1});
           } else {
+            Fluttertoast.showToast(msg:'Cannot add a new strike within 24 hours.');
             print('Cannot add a new strike within 24 hours.');
           }
         } else {
+          log("in esle");
           await FirebaseFirestore.instance
               .collection('users')
               .doc(uid)
