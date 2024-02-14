@@ -1080,11 +1080,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         child: Expanded(
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child:TextField(
+            child:TextFormField(
+          
               style: TextStyle(
                   color: Color(0xff283E50),
                   fontFamily: 'font'
               ),
+
               controller: _textFieldController,
               decoration: InputDecoration(
                 hintText: "Enter new User Name",
@@ -1092,7 +1094,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
               ),
             ),
           ),
-        ),
+        ),   
       ),
       actions: <Widget>[
         Row(
@@ -1140,7 +1142,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      updateDisplayName(_textFieldController.text);
+                      _textFieldController.text.isEmpty?Fluttertoast.showToast(msg: "Enter the valid name",backgroundColor: Color(0xFFFF997A)) :updateDisplayName(_textFieldController.text);
                     },
                     child: Text(
                       'Update',
@@ -1287,7 +1289,7 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      _sendPasswordResetEmail();
+                   _sendPasswordResetEmail();
                       _signOut();
                       Navigator.pop(context);
                     },

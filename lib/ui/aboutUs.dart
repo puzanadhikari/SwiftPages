@@ -111,7 +111,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                                   child:  Image.network(
                                     linkedinLogo,
                                     errorBuilder: (context, error, stackTrace) {
-                                      return Text('I');
+                                      return Text('');
                                     },
                                   ),),
                               SizedBox(width: 10,),
