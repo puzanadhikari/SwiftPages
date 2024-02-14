@@ -283,74 +283,81 @@ class _GraphPageState extends State<GraphPage> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Reading Stats",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Color(0xff283E50),
-                                    fontSize: 30,fontFamily: 'font',
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              SizedBox(height: 20,),
-                              Text(
-                                "You are viewing the stats for the year",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.grey[700],
-                                    fontSize: 16,fontFamily: 'font',
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              SizedBox(height: 15,),
-                              Padding(
-                                padding: const EdgeInsets.only(left:50.0,right: 50),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+
+                                Text(
+                                  "Reading Stats",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color(0xff283E50),
+                                      fontSize: 25,fontFamily: 'font',
+                                      fontWeight: FontWeight.bold
                                   ),
-                                  color: Color(0xFFFF997A),
-                                  elevation: 8,
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<int>(
-                                      hint: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(__selectedYear==0?"Select year":__selectedYear.toString(),style: TextStyle(color: Color(0xff283E50)),),
+                                ),
+                                SizedBox(height: 20,),
+                                Text(
+                                  "You are viewing the stats for the year",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 16,fontFamily: 'font',
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                SizedBox(height: 15,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left:50.0,right: 50),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    color: Color(0xFFFF997A),
+                                    elevation: 0,
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<int>(
+                                        borderRadius: BorderRadius.circular(15),
+                                        elevation: 0,
+                                        hint: Padding(
+                                          padding: const EdgeInsets.only(left:20.0),
+                                          child: Text(__selectedYear==0?"Select year":__selectedYear.toString(),style: TextStyle(color: Color(0xff283E50),fontFamily: 'font',fontSize: 16),),
+                                        ),
+                                        onChanged: (int? newValue) {
+                                          setState(() {
+                                             totalTimeMin=0;
+                                             totalTimeSec=0;
+                                             mediumPaceCount = 0;
+                                             fastPaceCount = 0;
+                                             slowPaceCount = 0;
+                                             mediumPaceCountPer = 0;
+                                             fastPaceCountPer = 0;
+                                             slowPaceCountPer = 0;
+                                             finalRating = 0;
+                                             __selectedYear =0;
+                                           moodCounts = {};
+                                          genreCounts = {};
+                                            __selectedYear = newValue!;
+                                            fetchBooksForPace();
+                                            fetchBooks();
+                                          });
+                                        },
+                                        icon: Icon(Icons.add,color: Color(0xFFFF997A),),
+                                        dropdownColor: Color(0xFFFF997A),
+                                        
+                                        items: years.map<DropdownMenuItem<int>>((int value) {
+                                          return DropdownMenuItem<int>(
+                                            value: value,
+                                            child: Text(value.toString(),style: TextStyle(color: Color(0xff283E50),fontFamily: 'font',fontSize: 16),),
+                                          );
+                                        }).toSet().toList(),
                                       ),
-                                      onChanged: (int? newValue) {
-                                        setState(() {
-                                           totalTimeMin=0;
-                                           totalTimeSec=0;
-                                           mediumPaceCount = 0;
-                                           fastPaceCount = 0;
-                                           slowPaceCount = 0;
-                                           mediumPaceCountPer = 0;
-                                           fastPaceCountPer = 0;
-                                           slowPaceCountPer = 0;
-                                           finalRating = 0;
-                                           __selectedYear =0;
-                                         moodCounts = {};
-                                        genreCounts = {};
-                                          __selectedYear = newValue!;
-                                          fetchBooksForPace();
-                                          fetchBooks();
-                                        });
-                                      },
-                                      icon: Icon(Icons.add,color: Color(0xFFFF997A),),
-                                      
-                                      items: years.map<DropdownMenuItem<int>>((int value) {
-                                        return DropdownMenuItem<int>(
-                                          value: value,
-                                          child: Text(value.toString()),
-                                        );
-                                      }).toSet().toList(),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
