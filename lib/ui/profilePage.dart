@@ -606,6 +606,38 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text("Change Time Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/close.png",height: 20,),
+                                SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: ()async{
+                                      // guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
+
+                                      if(guestLogin==true){
+                                        _showPersistentBottomSheet( context);
+                                      }else{
+                                        int? result = await showDialog<int>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CustomAlertYearlyGoalDialog();
+
+
+                                          },
+                                        );
+
+                                        if (result != null) {
+                                          // Do something with the selected number
+                                          print('Selected Number: $result');
+                                        }
+                                      }
+
+                                    },
+                                    child: Text("Change Book Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
+                              ],
+                            ),
                              Divider(
                                     thickness: 1,
                               color: Colors.black.withOpacity(0.25),
@@ -1462,6 +1494,157 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
 
 
 }
+
+
+
+class CustomAlertYearlyGoalDialog extends StatefulWidget {
+
+  @override
+  _CustomAlertYearlyGoalDialogState createState() => _CustomAlertYearlyGoalDialogState();
+}
+
+class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialog> {
+  int selectedNumber = 0;
+  TextEditingController newGoal = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> _changeGoal() async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_auth.currentUser?.uid)
+        .get();
+
+    await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'yearlyGoal': (int.parse(newGoal.text))});
+    Fluttertoast.showToast(msg: "Your Yearly goal cannot be greater than ${newGoal.text}",backgroundColor: Color(0xff283E50),);
+
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Text(
+            'Change Book Goal',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child:   TextField(
+              style: TextStyle(
+                  color: Color(0xff283E50),
+                  fontFamily: 'font'
+              ),
+              controller: newGoal,
+              decoration: InputDecoration(
+                hintText: "Enter new book Goal",
+                hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey),
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  // Add your action widgets here
+                  child: TextButton(
+                    onPressed: () {
+
+                      Navigator.pop(context);
+
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 100,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      _changeGoal();
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(msg: "Goal updated successfully!",backgroundColor:Color(0xFF283E50), );
+                    },
+                    child: Text(
+                      'Update',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+}
+
+
+
+
 
 
 class CustomAlertInvideDialog extends StatefulWidget {
