@@ -108,7 +108,12 @@ class _AboutUsPageState extends State<AboutUsPage> {
                             children: [
                               GestureDetector(
                                   onTap:()=> _launchURL(linkedinName),
-                                  child:  linkedinLogo==''?Text(''):Image.network(linkedinLogo)),
+                                  child:  Image.network(
+                                    linkedinLogo,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Text('I');
+                                    },
+                                  ),),
                               SizedBox(width: 10,),
                               GestureDetector(
                                   onTap: ()=> _launchURL(instagramName),
