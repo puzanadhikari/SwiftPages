@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg instead of flutter_svg/svg.dart
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'allBooks.dart';
 
 class AllBookDetailPage extends StatefulWidget {
@@ -24,8 +25,61 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
     super.initState();
     log(widget.book.publishedDate.toString());
   }
+  List<int> year = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+  List<int> days = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ];
 
-  void saveMyBook(String author, String image,int totalPage,String status,String publishedDate,String description,double rating) async {
+  List<String> month = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  int selectedYear = 0;
+  int selectedDays = 0;
+  String selectedMonth = '';
+  String gotDocId = '';
+
+  Future<String?> saveMyBook(String author, String image, int totalPage, String status, String publishedDate, String description, double rating) async {
     try {
       // Get the current authenticated user
       User? user = FirebaseAuth.instance.currentUser;
@@ -35,8 +89,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
         String uid = user.uid;
 
         // Reference to the 'myBooks' collection with the UID as the document ID
-        CollectionReference myBooksRef =
-        FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
+        CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
         // Check if the book with the same author and image already exists
         QuerySnapshot existingBooks = await myBooksRef
@@ -50,20 +103,36 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
           Map<String, dynamic> bookData = {
             'image': image,
             'author': author,
-            'totalPageCount': totalPage==0?150:totalPage,
-            'status':status,
-            'currentPage':0,
-            'description':description,
-            'publishedDate':publishedDate,
-            'rating':rating
+            'totalPageCount': totalPage == 0 ? 150 : totalPage,
+            'status': status,
+            'currentPage': 0,
+            'description': description,
+            'publishedDate': publishedDate,
+            'rating': rating
           };
 
           // Add the book data to the 'myBooks' collection
-          await myBooksRef.add(bookData);
+          DocumentReference newBookRef = await myBooksRef.add(bookData);
 
-          Fluttertoast.showToast(msg: "Book saved successfully!",backgroundColor:Color(0xFFFF997A));
+          Fluttertoast.showToast(msg: "Book saved successfully!", backgroundColor: Color(0xFFFF997A));
+          setState(() {
+            gotDocId = newBookRef.id;
+          });
+          int? result = await showDialog<int>(
+            context: context,
+            builder: (BuildContext context) {
+              return
+                CustomAlertForStartDateDialog(
+                  year: year,
+                  days: days,
+                  month: month, gotId: newBookRef.id,
+                );
+            },
+          );
+          // _showInvitationCodePopupForStartingDate();
+          return newBookRef.id;
         } else {
-          Fluttertoast.showToast(msg: "Book already exists!",backgroundColor: Color(0xFFFF997A));
+          Fluttertoast.showToast(msg: "Book already exists!", backgroundColor: Color(0xFFFF997A));
         }
       } else {
         print('No user is currently signed in.');
@@ -71,7 +140,10 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
     } catch (e) {
       print('Error saving book: $e');
     }
+
+    return null; // Return null if there was an error or the book already exists
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -263,7 +335,35 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
       ),
     );
   }
+  String startingDate = '';
+  Future<void> addStartingDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "startingDate": startingDate,
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
   void _showInvitationCodePopup() {
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -301,9 +401,11 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                       onPressed: () {
 
                         saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'CURRENTLY READING',widget.book.publishedDate.substring(0,4),widget.book.description,widget.book.rating); // Example values, replace with your data
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+
+                        //
+                        // Navigator.pop(context);
+                        // Navigator.pop(context);
+                        // Navigator.pop(context);
                       },
                       child: Container(
                           // width: 70,
@@ -320,6 +422,7 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
                     ElevatedButton(
                       onPressed: () {
                         saveMyBook( widget.book.title,widget.book.imageLink,widget.book.pageCount,'COMPLETED',widget.book.publishedDate.substring(0,4),widget.book.description,widget.book.rating);  // Example values, replace with your data
+
                         Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -398,6 +501,563 @@ class _AllBookDetailPageState extends State<AllBookDetailPage> {
         );
       },
     );
+  }
+
+  void _showInvitationCodePopupForStartingDate() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Color(0xffD9D9D9),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Started Date',
+                          style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+                        ),
+                        Container(
+                          width: 100,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF283E50),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              DateTime now = DateTime.now();
+                              startingDate = DateFormat('yyyy/MMM/dd', 'en_US').format(now);
+                              addStartingDate(gotDocId);
+                              // log(formattedDate);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Today',
+                              style: TextStyle(
+                                  color: Colors.white,fontFamily: 'font'
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 50,
+                  // width: 100,
+                  decoration: BoxDecoration(
+                    color: Color(0xffFEEAD4),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Container(
+                            height: 50,
+
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount:year.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                int number =year[index];
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedYear = number;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 50,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: number == selectedYear
+                                          ? Color(0xffD9D9D9)
+                                          : Colors.transparent,
+                                      border: Border.all(
+                                        color: number == selectedYear
+                                            ? Color(0xffD9D9D9)
+                                            : Colors.transparent,
+                                        width: 2.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      '$number',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,fontFamily:'font',
+                                        color: Color(0xff686868),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Container(
+                            height: 50,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount:month.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String number = month[index];
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedMonth = number;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 50,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: number == selectedMonth
+                                          ? Color(0xffD9D9D9)
+                                          : Colors.transparent,
+                                      border: Border.all(
+                                        color: number == selectedMonth
+                                            ? Color(0xffD9D9D9)
+                                            : Colors.transparent,
+                                        width: 2.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      '$number',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,fontFamily:'font',
+                                        color: Color(0xff686868),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Container(
+                            height: 50,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: days.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                int number = index + 1;
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedDays = number;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 50,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: number == selectedDays
+                                          ? Color(0xffD9D9D9)
+                                          : Colors.transparent,
+                                      border: Border.all(
+                                        color: number == selectedDays
+                                            ? Color(0xffD9D9D9)
+                                            : Colors.transparent,
+                                        width: 2.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      '$number',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,fontFamily:'font',
+                                        color: Color(0xff686868),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 115,
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF283E50),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            startingDate = selectedYear.toString()+'/'+selectedMonth.toString()+'/'+selectedDays.toString();
+                            log(startingDate);
+                          });
+                          addStartingDate(gotDocId);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          setState(() {});
+                        },
+                        child: Text(
+                          'Update',
+                          style: TextStyle(
+                              color: Colors.white,fontFamily: 'font'
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ),
+        );
+      },
+    );
+  }
+
+}
+class CustomAlertForStartDateDialog extends StatefulWidget {
+ String gotId;
+  List<int> year;
+  List<int> days;
+  List<String> month;
+
+  CustomAlertForStartDateDialog(
+      {required this.gotId,
+        required this.year,
+        required this.days,
+        required this.month});
+
+  @override
+  _CustomAlertForStartDateDialogState createState() =>
+      _CustomAlertForStartDateDialogState();
+}
+class _CustomAlertForStartDateDialogState
+    extends State<CustomAlertForStartDateDialog> {
+  int selectedYear = 0;
+  int selectedDays = 0;
+  String selectedMonth = '';
+  String startingDate = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Started Date',
+                style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+              ),
+              Container(
+                width: 100,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Color(0xFF283E50),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    DateTime now = DateTime.now();
+                    startingDate = DateFormat('yyyy/MMM/dd', 'en_US').format(now);
+                    addStartingDate(widget.gotId);
+                    // log(formattedDate);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    setState(() {});
+                  },
+                  child: Text(
+                    'Today',
+                    style: TextStyle(
+                        color: Colors.white,fontFamily: 'font'
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Color(0xffFEEAD4),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.year.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = widget.year[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedYear = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedYear
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedYear
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
+                              color: Color(0xff686868),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.month.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String number = widget.month[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedMonth = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedMonth
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedMonth
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
+                              color: Color(0xff686868),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.days.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = index + 1;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedDays = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedDays
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedDays
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
+                              color: Color(0xff686868),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 115,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Color(0xFF283E50),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    startingDate = selectedYear.toString()+'/'+selectedMonth.toString()+'/'+selectedDays.toString();
+                    log(startingDate);
+                  });
+                  addStartingDate(widget.gotId);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  setState(() {});
+                },
+                child: Text(
+                  'Update',
+                  style: TextStyle(
+                      color: Colors.white,fontFamily: 'font'
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Future<void> addStartingDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "startingDate": startingDate,
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
   }
 
 }
