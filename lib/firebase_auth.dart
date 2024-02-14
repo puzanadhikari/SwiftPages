@@ -77,7 +77,6 @@ class FirebaseAuthService {
       if (user != null) {
         String uid = user.uid;
 
-        // Sample user data (customize based on your requirements)
         Map<String, dynamic> userData = {
           "email": email,
           "username": username,

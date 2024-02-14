@@ -27,14 +27,20 @@ class _GraphPageState extends State<GraphPage> {
   String updatedTime='';
   int completedLength=0;
 
-  Map<String, int> moodCounts = {}; // Map to store mood counts
-  Map<String, int> genreCounts = {}; // Map to store mood counts
-
+  Map<String, int> moodCounts = {};
+  Map<String, int> genreCounts = {};
+  int currentYear = 0;
+  int startYear = 2019;
+  List<int> years = [];
 
   double ratingTotal =0.0;
   @override
   void initState() {
     super.initState();
+    DateTime now = DateTime.now();
+    currentYear = now.year;
+    years = List<int>.generate(currentYear - startYear + 1, (index) => startYear + index);
+
     fetchBooks();
     fetchData();
     fetchBooksForPace();
@@ -56,6 +62,7 @@ class _GraphPageState extends State<GraphPage> {
   double fastPaceCountPer = 0;
   double slowPaceCountPer = 0;
   double finalRating = 0;
+  int __selectedYear =0;
   Future<void> fetchBooksForPace() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -66,17 +73,18 @@ class _GraphPageState extends State<GraphPage> {
 
         CollectionReference myBooksRef = FirebaseFirestore.instance.collection('myBooks').doc(uid).collection('books');
 
-        QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
+        QuerySnapshot querySnapshotMyReads=__selectedYear==0? await myBooksRef.where('status', isEqualTo: 'COMPLETED').get():await myBooksRef.where('status', isEqualTo: 'COMPLETED').where('year',isEqualTo:__selectedYear).get();
+
 
         List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
+
 
         setState(() {
           myBooksMyReads = bookDocumentsMyReads
               .map((doc) => DetailBook.fromMap(doc.id, doc.data() as Map<String, dynamic>?))
               .toList();
         });
-
-        // Initialize counters
+        
         mediumPaceCount = 0;
         fastPaceCount = 0;
         slowPaceCount = 0;
@@ -151,7 +159,7 @@ class _GraphPageState extends State<GraphPage> {
 
 
 
-        QuerySnapshot querySnapshotMyReads = await myBooksRef.where('status', isEqualTo: 'COMPLETED').get();
+        QuerySnapshot querySnapshotMyReads=__selectedYear==0? await myBooksRef.where('status', isEqualTo: 'COMPLETED').get():await myBooksRef.where('status', isEqualTo: 'COMPLETED').where('year',isEqualTo:__selectedYear).get();
 
         // Access the documents in the query snapshot
         List<DocumentSnapshot> bookDocumentsMyReads = querySnapshotMyReads.docs;
@@ -267,7 +275,7 @@ class _GraphPageState extends State<GraphPage> {
                       top: 130,
                       left: 40,
                       child: Container(
-                        height: 100,
+                        height: 150,
                         width: MediaQuery.of(context).size.width/1.2,
 
                         decoration: BoxDecoration(
@@ -275,77 +283,80 @@ class _GraphPageState extends State<GraphPage> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: SingleChildScrollView(
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.all( 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 5,),
-                                Text(
-                                  "Last Streak History",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Color(0xff283E50),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,fontFamily: 'font',
+                          child: Column(
+                            children: [
+                              Text(
+                                "Reading Stats",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Color(0xff283E50),
+                                    fontSize: 30,fontFamily: 'font',
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              SizedBox(height: 20,),
+                              Text(
+                                "You are viewing the stats for the year",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.grey[700],
+                                    fontSize: 16,fontFamily: 'font',
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              SizedBox(height: 15,),
+                              Padding(
+                                padding: const EdgeInsets.only(left:50.0,right: 50),
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  color: Color(0xFFFF997A),
+                                  elevation: 8,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<int>(
+                                      hint: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(__selectedYear==0?"Select year":__selectedYear.toString(),style: TextStyle(color: Color(0xff283E50)),),
+                                      ),
+                                      onChanged: (int? newValue) {
+                                        setState(() {
+                                           totalTimeMin=0;
+                                           totalTimeSec=0;
+                                           mediumPaceCount = 0;
+                                           fastPaceCount = 0;
+                                           slowPaceCount = 0;
+                                           mediumPaceCountPer = 0;
+                                           fastPaceCountPer = 0;
+                                           slowPaceCountPer = 0;
+                                           finalRating = 0;
+                                           __selectedYear =0;
+                                         moodCounts = {};
+                                        genreCounts = {};
+                                          __selectedYear = newValue!;
+                                          fetchBooksForPace();
+                                          fetchBooks();
+                                        });
+                                      },
+                                      icon: Icon(Icons.add,color: Color(0xFFFF997A),),
+                                      
+                                      items: years.map<DropdownMenuItem<int>>((int value) {
+                                        return DropdownMenuItem<int>(
+                                          value: value,
+                                          child: Text(value.toString()),
+                                        );
+                                      }).toSet().toList(),
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 5,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/strick.png",
-                                          height: 50,
-                                          color: Color(0xff283E50),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                            lastStrikeTime==null?'': lastStrikeTime!.toDate().toLocal().toString().split(' ')[0],
-                                              style: TextStyle(      fontSize: 14,
-                                                fontWeight: FontWeight.bold,fontFamily:'font',   color: Color(0xff283E50),),
-                                            ),
-                                            Text(
-                                              lastStrikeTime==null?'':lastStrikeTime!.toDate().toLocal().toString().split(' ')[1].substring(0, 5),
-                                              style: TextStyle(      fontSize: 14,
-                                                fontWeight: FontWeight.bold,fontFamily:'font',   color: Color(0xff283E50),),
-                                            ),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                   'Last Streak: '+ lastStreak.toString(),
-                                          style: TextStyle(  color: Color(0xff283E50),      fontSize: 14,
-                                              fontWeight: FontWeight.bold,fontFamily: 'font',),
-                                        ),
-                                        Text(
-                                          'Current Streak: '+ streak.toString(),
-                                          style: TextStyle(      fontSize: 14,
-                                              fontWeight: FontWeight.bold,fontFamily:'font',  color: Color(0xff283E50),),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                     Positioned(
-                      top: 250,
+                      top: 300,
                       left: 40,
                       child: Stack(
                         children: [
@@ -490,7 +501,7 @@ class _GraphPageState extends State<GraphPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        "Reading Stats",
+                                        "Yearly Book Goals",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Color(0xff283E50),
@@ -545,7 +556,7 @@ class _GraphPageState extends State<GraphPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30.0,right: 30),
+                padding: const EdgeInsets.only(top:30,left: 30.0,right: 30),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   // height: MediaQuery.of(context).size.height/4,
@@ -624,144 +635,150 @@ class _GraphPageState extends State<GraphPage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30, left: 30.0, right: 30),
-                child: Container(
-                  height:MediaQuery.of(context).size.height/2.8,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Color(0xffD9D9D9),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Genre",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color(0xff283E50),
-                            fontSize: 20,
-                            fontFamily: 'font',
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height/3.5 ,
-                        child: AspectRatio(
-                          aspectRatio:1.5,
-                          child: PieChart(
-                            PieChartData(
-                              sections: genreCounts.entries.map((entry) {
-                                String genre = entry.key;
-                                int count = entry.value;
-
-                                return PieChartSectionData(
-                                  color: _getNextColor(), // Use the next color from the list
-                                  value: (count / completedLength).toDouble(),
-                                  title: '$genre\n${((count / completedLength) * 100).toStringAsFixed(2)}%',
-                                  titleStyle: TextStyle(fontFamily: 'font'),
-                                  radius: 70,
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:30,left: 30.0,right: 30),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/4,
-                  decoration: BoxDecoration(
-                    color: Color(0xffD9D9D9),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Center(
+              Visibility(
+                visible: genreCounts.isEmpty?false:true,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30, left: 30.0, right: 30),
+                  child: Container(
+                    height:MediaQuery.of(context).size.height/2.8,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Color(0xffD9D9D9),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Mood",
+                            "Genre",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: Color(0xff283E50),
-                                fontSize: 20,fontFamily: 'font',
-                                fontWeight: FontWeight.bold
+                              color: Color(0xff283E50),
+                              fontSize: 20,
+                              fontFamily: 'font',
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 30.0, right: 30),
-                          child: Column(
-                            children: List.generate((moodCounts.length / 3).ceil(), (index) {
-                              int startIndex = index * 3;
-                              int endIndex = startIndex + 3;
-
-                              // Ensure endIndex does not exceed the length of the moodCounts list
-                              endIndex = endIndex > moodCounts.length ? moodCounts.length : endIndex;
-
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: moodCounts.entries.toList().sublist(startIndex, endIndex).map((entry) {
-                                  String mood = entry.key;
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height/3.5 ,
+                          child: AspectRatio(
+                            aspectRatio:1.5,
+                            child: PieChart(
+                              PieChartData(
+                                sections: genreCounts.entries.map((entry) {
+                                  String genre = entry.key;
                                   int count = entry.value;
 
-                                  // Calculate radius based on percentage
-                                  double radius = (count / completedLength) * 10 + 30; // Adjust the scaling factor 50 as needed
-
-                                  // Determine the color based on the index
-                                  Color backgroundColor = moodCounts.keys.toList().indexOf(mood).isOdd ? Color(0xff283E50) : Color(0xFFFF997A);
-
-                                  return CircleAvatar(
-                                    radius: radius,
-                                    backgroundColor: backgroundColor,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          '${((count / completedLength) * 100).toStringAsFixed(2)}%',
-                                          style: TextStyle(
-                                            color: Color(0xFFD9D9D9),
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'font',
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        Text(
-                                          mood,
-                                          style: TextStyle(
-                                            color: Color(0xFFD9D9D9),
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'font',
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  return PieChartSectionData(
+                                    color: _getNextColor(), // Use the next color from the list
+                                    value: (count / completedLength).toDouble(),
+                                    title: '$genre\n${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                    titleStyle: TextStyle(fontFamily: 'font'),
+                                    radius: 70,
                                   );
                                 }).toList(),
-                              );
-                            }),
+                              ),
+                            ),
                           ),
                         ),
-
-
-
-
-
                       ],
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: moodCounts.isEmpty?false:true,
+                child: Padding(
+                  padding: const EdgeInsets.only(top:30,left: 30.0,right: 30),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height/4,
+                    decoration: BoxDecoration(
+                      color: Color(0xffD9D9D9),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Mood",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(0xff283E50),
+                                  fontSize: 20,fontFamily: 'font',
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 30.0, right: 30),
+                            child: Column(
+                              children: List.generate((moodCounts.length / 3).ceil(), (index) {
+                                int startIndex = index * 3;
+                                int endIndex = startIndex + 3;
+
+                                // Ensure endIndex does not exceed the length of the moodCounts list
+                                endIndex = endIndex > moodCounts.length ? moodCounts.length : endIndex;
+
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: moodCounts.entries.toList().sublist(startIndex, endIndex).map((entry) {
+                                    String mood = entry.key;
+                                    int count = entry.value;
+
+                                    // Calculate radius based on percentage
+                                    double radius = (count / completedLength) * 10 + 30; // Adjust the scaling factor 50 as needed
+
+                                    // Determine the color based on the index
+                                    Color backgroundColor = moodCounts.keys.toList().indexOf(mood).isOdd ? Color(0xff283E50) : Color(0xFFFF997A);
+
+                                    return CircleAvatar(
+                                      radius: radius,
+                                      backgroundColor: backgroundColor,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '${((count / completedLength) * 100).toStringAsFixed(2)}%',
+                                            style: TextStyle(
+                                              color: Color(0xFFD9D9D9),
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'font',
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Text(
+                                            mood,
+                                            style: TextStyle(
+                                              color: Color(0xFFD9D9D9),
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'font',
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              }),
+                            ),
+                          ),
+
+
+
+
+
+                        ],
+                      ),
                     ),
                   ),
                 ),
