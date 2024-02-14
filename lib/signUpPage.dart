@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +22,41 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
+  List<String> usernames = [];
+  @override
+  void initState() {
+    super.initState();
+    usernames = [];
+    fetchUsernames().then((value) {
+      setState(() {
+        usernames = value;
+      });
+    });
+  }
 
+  Future<List<String>> fetchUsernames() async {
+    List<String> usernames = [];
 
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').get();
+      querySnapshot.docs.forEach((doc) {
+        String username = doc['username'];
+        usernames.add(username);
+        log(usernames.toString());
+      });
+    } catch (e) {
+      print('Error fetching usernames: $e');
+    }
+
+    return usernames;
+  }
+
+  String? validateUsername(String? value) {
+    if (usernames.contains(value)) {
+      return 'Username already exists. Please enter a different username.';
+    }
+    return null;
+  }
   bool obscurePassword = true;
   Future<void> _handleGoogleSignIn() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -50,6 +85,12 @@ class _SignUpPageState extends State<SignUpPage> {
       // Handle the error as needed
     }
   }
+  bool isEmailValid(String email) {
+    // Simple email validation regex
+    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
   double height=50;
   @override
   Widget build(BuildContext context) {
@@ -97,6 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                         SizedBox(height: 10),
+                        Text(usernames.toString()),
                         Text(
                           'Get ready for a journey where every page \n        turns into a swift adventure!!!!!',
                           style: TextStyle(
@@ -138,7 +180,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               Container(
                                 height: height,
                                 child: TextFormField(
-                                  style: TextStyle(fontFamily: 'font',color:Colors.grey[700],fontSize: 13 ),
+                                  style: TextStyle(fontFamily: 'font', color: Colors.grey[700], fontSize: 13),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       setState(() {
@@ -146,22 +188,22 @@ class _SignUpPageState extends State<SignUpPage> {
                                       });
                                       return 'Please Enter Your Email';
                                     }
+                                    if (!isEmailValid(value)) {
+                                      return 'Please enter a valid email';
+                                    }
                                     return null;
                                   },
                                   controller: emailController,
                                   decoration: InputDecoration(
-                                      hintText: 'Email',
-                                      hintStyle: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: "font",
-                                          color: Color(0xff686868).withOpacity(0.5)),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8.0),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      filled: true,
-                                      fillColor:  Color(0xFFD9D9D9),
-                                      errorStyle: TextStyle(color: Colors.grey[700],fontSize: 8,fontFamily: "font",)
+                                    hintText: 'Email',
+                                    hintStyle: TextStyle(fontSize: 12, fontFamily: "font", color: Color(0xff686868).withOpacity(0.5)),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Color(0xFFD9D9D9),
+                                    errorStyle: TextStyle(color: Colors.grey[700], fontSize: 8, fontFamily: "font"),
                                   ),
                                 ),
                               ),
@@ -186,6 +228,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             Container(
                               height: height,
                               child: TextFormField(
+
                                 style: TextStyle(fontFamily: 'font',color:Colors.grey[700],fontSize: 13 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -196,8 +239,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                   }
                                   return null;
                                 },
+
+                                onChanged: validateUsername,
                                 controller: userNameController,
                                 decoration: InputDecoration(
+
                                     hintText: ' Enter Your UserName',
                                     hintStyle: TextStyle(
                                         fontSize: 12,
