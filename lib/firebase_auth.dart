@@ -35,7 +35,7 @@ class FirebaseAuthService {
   }
 
   Future<User?> SignUpWithEmailAndPassword(
-      BuildContext context, String email, String password, String username,String avatars,String dailyGoal,Color _avatarColor,int yearlyGoal) async {
+      BuildContext context, String email, String password, String username,String avatars,int dailyGoal,Color _avatarColor,int yearlyGoal) async {
     try {
       UserCredential userCredential =
       await _auth.createUserWithEmailAndPassword(
@@ -67,7 +67,7 @@ class FirebaseAuthService {
       return null;
     }
   }
-  Future addUserData(String email,String username,String password,String avatar,String dailyGoal,Color _avatarColor,int yearlyGoal) async {
+  Future addUserData(String email,String username,String password,String avatar,int dailyGoal,Color _avatarColor,int yearlyGoal) async {
     try {
 
       User? user = FirebaseAuth.instance.currentUser;
@@ -81,7 +81,7 @@ class FirebaseAuthService {
           "username": username,
           "password": password,
           "avatar": avatar,
-          'dailyGoal': dailyGoal,
+          'dailyGoal': jsonEncode(dailyGoal),
           'currentTime': 0,
           'avatarColor': _avatarColor.value,
           'lastStrikeTimestamp': null,

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,15 +28,19 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
   Color _avatarColor = Colors.white;
   TextEditingController _dailyGoal = TextEditingController();
   TextEditingController _yearlyGoal = TextEditingController();
+  final TextEditingController hour = TextEditingController();
+  final TextEditingController minute = TextEditingController();
   String? selectedAvatar;
   final storage = FirebaseStorage.instance;
   Reference get firebaseStorage => FirebaseStorage.instance.ref();
-
+  String clock='';
+  int selectedNumber = 0;
   Future<void> loadAvatars() async {
     List<String> urls = [];
 
     try {
       ListResult result = await firebaseStorage.child("avatars/").listAll();
+      clock =await firebaseStorage.child("assets/Group 60.svg").getDownloadURL();
 
       for (Reference ref in result.items) {
         final imageUrl = await ref.getDownloadURL();
@@ -49,12 +55,17 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
     });
   }
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  double height=50;
+
   @override
   void initState() {
     super.initState();
+
     avatarUrls = [];
     selectedAvatar = null;
     loadAvatars();
+
   }
 
   @override
@@ -160,19 +171,11 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (selectedAvatar != null) {
+                              log(clock);
                               _showPersistentBottomSheet(context);
-                              //log('Selected Avatar Path: $selectedAvatar');
                             } else {
-                              // Show a message if no avatar is selected
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Please select an avatar.'),
-                                ),
-                              );
-                            }
-
-
-
+                              Fluttertoast.showToast(msg:'Please select an avatar.',backgroundColor: Color(0xFF283E50));
+                          }
                           },
                           style: ElevatedButton.styleFrom(
                             primary: selectedAvatar != null ? Color(0xFF283E50) : Color(0xfffeead4),
@@ -208,7 +211,14 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
       ),
     );
   }
+  Future<int> getSelectedNumber() async {
+    // Simulating an asynchronous operation, replace this with your actual logic
+    await Future.delayed(Duration(seconds: 1));
+    return selectedNumber;
+  }
   void _showPersistentBottomSheet(BuildContext context) {
+    int hourValue = 0;
+    int minuteValue = 0;
     showModalBottomSheet(
       backgroundColor: Color(0xFF283E50),
       context: context,
@@ -217,137 +227,266 @@ class _ChooseAvatarsState extends State<ChooseAvatars> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.5,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Choose Your reading\nGoals",textAlign:TextAlign.center,style: TextStyle(fontSize: 30, color: Color(0xFFFEEAD4),fontFamily:'font',),),
-                  Text("You can later change it in the settings!!!",textAlign:TextAlign.center,style: TextStyle(fontSize: 15, color: Color(0xFFD9D9D9),fontFamily:'font',),),
-                  SizedBox(height: 30,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Daily Goal",
-                        style: TextStyle(
-                          fontSize:14,
-                          fontWeight: FontWeight.bold,fontFamily:'font',
-                          color:  Color(0xFFD9D9D9),
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      GestureDetector(
-                        onTap: (){
-                          showDialog(
-                            context: context,
-                            builder: (_) => FromToTimePicker(
-                              onTab: (from, to) {
-                                print('from $from to $to');
-                              },
-                              dialogBackgroundColor: Color(0xFF121212),
-                              fromHeadlineColor: Colors.white,
-                              toHeadlineColor: Colors.white,
-                              upIconColor: Colors.white,
-                              downIconColor: Colors.white,
-                              timeBoxColor: Color(0xFF1E1E1E),
-                              timeHintColor: Colors.grey,
-                              timeTextColor: Colors.white,
-                              dividerColor: Color(0xFF121212),
-                              doneTextColor: Colors.white,
-                              dismissTextColor: Colors.white,
-                              defaultDayNightColor: Color(0xFF1E1E1E),
-                              defaultDayNightTextColor: Colors.white,
-                              colonColor: Colors.white,
-                              showHeaderBullet: true,
-                              headerText: 'Time available from 01:00 AM to 11:00 PM',
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SingleChildScrollView(
+                padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height/1.8 ,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Choose Your reading\nGoals!!",textAlign:TextAlign.center,style: TextStyle(fontSize: 30, color: Color(0xFFFF997A),fontFamily:'font',),),
+                        Text("You can later change it in the settings!!!",textAlign:TextAlign.center,style: TextStyle(fontSize: 15, color: Color(0xFFD9D9D9),fontFamily:'font',),),
+                        SizedBox(height: 30,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Daily Goal",
+                              style: TextStyle(
+                                fontSize:18,
+                                fontWeight: FontWeight.bold,fontFamily:'font',
+                                color:  Color(0xFFFF997A),
+                              ),
                             ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2.0),
-                            color: Color(0xFFD9D9D9),
-                          ),
-                          child: Text("Select the time")
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Reading Goals",
-                        style: TextStyle(
-                          fontSize:14,
-                          fontWeight: FontWeight.bold,fontFamily:'font',
-                          color:  Color(0xFFD9D9D9),
+                            SizedBox(height: 20,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: height,
+                                  width: 50,
+                                  child: TextFormField(
+                                    style: TextStyle(fontFamily: 'font',color:Colors.grey[700],fontSize: 13 ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        setState(() {
+                                          height=70;
+                                          hourValue = int.tryParse(value!) ?? 0;
+                                        });
+                                        return 'Please Enter Your hour';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        // Parse the hour value
+                                        hourValue = int.tryParse(value) ?? 0;
+                                      });
+                                    },
+                                    controller: hour,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
 
+                                        hintText: '00',
+                                        hintStyle: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: "font",
+                                            color: Color(0xff686868).withOpacity(0.5)),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        filled: true,
+                                        fillColor:  Color(0xFFD9D9D9),
+                                        errorStyle: TextStyle(color: Colors.grey[700],fontSize: 8,fontFamily: "font",)
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 5,),
+                                Text(':',style: TextStyle(color: Color(0xFFD9D9D9),),),
+                                SizedBox(width: 5,),
+                                Container(
+                                  height: height,
+                                  width: 50,
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    style: TextStyle(fontFamily: 'font',color:Colors.grey[700],fontSize: 13 ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        setState(() {
+                                          height=70;
+                                          minuteValue = int.tryParse(value!) ?? 0;
+                                          log(minuteValue.toString());
+                                        });
+                                        return 'Please Enter Your minute';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        // Parse the minute value
+                                        minuteValue = int.tryParse(value) ?? 0;
+                                      });
+                                    },
+                                    onEditingComplete: () {
+
+                                      int totalMinutes = hourValue * 60 + minuteValue;
+                                      print('Total minutes: $totalMinutes');
+                                    },
+                                    controller: minute,
+
+                                    decoration: InputDecoration(
+                                        hintText: '00',
+                                        hintStyle: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: "font",
+                                            color: Color(0xff686868).withOpacity(0.5)),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        filled: true,
+                                        fillColor:  Color(0xFFD9D9D9),
+                                        errorStyle: TextStyle(color: Colors.grey[700],fontSize: 8,fontFamily: "font",)
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // GestureDetector(
+                            //     onTap: (){
+                            //       showDialog(
+                            //         context: context,
+                            //         builder: (_) => FromToTimePicker(
+                            //           onTab: (from, to) {
+                            //             print('from $from to $to');
+                            //           },
+                            //           dialogBackgroundColor: Color(0xffFEEAD4),
+                            //           fromHeadlineColor: Colors.white,
+                            //           toHeadlineColor: Colors.white,
+                            //           upIconColor: Colors.white,
+                            //           downIconColor: Colors.white,
+                            //           timeBoxColor: Color(0xFF1E1E1E),
+                            //           timeHintColor: Colors.grey,
+                            //           timeTextColor: Colors.white,
+                            //           dividerColor: Color(0xFF121212),
+                            //           doneTextColor: Colors.white,
+                            //           dismissTextColor: Colors.white,
+                            //           defaultDayNightColor: Color(0xFF1E1E1E),
+                            //           defaultDayNightTextColor: Colors.white,
+                            //           colonColor: Colors.white,
+                            //           showHeaderBullet: true,
+                            //           headerText: 'Time available from 01:00 AM to 11:00 PM',
+                            //           headerTextColor: Colors.black,
+                            //         ),
+                            //       );
+                            //     },
+                            //     child: clock==''?Text(''):SvgPicture.network(clock)
+                            // ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 5,),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2.0),
-                          color: Color(0xFFD9D9D9),
+                        SizedBox(height: 20,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Reading Goals",
+                              style: TextStyle(
+                                fontSize:18,
+                                fontWeight: FontWeight.bold,fontFamily:'font',
+                                color:  Color(0xFFFF997A),
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+
+                            SizedBox(
+                              height: 50,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 200,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    int number = index + 1;
+                                    return InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedNumber = number;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 50,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: number == selectedNumber
+                                                ?  Color(0xffFEEAD4)
+                                                : Colors.transparent,
+                                            width: 2.0,
+                                          ),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          '$number',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,fontFamily:'font',color: Color(0xffFEEAD4)
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        child: TextField(
-                          controller: _yearlyGoal,
-                          decoration: InputDecoration(
-                            hintText: 'Number of books for this year',
-                            border: InputBorder.none,
-                            prefixIcon: Icon(Icons.lock_clock),
+                        SizedBox(height: 20,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            int totalMinutes = hourValue * 60 + minuteValue;
+                            log(totalMinutes.toString());
+                            hour!=0||minute!=0?
+                            await _auth.SignUpWithEmailAndPassword(
+                                context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,totalMinutes,_avatarColor,selectedNumber):
+                            Fluttertoast.showToast(msg: "Please enter both the values",backgroundColor: Color(0xff283E50),);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFFFF997A),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                          child: Container(
+                            height: 26,
+                            child: Center(
+                              child: Text(
+                                'SIGN UP',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:   Color(0xFF283E50),
+                                  fontSize: 14,
+                                  fontFamily: 'font',
+                                  fontWeight: FontWeight.w800,
+                                  height: 0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 50,),
-                  ElevatedButton(
-                    onPressed: () async{
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      _dailyGoal.text.isNotEmpty&&_yearlyGoal.text.isNotEmpty?
-                      await _auth.SignUpWithEmailAndPassword(
-                          context, widget._email!.text, widget._password!.text,widget._username!.text,selectedAvatar!,_dailyGoal.text,_avatarColor,int.parse(_yearlyGoal.text)):
-                      Fluttertoast.showToast(msg: "Please enter both the values",backgroundColor: Color(0xff283E50),);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xFFFF997A),// Background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
-                      ),
-                    ),
-                    child: Container(
-                      height: 26,
-                      child: Center(
-                        child: Text(
-                          'SIGN UP',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color:   Color(0xFF283E50),
-                            fontSize: 14,
-                            fontFamily: 'font',
-                            fontWeight: FontWeight.w800,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
   }
+
 }
