@@ -1952,12 +1952,14 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       // Access the document data
       Map<String, dynamic> bookData =
           bookSnapshot.data() as Map<String, dynamic>;
+      int currentYear = DateTime.now().year;
 
       // Print the current status for reference
       print('Current Status: ${bookData['status']}');
 
       // Update the status to 'CURRENTLY READING'
-      await myBooksRef.doc(bookIdToUpdate).update({'status': status});
+      await myBooksRef.doc(bookIdToUpdate).update({'status': status,'year': currentYear,});
+
 
       print('Status updated successfully');
     } else {

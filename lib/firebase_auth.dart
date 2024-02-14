@@ -69,7 +69,9 @@ class FirebaseAuthService {
   }
   Future addUserData(String email,String username,String password,String avatar,int dailyGoal,Color _avatarColor,int yearlyGoal) async {
     try {
-
+      DateTime now = DateTime.now();
+      DateTime previousDay = DateTime(now.year, now.month, now.day - 1);
+      Timestamp lastStrikeTimestamp = Timestamp.fromDate(previousDay);
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
@@ -84,12 +86,13 @@ class FirebaseAuthService {
           'dailyGoal': jsonEncode(dailyGoal),
           'currentTime': 0,
           'avatarColor': _avatarColor.value,
-          'lastStrikeTimestamp': null,
+          'lastStrikeTimestamp': lastStrikeTimestamp,
           'yearlyGoal':yearlyGoal,
           'totalTimeMin':0,
           'totalTimeSec':0,
           'increaseStrike':false,
           'lastStrike':0,
+          'strikes':0
         };
 
         DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);

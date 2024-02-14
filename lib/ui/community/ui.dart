@@ -66,15 +66,13 @@ class _CommunityState extends State<Community> {
 
                   List<QueryDocumentSnapshot> bookDocuments =
                       snapshot.data!.docs;
-
-                  return ListView.builder(
+                   return ListView.builder(
                     reverse: false,
                     itemCount: bookDocuments.length,
                     itemBuilder: (context, index) {
                       var bookData =
-                          bookDocuments[index].data() as Map<String, dynamic>;
+                      bookDocuments[index].data() as Map<String, dynamic>;
                       var documentId = bookDocuments[index].id;
-
 
                       return BookCard(
                         bookData: bookData,
@@ -83,6 +81,7 @@ class _CommunityState extends State<Community> {
                       );
                     },
                   );
+
                 },
               ),
             ),

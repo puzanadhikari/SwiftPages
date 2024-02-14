@@ -15,6 +15,7 @@ import 'package:swiftpages/ui/community/ui.dart';
 import 'package:swiftpages/ui/restoreStreak/ui.dart';
 import 'package:swiftpages/ui/spashScreen.dart';
 import 'package:swiftpages/ui/topNavigatorBar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../signUpPage.dart';
 import 'aboutUs.dart';
@@ -102,10 +103,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
 
                 }else{
-                  Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: Color(0xff283E50),);
+                  Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: const Color(0xff283E50),);
                 }
                   }else{
-             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: Color(0xff283E50),);
+             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: const Color(0xff283E50),);
            }
          }else{
            await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
@@ -116,10 +117,10 @@ class _ProfilePageState extends State<ProfilePage> {
              if(int.parse(newGoal.text)<int.parse(dailyGoal)){
                await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
              }else{
-               Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: Color(0xff283E50),);
+               Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: const Color(0xff283E50),);
              }
            }else{
-             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: Color(0xff283E50),);
+             Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: const Color(0xff283E50),);
            }
          }else{
            await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
@@ -144,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Password reset email sent! Check your email.'),
         ),
       );
@@ -213,14 +214,14 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Your Invitation Code',style: TextStyle(fontFamily: 'font',),),
-          content: Text(_invitationCode,style: TextStyle(fontFamily: 'font',),),
+          title: const Text('Your Invitation Code',style: TextStyle(fontFamily: 'font',),),
+          content: Text(_invitationCode,style: const TextStyle(fontFamily: 'font',),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close',style: TextStyle(fontFamily: 'font',),),
+              child: const Text('Close',style: TextStyle(fontFamily: 'font',),),
             ),
           ],
         );
@@ -233,24 +234,24 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter Your Invitation Code',style: TextStyle(fontFamily: 'font',),),
+          title: const Text('Enter Your Invitation Code',style: TextStyle(fontFamily: 'font',),),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                style: TextStyle(
+                style: const TextStyle(
                     color: Color(0xff283E50),
                     fontFamily: 'font'
                 ),
                 controller: _invitationCodeController,
-                decoration: InputDecoration(labelText: 'Invitation Code'),
+                decoration: const InputDecoration(labelText: 'Invitation Code'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   _validateInvitationCode();
                 },
-                child: Text('Submit',style: TextStyle(fontFamily: 'font',),),
+                child: const Text('Submit',style: TextStyle(fontFamily: 'font',),),
               ),
             ],
           ),
@@ -259,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close',style: TextStyle(fontFamily: 'font',),),
+              child: const Text('Close',style: TextStyle(fontFamily: 'font',),),
             ),
           ],
         );
@@ -470,7 +471,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Text(
                                       '${guestLogin==true?'GUEST':userName.toUpperCase()}',
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(fontFamily: 'font',
+                                      style: const TextStyle(fontFamily: 'font',
                                           color: Colors.black,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -481,7 +482,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Text(
                                       "${guestLogin==true?'guest@swiftpages':email}",
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color(0xFF686868),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,fontFamily:'font',
@@ -493,7 +494,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ],
                                 ),
-                               guestLogin==true?Icon(Icons.person): CircleAvatar(
+                               guestLogin==true?const Icon(Icons.person): CircleAvatar(
                                   radius: 30,
                                   backgroundImage: NetworkImage(photoURL ?? ''),
                                   backgroundColor: Color(_colorCode!),
@@ -504,17 +505,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               thickness: 1,
                               color: Colors.black.withOpacity(0.25),
                             ),
-                            Text(
+                            const Text(
                               "Account",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 20),
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Image.asset("assets/person.png"),
-                                SizedBox(width: 15,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{
 
@@ -541,15 +542,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                       // _showEditDisplayNameDialog();
 
                                     },
-                                    child: Text("Change Username",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: const Text("Change Username",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Image.asset("assets/key.png"),
-                                SizedBox(width: 15,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                   onTap: ()async{
                                     if(guestLogin==true){
@@ -571,15 +572,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                     }
 
                                   },
-                                    child: Text("Change Password",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: const Text("Change Password",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Image.asset("assets/close.png",height: 20,),
-                                SizedBox(width: 15,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{
                                       // guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
@@ -603,15 +604,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                       }
 
                                     },
-                                    child: Text("Change Time Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: const Text("Change Time Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Image.asset("assets/close.png",height: 20,),
-                                SizedBox(width: 15,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{
                                       // guestLogin==true?_showPersistentBottomSheet( context):  _showEditEmailDialog();
@@ -634,19 +635,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                       }
 
                                     },
-                                    child: Text("Change Book Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
+                                    child: const Text("Change Book Goal",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),)),
                               ],
                             ),
                              Divider(
                                     thickness: 1,
                               color: Colors.black.withOpacity(0.25),
                             ),
-                            Text(
+                            const Text(
                               "Book Settings",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             GestureDetector(
                               onTap: ()async{
                                 if(guestLogin==true){
@@ -663,12 +664,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.asset("assets/envelope.png",height: 15,),
-                                  SizedBox(width: 15,),
-                                  Text("Invite a Friend",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
+                                  const SizedBox(width: 15,),
+                                  const Text("Invite a Friend",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
                               ),
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             GestureDetector(
                               onTap: ()async{
                                 // guestLogin==true?_showPersistentBottomSheet( context):    _showInvitationCodeEnterPopup();
@@ -694,8 +695,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.asset("assets/envelope.png",height: 15,),
-                                  SizedBox(width: 15,),
-                                  Text("Redeem",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
+                                  const SizedBox(width: 15,),
+                                  const Text("Redeem",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
                               ),
                             ),
@@ -703,23 +704,23 @@ class _ProfilePageState extends State<ProfilePage> {
                               thickness: 1,
                               color: Colors.black.withOpacity(0.25),
                             ),
-                            Text(
+                            const Text(
                               "Social",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
 
                               children: [
                                 Image.asset("assets/envelope.png",height: 20,),
-                                SizedBox(width: 15,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
                                       guestLogin==true?_showPersistentBottomSheet( context):    Navigator.push(context, MaterialPageRoute(builder: (context)=>TopNavigation(false)));
                                     },
-                                    child: Text("Community",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
+                                    child: const Text("Community",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
                             Divider(
@@ -727,23 +728,23 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: Colors.black.withOpacity(0.25),
                             ),
 
-                            Text(
+                            const Text(
                               "Streak Setting",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
 
                               children: [
-                                Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
-                                SizedBox(width: 15,),
+                                Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>RestoreStreakPage()));
+                                      guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>const RestoreStreakPage()));
                                     },
-                                    child: Text("Restore Streaks",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
+                                    child: const Text("Restore Streaks",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
                               ],
                             ),
 
@@ -753,33 +754,63 @@ class _ProfilePageState extends State<ProfilePage> {
                               thickness: 1,
                               color: Colors.black.withOpacity(0.25),
                             ),
-                            Text(
-                              "Profile Setting",
+                            const Text(
+                              "Setting",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
                             ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                            Row(
                              children: [
-                               Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
-                               SizedBox(width: 15,),
+                               Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                               const SizedBox(width: 15,),
                                GestureDetector(
                                    onTap: (){
                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsPage()));
                                    },
-                                   child: Text("About us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
+                                   child: const Text("About us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
                              ],
                            ),
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
                             Row(
                               children: [
-                                Image.asset("assets/strick.png",color: Color(0xFF686868),height: 20,),
-                                SizedBox(width: 15,),
+                                Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                                const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUsPage()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const ContactUsPage()));
                                     },
-                                    child: Text("Contact us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
+                                    child: const Text("Contact us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
+                              ],
+                            ),
+                            const SizedBox(height: 20,),
+                            Row(
+                              children: [
+                                Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                                const SizedBox(width: 15,),
+                                GestureDetector(
+                                    onTap: ()async{
+                                      String playStoreLink = '';
+
+                                      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+                                      final FirebaseAuth _auth = FirebaseAuth.instance;
+
+                                      try {
+                                        DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+                                            .collection('about_us')
+                                            .doc('mjZWNYj7FARJMCZYrFt2')
+                                            .get();
+
+                                        playStoreLink = userDoc.get('playstoreLink')??'';
+
+                                      launchUrl(Uri.parse(playStoreLink));
+
+                                      } catch (error) {
+                                        log('Error fetching data link: $error');
+                                      }
+
+                                    },
+                                    child: const Text("Rate us",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868)),)),
                               ],
                             )
                           ],
@@ -797,22 +828,22 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   void _showPersistentBottomSheet(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: Color(0xFFFEEAD4),
+      backgroundColor: const Color(0xFFFEEAD4),
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       builder: (BuildContext context) {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFFFEEAD4),
               borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
             ),
             child: Container(
-              color: Color(0xFFFEEAD4),
+              color: const Color(0xFFFEEAD4),
               width: MediaQuery.of(context).size.width * 0.9, // Adjust width as needed
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -822,24 +853,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     SvgPicture.asset('assets/oops.svg',
                    ),
-                    Text("OOPS!!!",style: TextStyle(fontFamily: 'font',fontSize: 30,   color: Color(0xFF686868),),),
-                    SizedBox(height: 30,),
-                    Text("Looks like you haven’t signed in yet.",style: TextStyle(
+                    const Text("OOPS!!!",style: TextStyle(fontFamily: 'font',fontSize: 30,   color: Color(0xFF686868),),),
+                    const SizedBox(height: 30,),
+                    const Text("Looks like you haven’t signed in yet.",style: TextStyle(
                       color: Color(0xFF686868),
                       fontSize: 14,
                       fontFamily: 'font',
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
-                    SizedBox(height: 50,),
-                    Text("To access this exciting feature, please sign in to your account. Join our community to interact with fellow readers, share your thoughts, and discover more.",style: TextStyle(fontFamily: 'font',
+                    const SizedBox(height: 50,),
+                    const Text("To access this exciting feature, please sign in to your account. Join our community to interact with fellow readers, share your thoughts, and discover more.",style: TextStyle(fontFamily: 'font',
                       color: Color(0xFF686868),
                       fontSize: 14,
 
                       fontWeight: FontWeight.w700,
                       height: 0,
                     ),),
-                    SizedBox(height: 50,),
+                    const SizedBox(height: 50,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -849,14 +880,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainPage()));
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFFFF997A),// Background color
+                            primary: const Color(0xFFFF997A),// Background color
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
                             ),
                           ),
                           child: Container(
                             height: 26,
-                            child: Center(
+                            child: const Center(
                               child: Text(  
                                 'GO BACK',
                                 textAlign: TextAlign.center,
@@ -880,14 +911,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpPage()));
                           },
                           style: ElevatedButton.styleFrom(
-                            primary:  Color(0xFF283E50),
+                            primary:  const Color(0xFF283E50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8), // Adjust the border radius as needed
                             ),
                           ),
                           child: Container(
                             height: 26,
-                            child: Center(
+                            child: const Center(
                               child: Text(
                                 'SIGN UP',
                                 textAlign: TextAlign.center,
@@ -920,17 +951,17 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Edit Goal Time",
             style: TextStyle(fontFamily: 'font',color: Colors.blue),
           ),
           content: TextField(
-            style: TextStyle(
+            style: const TextStyle(
                 color: Color(0xff283E50),
                 fontFamily: 'font'
             ),
             controller: newGoal,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Enter new goal Time",
               hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey),
             ),
@@ -941,7 +972,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 _changeGoal( true);
                 Navigator.pop(context);
               },
-              child: Text(
+              child: const Text(
                 "Reduce",
                 style: TextStyle(fontFamily: 'font',color: Colors.red),
               ),
@@ -951,13 +982,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 _changeGoal(false);
                 Navigator.pop(context);
               },
-              child: Text(
+              child: const Text(
                 "Increase",
                 style: TextStyle(fontFamily: 'font',color: Colors.green),
               ),
             ),
           ],
-          backgroundColor: Color(0xFFD9D9D9),
+          backgroundColor: const Color(0xFFD9D9D9),
         );
       },
     );
@@ -968,17 +999,17 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Edit User Name",
             style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
           ),
-          content: Text("Are you sure want to change your password?",style: TextStyle(fontFamily: 'font',),),
+          content: const Text("Are you sure want to change your password?",style: TextStyle(fontFamily: 'font',),),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text(
+              child: const Text(
                 "No",
                 style: TextStyle(fontFamily: 'font',color: Color(0xff283E50)), // Set cancel text color
               ),
@@ -989,13 +1020,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.pop(context); // Close the dialog
               },
 
-              child: Text(
+              child: const Text(
                 "Yes",
                 style: TextStyle(fontFamily: 'font',color: Colors.green), // Set save text color
               ),
             ),
           ],
-          backgroundColor: Color(0xFFD9D9D9), // Set dialog background color
+          backgroundColor: const Color(0xFFD9D9D9), // Set dialog background color
         );
       },
     );
@@ -1052,17 +1083,17 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color(0xffFEEAD4),
+      backgroundColor: const Color(0xffFEEAD4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             'Change Username',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Divider(
+          const Divider(
             color: Colors.grey,
             thickness: 1,
           ),
@@ -1071,7 +1102,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       content: Container(
         height: 50,
         width: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
           borderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -1082,13 +1113,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             padding: const EdgeInsets.only(left: 8.0),
             child:TextFormField(
           
-              style: TextStyle(
+              style: const TextStyle(
                   color: Color(0xff283E50),
                   fontFamily: 'font'
               ),
 
               controller: _textFieldController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Enter new User Name",
                 hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
               ),
@@ -1107,7 +1138,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1118,7 +1149,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                     onPressed: () {
 
                     },
-                    child: Text(
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1134,7 +1165,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1142,9 +1173,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      _textFieldController.text.isEmpty?Fluttertoast.showToast(msg: "Enter the valid name",backgroundColor: Color(0xFFFF997A)) :updateDisplayName(_textFieldController.text);
+                      _textFieldController.text.isEmpty?Fluttertoast.showToast(msg: "Enter the valid name",backgroundColor: const Color(0xFFFF997A)) :updateDisplayName(_textFieldController.text);
                     },
-                    child: Text(
+                    child: const Text(
                       'Update',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1193,7 +1224,7 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: widget.email,
       );
-        Fluttertoast.showToast(msg: "Password reset email sent! Check your email.",backgroundColor: Color(0xFFFF997A));
+        Fluttertoast.showToast(msg: "Password reset email sent! Check your email.",backgroundColor: const Color(0xFFFF997A));
 
 
     } catch (e) {
@@ -1210,17 +1241,17 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color(0xffFEEAD4),
+      backgroundColor: const Color(0xffFEEAD4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             'Change Password',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Divider(
+          const Divider(
             color: Colors.grey,
             thickness: 1,
           ),
@@ -1230,15 +1261,15 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
       content: Container(
         height: 50,
         width: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
         ),
-        child: Expanded(
+        child: const Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: EdgeInsets.only(left: 8.0),
             child: Text("Are you sure want to change your password?",style: TextStyle(fontFamily: 'font',),)
           ),
         ),
@@ -1254,7 +1285,7 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1265,7 +1296,7 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
                     onPressed: () {
                     Navigator.pop(context);
                     },
-                    child: Text(
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1281,7 +1312,7 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1293,7 +1324,7 @@ class _CustomAlertPasswordDialogState extends State<CustomAlertPasswordDialog> {
                       _signOut();
                       Navigator.pop(context);
                     },
-                    child: Text(
+                    child: const Text(
                       'Send',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1344,10 +1375,10 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
               await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': (newGoal.text),'currentTime':0});
 
             }else{
-              Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: Color(0xff283E50),);
+              Fluttertoast.showToast(msg: "Your Daily goal cannot be greater than $dailyGoal",backgroundColor: const Color(0xff283E50),);
             }
           }else{
-            Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: Color(0xff283E50),);
+            Fluttertoast.showToast(msg: "Your Daily goal cannot be equals to $dailyGoal",backgroundColor: const Color(0xff283E50),);
           }
         }else{
           await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'dailyGoal': '$valueForDailyGoal','currentTime':FieldValue.increment(int.parse(newGoal.text)*60)});
@@ -1383,17 +1414,17 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color(0xffFEEAD4),
+      backgroundColor: const Color(0xffFEEAD4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             'Change Time Goal',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Text(
+          const Text(
             'Note: If you reduce the time you will loose your daily goal progress.',
             style: TextStyle(color: Colors.red,fontFamily: 'font',fontSize: 10),
           ),
@@ -1403,7 +1434,7 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
       content: Container(
         height: 50,
         width: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
           borderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -1413,12 +1444,12 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
           child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child:   TextField(
-                style: TextStyle(
+                style: const TextStyle(
                     color: Color(0xff283E50),
                     fontFamily: 'font'
                 ),
                 controller: newGoal,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Enter new goal Time",
                   hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey),
                 ),
@@ -1437,7 +1468,7 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1448,9 +1479,9 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
                     onPressed: () {
                       _changeGoal( true);
                       Navigator.pop(context);
-                      Fluttertoast.showToast(msg: "Time updated successfully!",backgroundColor:Color(0xFF283E50), );
+                      Fluttertoast.showToast(msg: "Time updated successfully!",backgroundColor:const Color(0xFF283E50), );
                     },
-                    child: Text(
+                    child: const Text(
                       'Replace',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1466,7 +1497,7 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1476,9 +1507,9 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
                     onPressed: () {
                       _changeGoal(false);
                       Navigator.pop(context);
-                      Fluttertoast.showToast(msg: "Time updated successfully!",backgroundColor:Color(0xFF283E50), );
+                      Fluttertoast.showToast(msg: "Time updated successfully!",backgroundColor:const Color(0xFF283E50), );
                     },
-                    child: Text(
+                    child: const Text(
                       'Increase',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1519,7 +1550,7 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
         .get();
 
     await _firestore.collection('users').doc(_auth.currentUser?.uid).update({'yearlyGoal': (int.parse(newGoal.text))});
-    Fluttertoast.showToast(msg: "Your Yearly goal cannot be greater than ${newGoal.text}",backgroundColor: Color(0xff283E50),);
+    Fluttertoast.showToast(msg: "Your Yearly goal cannot be greater than ${newGoal.text}",backgroundColor: const Color(0xff283E50),);
 
   }
   @override
@@ -1531,17 +1562,17 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color(0xffFEEAD4),
+      backgroundColor: const Color(0xffFEEAD4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             'Change Book Goal',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Divider(
+          const Divider(
             color: Colors.grey,
             thickness: 1,
           ),
@@ -1550,7 +1581,7 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
       content: Container(
         height: 50,
         width: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
           borderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -1560,12 +1591,12 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child:   TextField(
-              style: TextStyle(
+              style: const TextStyle(
                   color: Color(0xff283E50),
                   fontFamily: 'font'
               ),
               controller: newGoal,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Enter new book Goal",
                 hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey),
               ),
@@ -1584,7 +1615,7 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1597,7 +1628,7 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
                       Navigator.pop(context);
 
                     },
-                    child: Text(
+                    child: const Text(
                       'Cancel',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1613,7 +1644,7 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1623,9 +1654,9 @@ class _CustomAlertYearlyGoalDialogState extends State<CustomAlertYearlyGoalDialo
                     onPressed: () {
                       _changeGoal();
                       Navigator.pop(context);
-                      Fluttertoast.showToast(msg: "Goal updated successfully!",backgroundColor:Color(0xFF283E50), );
+                      Fluttertoast.showToast(msg: "Goal updated successfully!",backgroundColor:const Color(0xFF283E50), );
                     },
-                    child: Text(
+                    child: const Text(
                       'Update',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1667,17 +1698,17 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color(0xffFEEAD4),
+      backgroundColor: const Color(0xffFEEAD4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             'Invite a friend',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Divider(
+          const Divider(
             color: Colors.grey,
             thickness: 1,
           ),
@@ -1687,7 +1718,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
       content: Container(
         height: 50,
         width: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
           borderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -1696,7 +1727,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
         child: Expanded(
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child:   Text("Your invitation code is : ${widget.code}",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
+            child:   Text("Your invitation code is : ${widget.code}",style: const TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
           ),
         ),
       ),
@@ -1711,7 +1742,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1724,7 +1755,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
                       Navigator.pop(context);
 
                     },
-                    child: Text(
+                    child: const Text(
                       'Close',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1740,7 +1771,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1752,7 +1783,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
                       Navigator.pop(context);
 
                     },
-                    child: Text(
+                    child: const Text(
                       'Share',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1770,7 +1801,7 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
   void _shareInviteCode() async{
     String appName = 'Swift Pages';
     String appDescription = 'Share your invitation code and invite friends to join $appName!';
-    String playStoreLink = 'https://play.google.com/store/apps/details?id=com.example.yourapp'; // Replace with your app's Play Store link
+    String playStoreLink = ''; // Replace with your app's Play Store link
 
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -1781,14 +1812,12 @@ class _CustomAlertInvideDialogState extends State<CustomAlertInvideDialog> {
           .doc('mjZWNYj7FARJMCZYrFt2')
           .get();
 
-      if (userDoc.exists) {
-        setState(() {
           playStoreLink = userDoc.get('playstoreLink')??'';
-          // finishedDate = userDoc.get('finishedDate') ?? 0;
-        });
-      }
+
+
+
     } catch (error) {
-      //log('Error fetching data: $error');
+      log('Error fetching data link: $error');
     }
 
     String message = '''
@@ -1833,17 +1862,17 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color(0xffFEEAD4),
+      backgroundColor: const Color(0xffFEEAD4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       title: Column(
         children: [
-          Text(
+          const Text(
             'Redeem your offer',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Divider(
+          const Divider(
             color: Colors.grey,
             thickness: 1,
           ),
@@ -1853,7 +1882,7 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
       content: Container(
         height: 50,
         width: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 
           borderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -1864,11 +1893,11 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
             padding: const EdgeInsets.only(left: 8.0),
             child: TextField(
               controller: _invitationCodeController,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xff283E50),
                 fontFamily: 'font'
               ),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Enter the invitation code",
 
                 hintStyle: TextStyle(fontFamily: 'font',color: Colors.grey), // Set hint text color
@@ -1888,7 +1917,7 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1901,7 +1930,7 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
                       Navigator.pop(context);
 
                     },
-                    child: Text(
+                    child: const Text(
                       'Close',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1917,7 +1946,7 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
                 child: Container(
                   width: 100,
                   height: 45,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF283E50),
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -1929,7 +1958,7 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
                       Navigator.pop(context);
 
                     },
-                    child: Text(
+                    child: const Text(
                       'Redeem',
                       style: TextStyle(
                           color: Colors.white,fontFamily: 'font'
@@ -1973,8 +2002,8 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: Color(0xFFFF997A),
-            textColor:  Color(0xff283E50),
+            backgroundColor: const Color(0xFFFF997A),
+            textColor:  const Color(0xff283E50),
           );
         } else {
           // Increase strikes for the redeeming user
@@ -1984,8 +2013,8 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: Color(0xFFFF997A),
-            textColor:  Color(0xff283E50),
+            backgroundColor: const Color(0xFFFF997A),
+            textColor:  const Color(0xff283E50),
           );
           // Increase strikes for the generating user
           String generatorUserId = redeemingUserDocument.id ?? '';
@@ -2012,8 +2041,8 @@ class _CustomAlertRedeemDialogState extends State<CustomAlertRedeemDialog> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: Color(0xFFFF997A),
-          textColor:  Color(0xff283E50),
+          backgroundColor: const Color(0xFFFF997A),
+          textColor:  const Color(0xff283E50),
         );
       }
     }).catchError((error) {
