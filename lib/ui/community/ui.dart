@@ -234,8 +234,18 @@ class _BookCardState extends State<BookCard> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
-                          _showConfirmationDialogToSave(context);
+                        onTap: ()async{
+                          int? result = await showDialog<int>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return
+                                CustomAlertForSavePost(imgLink: widget.bookData['imageLink'], postedBy: widget.bookData['username'], postedUserAvatar:   widget.bookData['avatarUrl'],
+                                    note: widget.bookData['notes'],
+
+                                );
+                            },
+                          );
+                          // _showConfirmationDialogToSave(context);
                         },
                         child: SvgPicture.asset(
                           'assets/save.svg',
@@ -701,6 +711,7 @@ class _BookCardState extends State<BookCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+
           title: Text(
             "Save post",
             style: TextStyle(fontFamily: 'font',color: Colors.blue), // Set title text color
@@ -2047,4 +2058,159 @@ class _CommentPageState extends State<CommentPage> {
     });
     reloadComments();
   }
+}
+class CustomAlertForSavePost extends StatefulWidget {
+
+      String imgLink;
+  String postedBy;
+      String postedUserAvatar;
+  String note;
+
+  CustomAlertForSavePost(
+      {required this.imgLink,
+        required this.postedBy,
+        required this.postedUserAvatar,
+        required this.note});
+
+  @override
+  _CustomAlertForSavePostState createState() =>
+      _CustomAlertForSavePostState();
+}
+class _CustomAlertForSavePostState
+    extends State<CustomAlertForSavePost> {
+  int selectedYear = 0;
+  int selectedDays = 0;
+  String selectedMonth = '';
+  String startingDate = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Save Post?',
+            style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Color(0xffFEEAD4),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child:    Text(
+          'Are you sure want to save this post?',
+          style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+        ),
+      ),
+      actions: <Widget>[
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment:MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 115,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                     Navigator.pop(context);
+                    },
+                    child: Text(
+                      'No',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 115,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283E50),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      savePost(
+                          context,
+                          widget.imgLink,
+                          widget.postedBy,
+                          widget.postedUserAvatar,
+                          widget.note);
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Yes',
+                      style: TextStyle(
+                          color: Colors.white,fontFamily: 'font'
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Future<void> addStartingDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "startingDate": startingDate,
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
+
 }
