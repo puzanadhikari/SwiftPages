@@ -136,6 +136,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                   horizontal: 30.0, vertical: 8.0),
                               child: TextFormField(
                                 controller: name,
+                                style: TextStyle(fontSize: 12,fontFamily: 'font',color: Color(0xFF283E50)),
                                 decoration: InputDecoration(
                                   hintText: 'Full Name',
                                   hintStyle: TextStyle(
@@ -157,6 +158,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 30.0, vertical: 8.0),
                               child: TextFormField(
+                                style: TextStyle(fontSize: 12,fontFamily: 'font',color: Color(0xFF283E50)),
                                 controller: email,
                                 decoration: InputDecoration(
                                   hintText: 'Email',
@@ -181,6 +183,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30.0, vertical: 8.0),
                                 child: TextFormField(
+                                  style: TextStyle(fontSize: 12,fontFamily: 'font',color: Color(0xFF283E50)),
                                   controller: msg,
                                   maxLines: null,
                                   decoration: InputDecoration(
