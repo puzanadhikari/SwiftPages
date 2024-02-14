@@ -624,7 +624,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           builder: (BuildContext context) {
                                             return CustomAlertYearlyGoalDialog();
 
-
                                           },
                                         );
 
@@ -1392,10 +1391,11 @@ class _CustomAlertDailyGoalDialogState extends State<CustomAlertDailyGoalDialog>
             'Change Time Goal',
             style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
           ),
-          Divider(
-            color: Colors.grey,
-            thickness: 1,
+          Text(
+            'Note: If you reduce the time you will loose your daily goal progress.',
+            style: TextStyle(color: Colors.red,fontFamily: 'font',fontSize: 10),
           ),
+
         ],
       ),
       content: Container(
