@@ -99,24 +99,25 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   // _buildUserDropdown(),
                   // _buildUserSearch(),
+                  SizedBox(height: 10,),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Container(
-                      height: 55,
-                      decoration: ShapeDecoration(
-                        color: Color(0xFFD9D9D9),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(92),
-                        ),
+                      height: 50,
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50.0),
+                        color: Colors.grey[200], // Change the color as needed
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        padding: const EdgeInsets.only(left:15.0),
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
-                            hintText: 'Search users...',
-                            prefixIcon: Icon(Icons.search),
-                            border: InputBorder.none, // Remove the default border
+                              hintText: 'Search users...',
+                              suffixIcon: Icon(Icons.search),
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(color: Colors.grey[600],fontFamily: 'font',fontSize: 13)
                           ),
                           onChanged: _onSearchChanged,
                         ),
@@ -124,20 +125,28 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
 
-                 Expanded(
+                  _searchController.text.isEmpty?
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top:80.0),
+                      child: SvgPicture.asset('assets/oops.svg',
+                        height: 500,
+                      ),
+                    ),
+                  ): Expanded(
                     child: StreamBuilder<List<Map<String, dynamic>>>(
                       stream: _usersStream,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Text('No users available');
                         }
-
-                        _users = snapshot.data!;
-
+                        // _users = snapshot.data!;
+                        List<Map<String, dynamic>> _users = snapshot.data!;
                         return Visibility(
                           visible: _searchController.text.isEmpty?false:true,
                           child: Card(
-                            color: Colors.white,
+                            color: Color(0xffFEEAD4),
                             elevation: 8,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0), // Set the border radius
@@ -150,7 +159,53 @@ class _SearchPageState extends State<SearchPage> {
                                 var username = user['username'];
                                 var avatar = user['avatar'];
 
-                                return ListTile(
+                                return GestureDetector(
+                                  onTap: (){
+                                    var user = _users.firstWhere((user) => user['userId'] == userId);
+                                    _showPersistentBottomSheet(context, user,userId);
+                                  },
+                                  child: Card(
+
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            20.0), // Adjust the radius as needed
+                                      ),
+                                      color: Color(0xFFFF997A),
+                                      elevation: 0,
+                                      margin: EdgeInsets.all(10),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 20,
+                                                        backgroundImage: NetworkImage(avatar),
+                                                        backgroundColor: Color(0xfffeead4),
+                                                      ),
+                                                      SizedBox(width: 5,),
+                                                      Text("${username}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
+
+                                                    ],
+                                                  ),
+                                                  SizedBox(width: 10),
+
+                                                ]),
+                                          ],
+                                        ),
+                                      ) ),
+                                );
+
+
+
+
+                                ListTile(
                                   title: Row(
                                     children: [
                                       CircleAvatar(
@@ -162,20 +217,7 @@ class _SearchPageState extends State<SearchPage> {
                                     ],
                                   ),
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          recipientUserId: userId,
-                                          recipientUsername: username,
-                                          recipientAvatar: avatar,
-                                        ),
-                                      ),
-                                    );
-                                    setState(() {
-                                      _searchController.clear();
-                                    });
-                                    log('Selected User: $userId');
+                                    fetchUserDetailsById(userId);
                                   },
                                 );
                               },
@@ -185,6 +227,7 @@ class _SearchPageState extends State<SearchPage> {
                       },
                     ),
                   ),
+
 
                 ],
               );
@@ -207,14 +250,14 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.grey[200], // Change the color as needed
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom:8.0,left:15),
+                      padding: const EdgeInsets.only(left:15.0),
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: 'Search users...',
-                          suffixIcon: Icon(Icons.search),
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.grey[600],fontFamily: 'font',fontSize: 13)
+                            hintText: 'Search users...',
+                            suffixIcon: Icon(Icons.search),
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(color: Colors.grey[600],fontFamily: 'font',fontSize: 13)
                         ),
                         onChanged: _onSearchChanged,
                       ),
@@ -288,14 +331,14 @@ class _SearchPageState extends State<SearchPage> {
                                               SizedBox(width: 10),
 
                                             ]),
-                                         ],
+                                      ],
                                     ),
                                   ) );
 
 
 
 
-                                ListTile(
+                              ListTile(
                                 title: Row(
                                   children: [
                                     CircleAvatar(
@@ -408,7 +451,7 @@ class _SearchPageState extends State<SearchPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text("${userData['username']}",style: TextStyle(color: Color(0xff283E50),fontWeight: FontWeight.bold,fontFamily:'font',fontSize: 16),),
-                                Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
+                                // Text("${userData['email']}",style: TextStyle(color: Color(0xff283E50),fontSize: 14),),
                               ],
                             ),
 
@@ -422,7 +465,7 @@ class _SearchPageState extends State<SearchPage> {
                               height: 40,
                               color: Colors.black,
                             ),
-                            Text(userData['strikes'].toString(), style: TextStyle(
+                            Text(userData['strikes']==null?'0':userData['strikes'].toString(), style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,
                             )),

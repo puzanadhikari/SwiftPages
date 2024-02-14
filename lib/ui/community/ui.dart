@@ -559,7 +559,7 @@ class _BookCardState extends State<BookCard> {
                               height: 40,
                               color: Color(0xff283E50),
                             ),
-                            Text(userData['strikes'].toString(), style: TextStyle(
+                            Text(userData['strikes']==null?'0':userData['strikes'].toString(), style: TextStyle(
                               fontSize: 14,
                               color: Color(0xff283E50),fontFamily: 'font',
                             )),
