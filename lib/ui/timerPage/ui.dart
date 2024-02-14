@@ -1740,7 +1740,55 @@ class CustomAlertDialog extends StatefulWidget {
 
 class _CustomAlertDialogState extends State<CustomAlertDialog> {
   int selectedNumber = 0;
+  List<int> year = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+  List<int> days = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ];
 
+  List<String> month = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -1848,17 +1896,25 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   ),
                   // Add your action widgets here
                   child: TextButton(
-                    onPressed: () {
-                      updateStatusOfBook('COMPLETED');
-                      addFinishedDate(widget.book.documentId);
+                    onPressed: () async{
                       Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ReviewPage(
-                                    book: widget.book,
-                                  )));
-                      // Navigator.pop(context);
+
+
+                      int? result = await showDialog<int>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return
+                            CustomeAlertForEndDateDialog(
+                              book: widget.book,
+                              year: year,
+                              days: days,
+                              month: month,
+                            );
+                        },
+                      );
+
+                      // addFinishedDate(widget.book.documentId);
+
                     },
                     child: Text(
                       'Finish',
@@ -1905,32 +1961,6 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     );
   }
 
-  Future<void> addFinishedDate(String docId) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-
-      if (user != null) {
-        String uid = user.uid;
-
-        // Sample user data (customize based on your requirements)
-        Map<String, dynamic> contactFormData = {
-          "finishedDate": DateTime.now(),
-        };
-
-        DocumentReference contactFormRef = FirebaseFirestore.instance
-            .collection('myBooks')
-            .doc(uid)
-            .collection('books')
-            .doc(docId);
-
-        await contactFormRef.set(contactFormData, SetOptions(merge: true));
-
-        print('Starting date added successfully!');
-      }
-    } catch (e) {
-      print('Error adding starting date: $e');
-    }
-  }
   void updateStatusOfBook(String status) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid;
@@ -1959,7 +1989,6 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
 
       // Update the status to 'CURRENTLY READING'
       await myBooksRef.doc(bookIdToUpdate).update({'status': status,'year': currentYear,});
-
 
       print('Status updated successfully');
     } else {
@@ -2595,3 +2624,407 @@ class _CustomAlertForStartDateDialogState
   }
 
 }
+
+
+
+
+
+class CustomeAlertForEndDateDialog extends StatefulWidget {
+  DetailBook book;
+  List<int> year;
+  List<int> days;
+  List<String> month;
+   CustomeAlertForEndDateDialog(  {required this.book,
+    required this.year,
+    required this.days,
+    required this.month});
+
+  @override
+  State<CustomeAlertForEndDateDialog> createState() => _CustomeAlertForEndDateDialogState();
+}
+
+class _CustomeAlertForEndDateDialogState extends State<CustomeAlertForEndDateDialog> {
+  int selectedYear = 0;
+  int selectedDays = 0;
+  String selectedMonth = '';
+  String finishDate = '';
+
+  Future<void> addFinishedDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "finishedDate": DateTime.now(),
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color(0xffFEEAD4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      title: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Finish Date',
+                style: TextStyle(color: Color(0xff283E50),fontFamily: 'font'),
+              ),
+              Container(
+                width: 100,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Color(0xFF283E50),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    DateTime now = DateTime.now();
+                    finishDate = DateFormat('yyyy/MMM/dd', 'en_US').format(now);
+                    addFinishDate(widget.book.documentId);
+                    // log(formattedDate);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    setState(() {});
+                  },
+                  child: Text(
+                    'Today',
+                    style: TextStyle(
+                        color: Colors.white,fontFamily: 'font'
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
+        ],
+      ),
+      content: Container(
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Color(0xffFEEAD4),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.year.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = widget.year[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedYear = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedYear
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedYear
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
+                              color: Color(0xff686868),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.month.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String number = widget.month[index];
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedMonth = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedMonth
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedMonth
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
+                              color: Color(0xff686868),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  height: 50,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.days.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      int number = index + 1;
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedDays = number;
+                          });
+                        },
+                        child: Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: number == selectedDays
+                                ? Color(0xffD9D9D9)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: number == selectedDays
+                                  ? Color(0xffD9D9D9)
+                                  : Colors.transparent,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$number',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,fontFamily:'font',
+                              color: Color(0xff686868),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 115,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Color(0xFF283E50),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    finishDate = selectedYear.toString()+'/'+selectedMonth.toString()+'/'+selectedDays.toString();
+                    log(finishDate);
+                  });
+                  addFinishDate(widget.book.documentId);
+                  updateStatusOfBook('COMPLETED');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReviewPage(
+                            book: widget.book,
+                          )));
+
+                  setState(() {});
+                },
+                child: Text(
+                  'Update',
+                  style: TextStyle(
+                      color: Colors.white,fontFamily: 'font'
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> addFinishDate(String docId) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+
+        // Sample user data (customize based on your requirements)
+        Map<String, dynamic> contactFormData = {
+          "finishDate": finishDate,
+        };
+
+        DocumentReference contactFormRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books')
+            .doc(docId);
+
+        await contactFormRef.set(contactFormData, SetOptions(merge: true));
+
+        print('Starting date added successfully!');
+      }
+    } catch (e) {
+      print('Error adding starting date: $e');
+    }
+  }
+
+  void updateStatusOfBook(String status) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+
+// Reference to the 'myBooks' collection with the UID as the document ID
+    CollectionReference myBooksRef = FirebaseFirestore.instance
+        .collection('myBooks')
+        .doc(uid)
+        .collection('books');
+
+// Specify the ID of the book you want to update
+    String bookIdToUpdate =
+        widget.book.documentId; // Replace with the actual ID
+
+// Fetch the specific book document
+    DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
+
+    if (bookSnapshot.exists) {
+      // Access the document data
+      Map<String, dynamic> bookData =
+      bookSnapshot.data() as Map<String, dynamic>;
+
+      // Print the current status for reference
+      print('Current Status: ${bookData['status']}');
+
+      // Update the status to 'CURRENTLY READING'
+      await myBooksRef.doc(bookIdToUpdate).update({'status': status,'year':selectedYear});
+
+      print('Status updated successfully');
+    } else {
+      // Handle the case where the specified book does not exist
+      print('Book with ID $bookIdToUpdate does not exist.');
+    }
+  }
+
+  void updatePageNumber(DetailBook book, int newPageNumber) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String uid = user.uid;
+
+        CollectionReference myBooksRef = FirebaseFirestore.instance
+            .collection('myBooks')
+            .doc(uid)
+            .collection('books');
+
+        // Update the page number in the Firestore document
+        await myBooksRef
+            .doc(book.documentId)
+            .update({'currentPage': newPageNumber});
+
+        // Update the local state with the new page number
+        setState(() {
+          book.currentPage = newPageNumber;
+        });
+
+        print('Page number updated successfully!');
+      } else {
+        print('No user is currently signed in.');
+      }
+    } catch (e) {
+      print('Error updating page number: $e');
+    }
+  }
+
+}
+
+
+

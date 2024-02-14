@@ -37,7 +37,7 @@ String selectedPace = '';
 String selectedGenre = '';
 String selectedMood = '';
 String startDate = '';
-DateTime? finishedDate ;
+String finishedDate='' ;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 Future<void> fetchData() async {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -51,6 +51,7 @@ Future<void> fetchData() async {
     if (userDoc.exists) {
       setState(() {
         startDate = userDoc.get('startingDate') ?? '';
+        finishedDate = userDoc.get('finishDate') ?? '';
         log(startDate);
         // finishedDate = userDoc.get('finishedDate') ?? 0;
       });
@@ -239,7 +240,7 @@ Future<void> fetchData() async {
                                 children: [
                                   Text("Finished Date",style: TextStyle(color: Color(0xff686868),fontSize: 12,fontWeight: FontWeight.bold,fontFamily: 'font'),),
                                   SizedBox(height: 5,),
-                                  Text(DateTime.now().year.toString()+'/'+DateTime.now().month.toString()+'/'+DateTime.now().day.toString(),style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'font'),),
+                                  Text(finishedDate,style: TextStyle(color: Color(0xff283E50),fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'font'),),
                                 ],
                               ), ],
                           ),
