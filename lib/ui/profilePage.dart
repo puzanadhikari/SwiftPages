@@ -514,7 +514,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset("assets/person.png"),
+                                SvgPicture.asset(
+                                    "assets/profile/username.svg",
+                                    fit: BoxFit.fill
+                                ),
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{
@@ -549,7 +552,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset("assets/key.png"),
+                                SvgPicture.asset(
+                                    "assets/profile/password.svg",
+                                    fit: BoxFit.fill
+                                ),
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                   onTap: ()async{
@@ -579,7 +585,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset("assets/close.png",height: 20,),
+                                SvgPicture.asset(
+                                    "assets/profile/timeGoal.svg",
+                                    fit: BoxFit.fill
+                                ),
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{
@@ -611,7 +620,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset("assets/close.png",height: 20,),
+                                SvgPicture.asset(
+                                    "assets/profile/bookGoal.svg",
+                                    fit: BoxFit.fill
+                                ),
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{
@@ -663,7 +675,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset("assets/envelope.png",height: 15,),
+                                  SvgPicture.asset(
+                                      "assets/profile/invite.svg",
+                                      fit: BoxFit.fill
+                                  ),
                                   const SizedBox(width: 15,),
                                   const Text("Invite a Friend",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
@@ -694,7 +709,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset("assets/envelope.png",height: 15,),
+                                  SvgPicture.asset(
+                                      "assets/profile/reedem.svg",
+                                      fit: BoxFit.fill
+                                  ),
                                   const SizedBox(width: 15,),
                                   const Text("Redeem",style: TextStyle(fontFamily: 'font',fontSize: 16,color:  Color(0xFF686868),),),
                                 ],
@@ -712,9 +730,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(height: 20,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
-
                               children: [
-                                Image.asset("assets/envelope.png",height: 20,),
+                                SvgPicture.asset(
+                                    "assets/profile/community.svg",
+                                    fit: BoxFit.fill
+                                ),
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
@@ -728,32 +748,35 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: Colors.black.withOpacity(0.25),
                             ),
 
-                            const Text(
-                              "Streak Setting",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
-                            ),
-                            const SizedBox(height: 20,),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            // const Text(
+                            //   "Streak Setting",
+                            //   style: TextStyle(
+                            //       fontWeight: FontWeight.bold,fontFamily:'font', fontSize: 16),
+                            // ),
+                            // const SizedBox(height: 20,),
+                            // Row(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //
+                            //   children: [
+                            //     SvgPicture.asset(
+                            //         "assets/profile/aboutUs.svg",
+                            //         fit: BoxFit.fill
+                            //     ),
+                            //     const SizedBox(width: 15,),
+                            //     GestureDetector(
+                            //         onTap: (){
+                            //           guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>const RestoreStreakPage()));
+                            //         },
+                            //         child: const Text("Restore Streaks",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
+                            //   ],
+                            // ),
 
-                              children: [
-                                Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
-                                const SizedBox(width: 15,),
-                                GestureDetector(
-                                    onTap: (){
-                                      guestLogin==true? _showPersistentBottomSheet( context):     Navigator.push(context, MaterialPageRoute(builder: (context)=>const RestoreStreakPage()));
-                                    },
-                                    child: const Text("Restore Streaks",style: TextStyle(fontFamily: 'font',fontSize: 16,color:   Color(0xFF686868),),)),
-                              ],
-                            ),
 
-
-
-                            Divider(
-                              thickness: 1,
-                              color: Colors.black.withOpacity(0.25),
-                            ),
+                            //
+                            // Divider(
+                            //   thickness: 1,
+                            //   color: Colors.black.withOpacity(0.25),
+                            // ),
                             const Text(
                               "Setting",
                               style: TextStyle(
@@ -762,7 +785,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(height: 20,),
                            Row(
                              children: [
-                               Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                               SvgPicture.asset(
+                                   "assets/profile/aboutUs.svg",
+                                   fit: BoxFit.fill
+                               ),
                                const SizedBox(width: 15,),
                                GestureDetector(
                                    onTap: (){
@@ -774,7 +800,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(height: 20,),
                             Row(
                               children: [
-                                Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                                SvgPicture.asset(
+                                    "assets/profile/contactUs.svg",
+                                    fit: BoxFit.fill
+                                ),
+
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: (){
@@ -786,7 +816,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(height: 20,),
                             Row(
                               children: [
-                                Image.asset("assets/strick.png",color: const Color(0xFF686868),height: 20,),
+                                SvgPicture.asset(
+                                    "assets/profile/rateUs.svg",
+                                    fit: BoxFit.fill
+                                ),
                                 const SizedBox(width: 15,),
                                 GestureDetector(
                                     onTap: ()async{

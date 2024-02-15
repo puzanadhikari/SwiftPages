@@ -52,9 +52,14 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   String? validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      setState(() {
+        height = 70;
+      });}
     if (usernames.contains(value)) {
       return 'Username already exists. Please enter a different username.';
     }
+
     return null;
   }
   bool obscurePassword = true;
@@ -65,7 +70,6 @@ class _SignUpPageState extends State<SignUpPage> {
       UserCredential userCredential =
       await _authGoogle.signInWithProvider(_googleAuthProvider);
 
-      // After successful sign-in, retrieve the user's information
       if (userCredential.user != null) {
         String? email = userCredential.user!.email;
         String? displayName = userCredential.user!.displayName;
@@ -138,7 +142,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                         SizedBox(height: 10),
-                        Text(usernames.toString()),
                         Text(
                           'Get ready for a journey where every page \n        turns into a swift adventure!!!!!',
                           style: TextStyle(
@@ -230,15 +233,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               child: TextFormField(
 
                                 style: TextStyle(fontFamily: 'font',color:Colors.grey[700],fontSize: 13 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    setState(() {
-                                      height = 70;
-                                    });
-                                    return 'Please Enter Your UserName';
-                                  }
-                                  return null;
-                                },
+                                validator: validateUsername,
 
                                 onChanged: validateUsername,
                                 controller: userNameController,

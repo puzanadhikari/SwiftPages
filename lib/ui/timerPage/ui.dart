@@ -2969,11 +2969,8 @@ class _CustomeAlertForEndDateDialogState extends State<CustomeAlertForEndDateDia
         .doc(uid)
         .collection('books');
 
-// Specify the ID of the book you want to update
     String bookIdToUpdate =
-        widget.book.documentId; // Replace with the actual ID
-
-// Fetch the specific book document
+        widget.book.documentId;
     DocumentSnapshot bookSnapshot = await myBooksRef.doc(bookIdToUpdate).get();
 
     if (bookSnapshot.exists) {
