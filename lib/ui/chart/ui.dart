@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import '../homePage.dart';
 import '../myBooks.dart';
@@ -241,9 +242,9 @@ class _GraphPageState extends State<GraphPage> {
                     Positioned(
                       top: 0,
                       left: 0,
-                      child: Image.asset(
-                        'assets/Ellipse.png', // Replace with the correct image path
-                        fit: BoxFit.contain,
+                      child: SvgPicture.asset(
+                          "assets/Ellipse1.svg",
+                          fit: BoxFit.fill
                       ),
                     ),
                     Positioned(

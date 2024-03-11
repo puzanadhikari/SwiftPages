@@ -575,9 +575,9 @@ userName  = preferences.getString("userName")!;
                 Positioned(
                   top: 0,
                   left: 0,
-                  child: Image.asset(
-                    'assets/Ellipse.png', // Replace with the correct image path
-                    fit: BoxFit.contain,
+                  child: SvgPicture.asset(
+                      "assets/Ellipse1.svg",
+                      fit: BoxFit.fill
                   ),
                 ),
                 Positioned(
